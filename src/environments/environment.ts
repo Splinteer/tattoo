@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   appUrl: 'http://localhost:4200',
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'https://localhost:3000',
   auth0: {
     domain: 'tattoo1.eu.auth0.com',
     clientId: 'QtBNZJWKMPvD3P2DinT2GtvEMcNgAuRw',

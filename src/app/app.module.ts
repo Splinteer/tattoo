@@ -4,12 +4,16 @@ import {
   BrowserTransferStateModule,
 } from '@angular/platform-browser';
 
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthHttpInterceptor } from '@auth0/auth0-angular';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { AuthModule as Auth0Module } from '@auth0/auth0-angular';
 import { AuthModule } from './modules/auth/auth.module';
 import { environment } from 'src/environments/environment';
+import { ApiInterceptor } from './api.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,13 +21,34 @@ import { environment } from 'src/environments/environment';
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserTransferStateModule,
     AppRoutingModule,
+    HttpClientModule,
     Auth0Module.forRoot({
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
+      audience: 'https://' + environment.auth0.domain + '/api/v2/',
+      scope: 'read:client_grants',
+      httpInterceptor: {
+        allowedList: [
+          {
+            uri: environment.apiUrl + '/*',
+            tokenOptions: {
+              audience: 'https://' + environment.auth0.domain + '/api/v2/',
+              scope: 'read:client_grants',
+            },
+          },
+        ],
+      },
     }),
     AuthModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true,
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
