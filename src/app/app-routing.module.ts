@@ -1,19 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './auth/login/login.component';
 
-import { AuthGuard as Auth0Guard } from '@auth0/auth0-angular';
-import { FirstLoginComponent } from './auth/firstLogin/firstLogin.component';
+import { Auth0Guard } from './modules/auth/auth0.guard';
+import { CompleteAuthenticationGuard } from './modules/auth/completeAuth.guard';
+import { FirstLoginComponent } from './modules/auth/firstLogin/firstLogin.component';
 
 const routes: Routes = [
   {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
     path: 'first-step',
     component: FirstLoginComponent,
-    // canActivate: [Auth0Guard],
+    canActivate: [Auth0Guard],
   },
 ];
 

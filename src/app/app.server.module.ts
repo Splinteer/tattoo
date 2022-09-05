@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
-import { ServerModule } from '@angular/platform-server';
+import {
+  ServerModule,
+  ServerTransferStateModule,
+} from '@angular/platform-server';
 
 import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
 
-import { Auth0ServerService } from './auth/auth.server.service';
-import { Auth0Service } from './auth/auth.service';
+import { Auth0ServerService } from './modules/auth/auth.server.service';
+import { Auth0Service } from './modules/auth/auth.service';
 
 @NgModule({
-  imports: [AppModule, ServerModule],
+  imports: [AppModule, ServerModule, ServerTransferStateModule],
   providers: [
     {
       provide: Auth0Service,

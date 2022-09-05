@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService, User } from '@auth0/auth0-angular';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth0Service {
-  isAuthenticated: any;
+  isAuthenticated: Observable<boolean>;
   user$: Observable<User | null | undefined>;
-  getToken: any;
+  getToken: Observable<string>;
 
   constructor(private auth: AuthService) {
     this.isAuthenticated = this.auth.isAuthenticated$;
@@ -17,7 +18,9 @@ export class Auth0Service {
   }
 
   login() {
-    this.auth.loginWithRedirect();
+    this.auth.loginWithRedirect({
+      redirect_uri: environment.appUrl + '/first-step',
+    });
   }
 
   logout() {
@@ -25,6 +28,9 @@ export class Auth0Service {
   }
 
   signup() {
-    this.auth.loginWithRedirect({ screen_hint: 'signup' });
+    this.auth.loginWithRedirect({
+      screen_hint: 'signup',
+      redirect_uri: environment.appUrl + '/first-step',
+    });
   }
 }

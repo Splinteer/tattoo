@@ -4,8 +4,12 @@
 
 export const environment = {
   production: false,
-  auth0_domain: 'tattoo1.eu.auth0.com',
-  auth0_clientId: 'QtBNZJWKMPvD3P2DinT2GtvEMcNgAuRw',
+  appUrl: 'http://localhost:4200',
+  apiUrl: 'http://localhost:3000/api',
+  auth0: {
+    domain: 'tattoo1.eu.auth0.com',
+    clientId: 'QtBNZJWKMPvD3P2DinT2GtvEMcNgAuRw',
+  },
 };
 
 /*
