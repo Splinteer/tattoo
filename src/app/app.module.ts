@@ -6,6 +6,7 @@ import {
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from '@auth0/auth0-angular';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,6 +40,7 @@ import { ApiInterceptor } from './api.interceptor';
         ],
       },
     }),
+    NgbModule,
     AuthModule,
   ],
   providers: [
