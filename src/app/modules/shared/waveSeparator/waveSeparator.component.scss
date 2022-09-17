@@ -1,7 +1,14 @@
 @import "src/theme/theme-variables";
 @import "bootstrap/scss/mixins/_breakpoints";
 
-:host {
+.wave-container {
+  height: 27px;
+  @include media-breakpoint-up(lg) {
+    height: 90px;
+  }
+}
+
+.wave {
   position: absolute;
   bottom: 0;
   left: 0;

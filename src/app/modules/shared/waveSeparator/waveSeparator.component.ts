@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./waveSeparator.component.scss'],
 })
 export class WaveSeparatorComponent {
-  @Input('color') color = '#fff';
+  @Input('color') color = 'white';
 }
