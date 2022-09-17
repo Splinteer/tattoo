@@ -1,0 +1,14 @@
+@import "src/theme/theme-variables";
+
+.navbar-container {
+  padding: 0 3%;
+}
+
+.navbar {
+  border-bottom: $border-width $border-style $border-color;
+  font-family: "Montserrat";
+}
+
+.navbar-brand {
+  font-weight: 200;
+}

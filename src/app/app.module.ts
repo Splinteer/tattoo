@@ -15,6 +15,7 @@ import { AuthModule as Auth0Module } from '@auth0/auth0-angular';
 import { AuthModule } from './modules/auth/auth.module';
 import { environment } from 'src/environments/environment';
 import { ApiInterceptor } from './api.interceptor';
+import { HeaderModule } from './modules/header/header.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,6 +43,7 @@ import { ApiInterceptor } from './api.interceptor';
     }),
     NgbModule,
     AuthModule,
+    HeaderModule,
   ],
   providers: [
     {
