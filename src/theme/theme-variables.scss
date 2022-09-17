@@ -67,7 +67,6 @@ $cyan: #0dcaf0;
 // scss-docs-start colors-map
 $colors: (
   "blue": $blue,
-  "brown": $brown,
   "indigo": $indigo,
   "purple": $purple,
   "pink": $pink,
@@ -85,7 +84,7 @@ $colors: (
 // scss-docs-end colors-map
 
 $headings-color: $blue;
-$nav-link-color: $brown;
+$nav-link-color: $blue;
 $nav-link-hover-color: $black;
 
 $border-color: rgba($black, 0.4);
@@ -101,5 +100,5 @@ $font-family-sans-serif: "Montserrat", system-ui, -apple-system, "Segoe UI",
   Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif,
   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-@import "~bootstrap/scss/_functions";
-@import "~bootstrap/scss/_variables";
+@import "bootstrap/scss/_functions";
+@import "bootstrap/scss/_variables";
