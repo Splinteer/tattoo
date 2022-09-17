@@ -16,6 +16,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { environment } from 'src/environments/environment';
 import { ApiInterceptor } from './api.interceptor';
 import { HeaderModule } from './modules/header/header.module';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,6 +45,7 @@ import { HeaderModule } from './modules/header/header.module';
     NgbModule,
     AuthModule,
     HeaderModule,
+    SharedModule,
   ],
   providers: [
     {
