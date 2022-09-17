@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth0Service } from '../auth/auth.service';
+import { Auth0Service } from '../modules/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -7,6 +7,7 @@ import { Auth0Service } from '../auth/auth.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  collapsed = true;
   constructor(public auth0: Auth0Service) {}
 
   ngOnInit() {}

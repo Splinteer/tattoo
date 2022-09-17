@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
-import {
-  BrowserModule,
-  BrowserTransferStateModule,
-} from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from '@auth0/auth0-angular';
@@ -15,14 +12,14 @@ import { AuthModule as Auth0Module } from '@auth0/auth0-angular';
 import { AuthModule } from './modules/auth/auth.module';
 import { environment } from 'src/environments/environment';
 import { ApiInterceptor } from './api.interceptor';
-import { HeaderModule } from './modules/header/header.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { PublicModule } from './modules/public/public.module';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    BrowserTransferStateModule,
     AppRoutingModule,
     HttpClientModule,
     Auth0Module.forRoot({
@@ -44,8 +41,8 @@ import { SharedModule } from './modules/shared/shared.module';
     }),
     NgbModule,
     AuthModule,
-    HeaderModule,
     SharedModule,
+    PublicModule,
   ],
   providers: [
     {

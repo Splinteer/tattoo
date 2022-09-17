@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-md navbar-light">
+  <div class="container-fluid">
+    <span class="navbar-brand">Brand</span>
+    <button
+      class="navbar-toggler"
+      type="button"
+      aria-controls="navbarContent"
+      [attr.aria-expanded]="!collapsed"
+      aria-label="Toggle navigation"
+      (click)="collapsed = !collapsed"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div
+      class="navbar-collapse"
+      [class.collapse]="collapsed"
+      id="navbarContent"
+    >
+      <div class="ms-auto">
+        <button
+          *ngIf="!auth0.isAuthenticated; else profile"
+          class="btn btn-outline"
+          (click)="auth0.login()"
+        >
+          login
+        </button>
+        <ng-template #profile>
+          <div
+            class="ms-auto"
+            ngbDropdown
+            display="dynamic"
+            placement="bottom-end"
+          >
+            <img
+              class="profile-picture"
+              src="https://dummyimage.com/30x30/0190f0/fff "
+              alt=""
+              id="dropdownBasic1"
+              ngbDropdownToggle
+            />
+            <div
+              ngbDropdownMenu
+              aria-labelledby="dropdownBasic1"
+              class="dropdown-menu"
+            >
+              <a ngbDropdownItem href="#" (click)="$event.preventDefault()"
+                >Action</a
+              >
+              <a ngbDropdownItem href="#" (click)="$event.preventDefault()"
+                >Another action</a
+              >
+              <a ngbDropdownItem href="#" (click)="$event.preventDefault()"
+                >Something else here</a
+              >
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav>

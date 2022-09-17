@@ -1,14 +1,15 @@
 @import "src/theme/theme-variables";
 
-.navbar-container {
-  padding: 0 3%;
-}
-
 .navbar {
-  border-bottom: $border-width $border-style $border-color;
+  padding-left: 3%;
+  padding-right: 3%;
   font-family: "Montserrat";
 }
 
 .navbar-brand {
   font-weight: 200;
+}
+
+.profile-picture {
+  border-radius: 50%;
 }
