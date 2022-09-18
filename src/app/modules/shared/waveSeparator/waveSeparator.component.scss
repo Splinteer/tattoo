@@ -1,11 +1,8 @@
-@import "src/theme/theme-variables";
-@import "bootstrap/scss/mixins/_breakpoints";
-
 .wave-container {
   height: 27px;
-  @include media-breakpoint-up(lg) {
-    height: 90px;
-  }
+  // @include media-breakpoint-up(lg) {
+  //   height: 90px;
+  // }
 }
 
 .wave {
@@ -24,8 +21,8 @@
     height: 27px;
     transition: height 2s;
 
-    @include media-breakpoint-up(lg) {
-      height: 90px;
-    }
+    // @include media-breakpoint-up(lg) {
+    //   height: 90px;
+    // }
   }
 }

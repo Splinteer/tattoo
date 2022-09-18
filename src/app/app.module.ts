@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from '@auth0/auth0-angular';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,7 +38,6 @@ import { HeaderComponent } from './header/header.component';
         ],
       },
     }),
-    NgbModule,
     AuthModule,
     SharedModule,
     PublicModule,
