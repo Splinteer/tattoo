@@ -10,6 +10,10 @@ const routes: Routes = [
     path: '',
     component: HomeComponent,
   },
+  {
+    path: 'first-step',
+    component: HomeComponent,
+  },
 ];
 
 @NgModule({

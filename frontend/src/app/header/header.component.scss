@@ -1,0 +1,28 @@
+header {
+  padding: 20px 40px;
+}
+
+nav {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+}
+
+nav > * {
+  display: flex;
+  align-items: center;
+
+  &:last-child {
+    justify-content: flex-end;
+  }
+}
+
+ul {
+  justify-content: center;
+  li {
+    margin-inline: 20px;
+  }
+}
+
+svg {
+  stroke: var(--black);
+}

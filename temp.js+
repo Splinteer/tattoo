@@ -1,0 +1,47 @@
+function fetchUserProfile(accessToken, context, callback) {
+  request.get(
+    {
+      url: `https://graph.facebook.com/v14.0/me?fields=id,name,last_name,email,first_name,short_name&access_token=${accessToken}`,
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+    },
+    (err, resp, body) => {
+      if (err) {
+        return callback(err);
+      }
+      if (resp.statusCode !== 200) {
+        return callback(new Error(JSON.stringify(body)));
+      }
+      let bodyParsed;
+      try {
+        bodyParsed = JSON.parse(body);
+      } catch (jsonError) {
+        return callback(new Error(JSON.stringify(body)));
+      }
+      const user = {
+        user_id: bodyParsed.id,
+        email: bodyParsed.email,
+        given_name: bodyParsed.first_name,
+        family_name: bodyParsed.last_name,
+        name: bodyParsed.name,
+      };
+
+      callback(null, user);
+    }
+  );
+}
+
+function fetchUserProfile(accessToken, context, callback) {
+  const token = jwt.decode(context.id_token);
+  const user = {
+    user_id: token.sub,
+    email: token.email,
+    given_name: token.given_name,
+    family_name: token.family_name,
+    name: token.name,
+    picture: token.picture,
+  };
+
+  callback(null, user);
+}
