@@ -17,6 +17,16 @@ export class ShopService {
 
   constructor(private database: DbService) {}
 
+  public async get(userId: string) {
+    const query = `SELECT shop.*, can_read_message, can_write_message FROM shop
+      INNER JOIN member ON shop.id=member.shop_id
+      WHERE member_id=$1`;
+
+    const { rows } = await this.database.query(query, [userId]);
+
+    return rows[0] ?? null;
+  }
+
   public async create(
     name: string,
     url: string,

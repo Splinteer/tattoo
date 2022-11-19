@@ -7,7 +7,7 @@
       <li>Search</li>
     </ul>
     <div class="user-panel">
-      {{ auth0.isAuthenticated | async }}
+      <a href="">Ouvrir un shop</a>
       <button
         *ngIf="!(auth0.isAuthenticated | async); else profile"
         (click)="auth0.login()"
@@ -22,6 +22,8 @@
           height="24"
           fill="none"
           viewBox="0 0 24 24"
+          (click)="auth0.logout()"
+          style="cursor: pointer"
         >
           <path
             stroke-linecap="round"

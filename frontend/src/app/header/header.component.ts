@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ShopService } from '@modules/shop/shop.service';
 import { Auth0Service } from '../modules/auth/auth.service';
 
 @Component({
@@ -7,8 +8,19 @@ import { Auth0Service } from '../modules/auth/auth.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  collapsed = true;
-  constructor(public auth0: Auth0Service) {}
+  public shopStatus: string | null = null;
 
-  ngOnInit() {}
+  constructor(public auth0: Auth0Service, private shopService: ShopService) {}
+
+  ngOnInit() {
+    this.auth0.isAuthenticated.subscribe((isAuthenticated: boolean) => {
+      this.getShop();
+    });
+  }
+
+  private getShop() {
+    this.shopService.getShop().subscribe((shopStatus: string | null) => {
+      this.shopStatus = shopStatus;
+    });
+  }
 }

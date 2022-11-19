@@ -1,9 +1,13 @@
 import { ShopService } from './shop.service';
-import { Body, Controller, Post } from '@nestjs/common';
-
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 @Controller('shop')
 export class ShopController {
   constructor(private shopService: ShopService) {}
+
+  @Get()
+  get() {
+    this.shopService.get('oklm');
+  }
 
   @Post('create')
   create(

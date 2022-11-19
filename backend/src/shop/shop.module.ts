@@ -5,6 +5,7 @@ import { ShopController } from './shop.controller';
 import { ShopService } from './shop.service';
 import { MemberService } from './member/member.service';
 import { MemberController } from './member/member.controller';
+import { AuthModule } from '@app/common/auth/auth.module';
 
 @Module({
   imports: [CommonModule, ConfigModule.forRoot()],

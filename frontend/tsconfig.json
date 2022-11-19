@@ -16,7 +16,10 @@
     "importHelpers": true,
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ESNext", "dom"]
+    "lib": ["ESNext", "dom"],
+    "paths": {
+      "@modules/*": ["src/app/modules/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

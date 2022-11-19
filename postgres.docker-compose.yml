@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  tattoo:
+    image: "postgres:13"
+    container_name: tattoo_db
+    ports:
+      - "5467:5432"
+    expose:
+      - "5467"
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 5s
+      retries: 5
+    restart: always
+    volumes:
+      - /volumes/pg-data/tattoo/:/var/lib/postgresql/data/
+      - ./initdb:/docker-entrypoint-initdb.d/
+
+  phppgadmin_tattoo:
+    image: bitnami/phppgadmin:latest
+    environment:
+      - DATABASE_HOST=tattoo
+    ports:
+      - "8001:8080"
+      - "4434:8443"
+    depends_on:
+      - tattoo
