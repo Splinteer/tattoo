@@ -1,6 +1,8 @@
 import { ShopService } from './shop.service';
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../../libs/common/src/auth/auth.guard';
 @Controller('shop')
+@UseGuards(AuthGuard)
 export class ShopController {
   constructor(private shopService: ShopService) {}
 

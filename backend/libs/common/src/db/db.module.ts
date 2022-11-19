@@ -1,6 +1,5 @@
-import { Module, Provider } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Pool } from 'pg';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { DbService } from './db.service';
 
 @Module({
