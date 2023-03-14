@@ -27,7 +27,8 @@ CREATE TABLE
             external_user_id
         ),
         CONSTRAINT userid_mapping_supertokens_user_id_fkey FOREIGN KEY (supertokens_user_id) REFERENCES all_auth_recipe_users(user_id) ON DELETE CASCADE
-    )
+    );
+
 CREATE TABLE
     IF NOT EXISTS dashboard_users(
         user_id CHAR(36) NOT NULL,
@@ -127,7 +128,7 @@ CREATE TABLE
         user_id CHAR(36) NOT NULL,
         email VARCHAR(256) CONSTRAINT passwordless_users_email_key UNIQUE,
         phone_number VARCHAR(256) CONSTRAINT passwordless_users_phone_number_key UNIQUE,
-        time_joined BIGINT UNSIGNED NOT NULL,
+        time_joined BIGINT NOT NULL,
         CONSTRAINT passwordless_users_pkey PRIMARY KEY (user_id)
     );
 
