@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  tattoo_db:
+    image: "postgres:13"
+    container_name: tattoo_db
+    ports:
+      - "5467:5432"
+    expose:
+      - "5467"
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 5s
+      retries: 5
+    volumes:
+      - /volumes/pg-data/tattoo/:/var/lib/postgresql/data/
+      - ./initdb:/docker-entrypoint-initdb.d/
+    networks:
+      - tattoo_network
+    restart: unless-stopped
+
+  phppgadmin_tattoo:
+    image: bitnami/phppgadmin:latest
+    environment:
+      - DATABASE_HOST=tattoo
+    ports:
+      - "8001:8080"
+      - "4434:8443"
+    networks:
+      - tattoo_network
+    depends_on:
+      - tattoo_db
+
+  supertokens:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:4.4
+    ports:
+      - 3567:3567
+    env_file:
+      - ./backend/.env
+    environment:
+      POSTGRESQL_CONNECTION_URI: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@tattoo_db:5432/${POSTGRES_DB}"
+    restart: unless-stopped
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tattoo_network
+    depends_on:
+      tattoo_db:
+        condition: service_healthy
+
+networks:
+  tattoo_network:
+    driver: bridge
