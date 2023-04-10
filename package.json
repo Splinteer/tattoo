@@ -1,0 +1,18 @@
+{
+  "name": "my-app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:frontend": "cd front && npm run start",
+    "start:backend": "cd backend && npm run start:dev",
+    "start:dependencies": "docker compose up tattoo_db supertokens -d",
+    "start": "npm-run-all --parallel start:dependencies start:frontend start:backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
