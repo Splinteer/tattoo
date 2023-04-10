@@ -8,6 +8,8 @@ import {
 import { AuthMiddleware } from './auth.middleware';
 import { ConfigInjectionToken, AuthModuleConfig } from './config.interface';
 import { SupertokensService } from './supertokens/supertokens.service';
+import { HttpModule } from '@nestjs/axios';
+import { CustomerModule } from 'src/customer/customer.module';
 
 @Module({
   providers: [],
@@ -37,7 +39,7 @@ export class AuthModule implements NestModule {
         SupertokensService,
       ],
       exports: [],
-      imports: [],
+      imports: [HttpModule, CustomerModule],
       module: AuthModule,
     };
   }

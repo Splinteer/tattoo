@@ -15,11 +15,11 @@ export class DbService extends Pool {
     });
   }
 
-  static getUUID = () => uuidV4();
+  static readonly getUUID = () => uuidV4();
 
-  public begin = () => this.query('BEGIN');
-  public commit = () => this.query('COMMIT');
-  public rollback = () => this.query('ROLLBACK');
+  public readonly begin = () => this.query('BEGIN');
+  public readonly commit = () => this.query('COMMIT');
+  public readonly rollback = () => this.query('ROLLBACK');
 
   public async insertOne(
     table: string,
@@ -36,7 +36,6 @@ export class DbService extends Pool {
     let results: any;
     try {
       const { rows } = await this.query(query, values);
-      await this.end();
       results = rows;
     } catch (error: any) {
       if (error?.code === '23505') {
@@ -50,6 +49,7 @@ export class DbService extends Pool {
 
     if (!results || results.length === 0) {
       console.debug(object);
+      console.debug(query, values);
       throw new Error(
         `db.ts-insertOne: Impossible to insert object into table ${table}`,
       );
@@ -74,7 +74,6 @@ export class DbService extends Pool {
 
     try {
       await this.query(query, values);
-      await this.end();
     } catch ({ constraint, detail }: any) {
       throw new Error(
         `db.ts-updateObject: Impossible to update\n  Table: ${table}\n Id: ${id}\n  Constraint: ${constraint}\n  Detail: ${detail}`,

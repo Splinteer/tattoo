@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ShopModule } from './shop/shop.module';
 import { AuthModule } from './auth/auth.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
         websiteBasePath: '/auth',
       },
     }),
+    CustomerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

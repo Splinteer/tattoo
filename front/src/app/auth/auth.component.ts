@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import * as React from 'react';
+
 import * as ReactDOM from 'react-dom';
+
 import SuperTokensReactComponent from './supertokensAuthComponent';
 
 @Component({
   selector: 'app-auth',
   template: '<div [id]="rootId"></div>',
 })
-export class AuthComponent implements AfterViewInit, OnDestroy {
+export class AuthComponent implements OnDestroy, AfterViewInit {
   title = 'angularreactapp';
 
   public rootId = 'rootId';

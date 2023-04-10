@@ -20,12 +20,7 @@ SuperTokens.init({
   recipeList: [
     ThirdPartyEmailPassword.init({
       signInAndUpFeature: {
-        providers: [
-          Github.init(),
-          Google.init(),
-          Facebook.init(),
-          Apple.init(),
-        ],
+        providers: [Google.init(), Facebook.init(), Apple.init()],
       },
     }),
     Session.init(),
