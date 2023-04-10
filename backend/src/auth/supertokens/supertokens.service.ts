@@ -59,23 +59,11 @@ export class SupertokensService {
                 'https://www.googleapis.com/auth/user.phonenumbers.read',
               ],
             }),
-            ThirdPartyEmailPassword.Github({
-              clientId: '467101b197249757c71f',
-              clientSecret: 'e97051221f4b6426e8fe8d51486396703012f5bd',
+            ThirdPartyEmailPassword.Facebook({
+              clientId: '174713798769879',
+              clientSecret: '773975cc0fa0f05e9faa82dde3b534ca',
+              scope: ['email', 'public_profile'],
             }),
-            ThirdPartyEmailPassword.Apple({
-              clientId: '4398792-io.supertokens.example.service',
-              clientSecret: {
-                keyId: '7M48Y4RYDL',
-                privateKey:
-                  '-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgu8gXs+XYkqXD6Ala9Sf/iJXzhbwcoG5dMh1OonpdJUmgCgYIKoZIzj0DAQehRANCAASfrvlFbFCYqn3I2zeknYXLwtH30JuOKestDbSfZYxZNMqhF/OzdZFTV0zc5u5s3eN+oCWbnvl0hM+9IW0UlkdA\n-----END PRIVATE KEY-----',
-                teamId: 'YWQCXGJRJL',
-              },
-            }),
-            // ThirdPartyEmailPassword.Facebook({
-            //    clientSecret: "FACEBOOK_CLIENT_SECRET",
-            //    clientId: "FACEBOOK_CLIENT_ID"
-            // })
           ],
           override: {
             apis: (originalImplementation) => {
@@ -96,13 +84,12 @@ export class SupertokensService {
                   if (response.status === 'OK') {
                     const { id, email } = response.user;
 
+                    const userInfo = await getSocialUserInfo(
+                      response.user.thirdParty,
+                      response.authCodeResponse,
+                    );
                     if (response.createdNewUser) {
-                      const userInfo = await getSocialUserInfo(
-                        response.user.thirdParty.id,
-                        response.authCodeResponse,
-                      );
-
-                      customerService.create(id, email, userInfo);
+                      // customerService.create(id, email, userInfo);
                     } else {
                       console.log('User signed in!');
                       // TODO: Post sign in logic
@@ -121,15 +108,36 @@ export class SupertokensService {
   }
 
   private async getSocialUserInfo(
-    thirdPart: string,
+    thirdParty: { id: string; userId: string },
     authCodeResponse: any,
-  ): Promise<UserInformations | void> {
-    if (thirdPart === 'google') {
-      return this.getGoogleUserInfo(authCodeResponse.access_token);
+  ): Promise<UserInformations> {
+    if (thirdParty.id === 'google') {
+      return this.getGoogleUserInfo(
+        thirdParty.userId,
+        authCodeResponse.access_token,
+      );
     }
+
+    if (thirdParty.id === 'facebook') {
+      return this.getFacebookUserInfo(
+        thirdParty.userId,
+        authCodeResponse.access_token,
+      );
+    }
+
+    return {
+      firstname: null,
+      lastname: null,
+      birthday: null,
+      gender: null,
+      phone: null,
+    };
   }
 
-  private async getGoogleUserInfo(token: string): Promise<UserInformations> {
+  private async getGoogleUserInfo(
+    id: string,
+    token: string,
+  ): Promise<UserInformations> {
     const profileData = [
       'addresses',
       'birthdays',
@@ -165,9 +173,32 @@ export class SupertokensService {
     return {
       firstname: data.names && data.names[0]?.givenName,
       lastname: data.names && data.names[0]?.familyName,
-      gender: data.genders && data.genders[0]?.value,
       birthday,
+      gender: data.genders && data.genders[0]?.value,
       phone: data.phoneNumbers && data.phoneNumbers[0]?.value, // not working
+    };
+  }
+
+  private async getFacebookUserInfo(
+    id: string,
+    token: string,
+  ): Promise<UserInformations> {
+    const { data } = await lastValueFrom(
+      this.http.get(`https://graph.facebook.com/${id}`, {
+        params: {
+          fields: 'id,name,email,birthday,first_name,gender,last_name,picture',
+          access_token: token,
+        },
+      }),
+    );
+    console.log(data);
+
+    return {
+      firstname: data.first_name ?? null,
+      lastname: data.last_name ?? null,
+      birthday: data.birthday ?? null,
+      gender: data.gender ?? null,
+      phone: null,
     };
   }
 }
