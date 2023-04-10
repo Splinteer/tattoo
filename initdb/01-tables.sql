@@ -1,7 +1,7 @@
 CREATE TABLE
     public.customer (
         id uuid PRIMARY KEY NOT NULL,
-        auth0_id varchar(255) NOT NULL UNIQUE,
+        supertokens_id uuid NOT NULL UNIQUE,
         email varchar(255) NOT NULL,
         firstname varchar(255) NOT NULL,
         lastname varchar(255) NOT NULL,
