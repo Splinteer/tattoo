@@ -22,9 +22,9 @@ specifiers:
   karma-jasmine: ~5.1.0
   karma-jasmine-html-reporter: ~2.0.0
   npm: ^9.6.1
-  react: ^18.2.0
-  react-dom: ^18.2.0
-  rxjs: ~7.5.0
+  react: ^17.0.0
+  react-dom: ^17.0.0
+  rxjs: ~7.5.7
   supertokens-auth-react: ^0.31.2
   supertokens-web-js: ^0.5.0
   tslib: ^2.3.0
@@ -41,10 +41,10 @@ dependencies:
   '@angular/platform-browser-dynamic': 14.3.0_66avhzcjyfbc4wwcsnykbga42a
   '@angular/router': 14.3.0_rmubd7q5dbiie2xgqqhnhdvaaa
   npm: 9.6.1
-  react: 18.2.0
-  react-dom: 18.2.0_react@18.2.0
+  react: 17.0.2
+  react-dom: 17.0.2_react@17.0.2
   rxjs: 7.5.7
-  supertokens-auth-react: 0.31.2_zh4rdguscatxykxktv3lwuw3je
+  supertokens-auth-react: 0.31.2_fxgl4zzi2qphqpuim24q3uobyq
   supertokens-web-js: 0.5.0
   tslib: 2.5.0
   zone.js: 0.11.8
@@ -6048,25 +6048,27 @@ packages:
       unpipe: 1.0.0
     dev: true
 
-  /react-dom/18.2.0_react@18.2.0:
-    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
+  /react-dom/17.0.2_react@17.0.2:
+    resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
     peerDependencies:
-      react: ^18.2.0
+      react: 17.0.2
     dependencies:
       loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.23.0
+      object-assign: 4.1.1
+      react: 17.0.2
+      scheduler: 0.20.2
     dev: false
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: false
 
-  /react/18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+  /react/17.0.2:
+    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
+      object-assign: 4.1.1
     dev: false
 
   /read-cache/1.0.0:
@@ -6321,10 +6323,11 @@ packages:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
     dev: true
 
-  /scheduler/0.23.0:
-    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
+  /scheduler/0.20.2:
+    resolution: {integrity: sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==}
     dependencies:
       loose-envify: 1.4.0
+      object-assign: 4.1.1
     dev: false
 
   /schema-utils/2.7.1:
@@ -6741,7 +6744,7 @@ packages:
       - supports-color
     dev: true
 
-  /supertokens-auth-react/0.31.2_zh4rdguscatxykxktv3lwuw3je:
+  /supertokens-auth-react/0.31.2_fxgl4zzi2qphqpuim24q3uobyq:
     resolution: {integrity: sha512-fnxcBO/Jt8Tvmob2G8X5OHRBjyfpm6O0qx3bk+g+wVvcLOH34fE7ERb/2V37cNZjuaGkQ1sRJYnvCWF3VubY9Q==}
     engines: {node: '>=16.0.0', npm: ^8}
     peerDependencies:
@@ -6751,8 +6754,8 @@ packages:
     dependencies:
       intl-tel-input: 17.0.21
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
       supertokens-js-override: 0.0.4
       supertokens-web-js: 0.5.0
     dev: false
