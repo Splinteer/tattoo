@@ -99,7 +99,30 @@ export class SupertokensService {
             },
           },
         }),
-        Session.init(),
+        Session.init({
+          jwt: {
+            enable: true,
+          },
+          override: {
+            functions: function (originalImplementation) {
+              return {
+                ...originalImplementation,
+                createNewSession: async function (input) {
+                  const customer = await customerService.getCustomerCredentials(
+                    input.userId,
+                  );
+
+                  input.accessTokenPayload = {
+                    ...input.accessTokenPayload,
+                    customer,
+                  };
+
+                  return originalImplementation.createNewSession(input);
+                },
+              };
+            },
+          },
+        }),
         Dashboard.init(),
       ],
     });
