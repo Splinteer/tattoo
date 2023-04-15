@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CredentialsService } from './credentials.service';
-import { AuthModule } from '../auth/auth.module';
 import { CustomerService } from './customer.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule, AuthModule],
+  imports: [CommonModule, HttpClientModule],
   declarations: [],
-  providers: [CredentialsService, CustomerService],
+  providers: [CustomerService],
 })
 export class CustomerModule {}
