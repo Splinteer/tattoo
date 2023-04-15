@@ -84,15 +84,13 @@ export class SupertokensService {
                   if (response.status === 'OK') {
                     const { id, email } = response.user;
 
-                    const userInfo = await getSocialUserInfo(
-                      response.user.thirdParty,
-                      response.authCodeResponse,
-                    );
                     if (response.createdNewUser) {
-                      // customerService.create(id, email, userInfo);
-                    } else {
-                      console.log('User signed in!');
-                      // TODO: Post sign in logic
+                      const userInfo = await getSocialUserInfo(
+                        response.user.thirdParty,
+                        response.authCodeResponse,
+                      );
+
+                      customerService.create(id, email, userInfo);
                     }
                   }
                   return response;

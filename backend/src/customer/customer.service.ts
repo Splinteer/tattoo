@@ -29,4 +29,13 @@ export class CustomerService {
       birthday: infos.birthday,
     }) as Promise<Customer>;
   }
+
+  async getCustomerCredentials(supertokensId: string): Promise<Customer> {
+    const { rows } = await this.database.query(
+      'SELECT * FROM customer WHERE supertokens_id = $1',
+      [supertokensId],
+    );
+
+    return rows[0] as Promise<Customer>;
+  }
 }
