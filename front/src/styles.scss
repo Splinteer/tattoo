@@ -1,1 +1,99 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;700&display=swap");
+
+@import "@angular/cdk/overlay-prebuilt.css";
+
+:root {
+  --bg-color: #fdfaff;
+  --primary-color: #29395b;
+  --primary-color-light: #2b2261;
+  --border-radius: 5px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Schibsted Grotesk", sans-serif;
+  font-size: 16px;
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+app-root {
+  flex-grow: 1;
+}
+
+.cdk-overlay-pane {
+  border: 1px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-color);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+
+  transform-origin: top;
+  animation: slide-down 200ms ease-in-out;
+
+  .cdk-menu {
+    display: inline-flex;
+    flex-direction: column;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--bg-color);
+
+    .cdk-menu-item {
+      user-select: none;
+      min-width: 64px;
+      line-height: 36px;
+      padding: 0 16px;
+
+      &.hoverable {
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--primary-color);
+          color: var(--bg-color);
+        }
+
+        &:active {
+          background-color: var(--primary-color-light);
+          transition: background-color 0.1s ease-in;
+        }
+      }
+    }
+
+    .cdk-menu-item:first-of-type {
+      border-top-left-radius: var(--border-radius);
+      border-top-right-radius: var(--border-radius);
+    }
+
+    .cdk-menu-item:last-of-type {
+      border-bottom-left-radius: var(--border-radius);
+      border-bottom-right-radius: var(--border-radius);
+    }
+  }
+}
+
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Reset button styles
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+}

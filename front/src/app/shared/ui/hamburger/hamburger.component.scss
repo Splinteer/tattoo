@@ -1,0 +1,147 @@
+$line-height: 3px;
+$space-between-lines: 4px;
+$size: 7px;
+$line-size: 3px;
+
+.hamburger {
+  position: relative;
+  width: 30px;
+}
+
+.hamburger-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  cursor: pointer;
+}
+
+.hamburger-line {
+  display: block;
+  width: 100%;
+  border-radius: 3px;
+  height: $line-height;
+  background: var(--primary-color);
+  transition: all 0.3s;
+  position: relative;
+}
+
+.hamburger-line + .hamburger-line {
+  margin-top: $space-between-lines;
+}
+
+.active .hamburger-line:nth-child(1) {
+  animation: ease 0.7s top forwards;
+}
+
+.not-active .hamburger-line:nth-child(1) {
+  animation: ease 0.7s top-2 forwards;
+}
+
+.active .hamburger-line:nth-child(2) {
+  animation: ease 0.7s scaled forwards;
+}
+
+.not-active .hamburger-line:nth-child(2) {
+  animation: ease 0.7s scaled-2 forwards;
+}
+
+.active .hamburger-line:nth-child(3) {
+  animation: ease 0.7s bottom forwards;
+}
+
+.not-active .hamburger-line:nth-child(3) {
+  animation: ease 0.7s bottom-2 forwards;
+}
+
+@keyframes top {
+  0% {
+    top: 0;
+    transform: rotate(0);
+  }
+  50% {
+    top: $size;
+    transform: rotate(0);
+  }
+  100% {
+    top: $size;
+    transform: rotate(45deg);
+  }
+}
+
+@keyframes top-2 {
+  0% {
+    top: $size;
+    transform: rotate(45deg);
+  }
+  50% {
+    top: $size;
+    transform: rotate(0deg);
+  }
+  100% {
+    top: 0;
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes bottom {
+  0% {
+    bottom: 0;
+    transform: rotate(0);
+  }
+  50% {
+    bottom: $size;
+    transform: rotate(0);
+  }
+  100% {
+    bottom: $size;
+    transform: rotate(135deg);
+  }
+}
+
+@keyframes bottom-2 {
+  0% {
+    bottom: $size;
+    transform: rotate(135deg);
+  }
+  50% {
+    bottom: $size;
+    transform: rotate(0);
+  }
+  100% {
+    bottom: 0;
+    transform: rotate(0);
+  }
+}
+
+@keyframes scaled {
+  50% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes scaled-2 {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+:host {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  :host {
+    display: block;
+  }
+}

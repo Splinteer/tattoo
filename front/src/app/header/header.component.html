@@ -1,0 +1,42 @@
+<header>
+  <nav class="menu">
+    <div class="brand">Tattoo Manager</div>
+
+    <ng-container *ngTemplateOutlet="menu"></ng-container>
+
+    <app-hamburger [isMobileMenuOpen]="isMobileMenuOpen"></app-hamburger>
+  </nav>
+  <nav class="mobile-menu" [ngClass]="{ open: isMobileMenuOpen }" #mobileMenu>
+    <ng-container *ngTemplateOutlet="menu"></ng-container>
+  </nav>
+</header>
+
+<ng-template #menu>
+  <ul>
+    <li><a routerLink="/artists">Artists</a></li>
+    <li><a routerLink="/tattoos">Tattoos</a></li>
+    <li><a routerLink="/tattooists">Tattooists</a></li>
+  </ul>
+
+  <ul>
+    <li *ngIf="credentials$ | async; else notLogged">
+      <button class="profile" [cdkMenuTriggerFor]="profileMenu">
+        <img
+          src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+          alt=""
+        />
+      </button>
+      <ng-template #profileMenu>
+        <div class="profile-menu" cdkMenu>
+          <a class="hoverable" cdkMenuItem>Refresh</a>
+          <a class="hoverable" cdkMenuItem>Settings</a>
+          <a class="hoverable" cdkMenuItem>Help</a>
+          <a class="hoverable" cdkMenuItem>Sign out</a>
+        </div>
+      </ng-template>
+    </li>
+    <ng-template #notLogged>
+      <li><a routerLink="/login" *ngIf="true">Se connecter</a></li>
+    </ng-template>
+  </ul>
+</ng-template>
