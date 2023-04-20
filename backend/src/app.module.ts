@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ShopModule } from './shop/shop.module';
 import { AuthModule } from './auth/auth.module';
 import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
-    ShopModule,
     AuthModule.forRoot({
       connectionURI: 'http://localhost:3567',
       // apiKey: <API_KEY(if configured)>,

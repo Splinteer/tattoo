@@ -64,12 +64,12 @@ app-root {
       }
     }
 
-    .cdk-menu-item:first-of-type {
+    &:first-child {
       border-top-left-radius: var(--border-radius);
       border-top-right-radius: var(--border-radius);
     }
 
-    .cdk-menu-item:last-of-type {
+    &:last-child {
       border-bottom-left-radius: var(--border-radius);
       border-bottom-right-radius: var(--border-radius);
     }
@@ -96,4 +96,23 @@ button {
   font: inherit;
   color: inherit;
   text-align: inherit;
+}
+
+.button-outline {
+  border: 1px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  color: var(--primary-color);
+  background-color: var(--bg-color);
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+  }
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
 }

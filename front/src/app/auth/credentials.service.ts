@@ -10,8 +10,18 @@ export class CredentialsService {
 
   public readonly credentials$ = this.credentialsSubject$.asObservable();
 
-  public async logOut() {
-    await Session.signOut();
-    this.credentialsSubject$.next(null);
+  public async logOut(refresh = false): Promise<void> {
+    try {
+      await Session.signOut();
+      this.credentialsSubject$.next(null);
+      if (refresh) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error);
+      const test = await Session.doesSessionExist();
+      await Session.signOut();
+      console.log({ test });
+    }
   }
 }

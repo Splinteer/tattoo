@@ -51,7 +51,7 @@ export class SupertokensService {
     const sessionExists = await Session.doesSessionExist();
     if (sessionExists) {
       const { customer } = await Session.getAccessTokenPayloadSecurely();
-      this.credentialsService.credentialsSubject$.next(customer);
+      this.credentialsService.credentialsSubject$.next(customer ?? true);
     }
   }
 }

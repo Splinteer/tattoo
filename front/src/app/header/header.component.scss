@@ -37,11 +37,6 @@ ul {
   padding: 0;
   gap: 1rem;
   align-items: center;
-
-  a {
-    text-decoration: none;
-    color: var(--primary-color);
-  }
 }
 
 @media (max-width: 768px) {
@@ -76,4 +71,13 @@ ul {
 .profile-menu {
   min-width: 180px;
   max-width: 280px;
+
+  .profile-info {
+    text-align: center;
+    border-bottom: 1px solid var(--primary-color);
+
+    .email {
+      font-size: 0.8rem;
+    }
+  }
 }
