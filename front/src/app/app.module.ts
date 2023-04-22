@@ -10,6 +10,19 @@ import { HeaderComponent } from './header/header.component';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
+import {
+  TranslateCompiler,
+  TranslateLoader,
+  TranslateModule,
+} from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   imports: [
@@ -19,6 +32,21 @@ import { SharedModule } from './shared/shared.module';
     AppRoutingModule,
     AuthModule,
     BrowserAnimationsModule,
+
+    HttpClientModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'fr',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+      compiler: {
+        provide: TranslateCompiler,
+        useClass: TranslateMessageFormatCompiler,
+      },
+    }),
+
     SharedModule,
   ],
   declarations: [AppComponent, HomeComponent, HeaderComponent],
