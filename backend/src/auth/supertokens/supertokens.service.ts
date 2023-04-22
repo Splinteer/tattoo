@@ -120,25 +120,36 @@ export class SupertokensService {
                     await originalImplementation.thirdPartySignInUpPOST(input);
 
                   // Post sign up response, we check if it was successful
-                  if (response.status === 'OK') {
+                  if (response.status === 'OK' && response.createdNewUser) {
                     const { id, email } = response.user;
 
-                    if (response.createdNewUser) {
-                      const userInfo = await getSocialUserInfo(
-                        response.user.thirdParty,
-                        response.authCodeResponse,
-                      );
+                    const userInfo = await getSocialUserInfo(
+                      response.user.thirdParty,
+                      response.authCodeResponse,
+                    );
 
-                      console.log('User creation');
-                      const created = await customerService.create(
-                        id,
-                        email,
-                        userInfo,
-                      );
-                      console.log('user created');
-                      // console.log('created', created);
-                    }
+                    await customerService.create(id, email, userInfo);
+
+                    const customer =
+                      await customerService.getCustomerCredentials(id);
+
+                    const sessionHandles =
+                      await Session.getAllSessionHandlesForUser(id);
+
+                    await Promise.all(
+                      sessionHandles.map(async (sessionHandle) => {
+                        if (sessionHandle === undefined) {
+                          return;
+                        }
+
+                        await Session.mergeIntoAccessTokenPayload(
+                          sessionHandles[0],
+                          { customer: { ...customer } },
+                        );
+                      }),
+                    );
                   }
+
                   return response;
                 },
               };
