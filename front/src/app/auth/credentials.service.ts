@@ -21,7 +21,6 @@ export class CredentialsService {
       console.error(error);
       const test = await Session.doesSessionExist();
       await Session.signOut();
-      console.log({ test });
     }
   }
 }

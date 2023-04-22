@@ -126,7 +126,6 @@ export class SupertokensService {
               return {
                 ...originalImplementation,
                 createNewSession: async function (input) {
-                  console.log('Get customer credentials');
                   const customer = await customerService.getCustomerCredentials(
                     input.userId,
                   );
@@ -231,7 +230,6 @@ export class SupertokensService {
         },
       }),
     );
-    console.log(data);
 
     return {
       firstname: data.first_name ?? null,
