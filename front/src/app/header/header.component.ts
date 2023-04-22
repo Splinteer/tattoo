@@ -19,7 +19,7 @@ export class HeaderComponent {
 
   public readonly credentials$ = this.credentialsService.credentials$;
 
-  public readonly logOut = () => this.credentialsService.logOut();
+  public readonly logOut = () => this.credentialsService.logOut(true);
 
   // Responsive menu toggle
 

@@ -3,45 +3,148 @@ CREATE TABLE
         id uuid PRIMARY KEY NOT NULL,
         supertokens_id uuid NOT NULL UNIQUE,
         email varchar(255) NOT NULL,
-        firstname varchar(255) NOT NULL,
-        lastname varchar(255) NOT NULL,
-        birthday date NOT NULL
+        firstname varchar(255),
+        lastname varchar(255),
+        birthday date,
+        profile_picture varchar(255),
+        pronouns varchar(255),
+        phone varchar(255),
+        instagram varchar(255),
+        twitter varchar(255),
+        personal_information text
     );
 
 CREATE TABLE
     public.shop (
         id uuid PRIMARY KEY NOT NULL,
         owner_id uuid NOT NULL,
+        creation_date timestamp NOT NULL DEFAULT NOW(),
+        last_update timestamp NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,
         url varchar(255) NOT NULL,
-        show_city boolean DEFAULT TRUE,
-        vacation_mode boolean DEFAULT FALSE,
-        CONSTRAINT fk_shop_owner FOREIGN KEY(owner_id) REFERENCES public.customer(id)
-    );
-
-CREATE TABLE
-    public.address (
-        id uuid PRIMARY KEY NOT NULL,
-        shop_id uuid,
-        address varchar(255) NOT NULL,
-        address2 varchar(255),
-        city varchar(255) NOT NULL,
-        postalcode varchar(255) NOT NULL,
+        description text,
+        profile_picture varchar(255),
+        booking_open boolean NOT NULL DEFAULT false,
+        address_line_1 varchar(255),
+        address_line_2 varchar(255),
+        city varchar(255),
         state varchar(255),
-        country varchar(255) NOT NULL,
-        CONSTRAINT fk_address_shop FOREIGN KEY(shop_id) REFERENCES public.shop(id)
+        zip varchar(255),
+        country varchar(255),
+        instagram varchar(255),
+        twitter varchar(255),
+        facebook varchar(255),
+        website varchar(255),
+        CONSTRAINT fk_owner_id FOREIGN KEY (owner_id) REFERENCES public.customer (id)
     );
 
-CREATE TYPE member_type AS ENUM ('tattoo_artist', 'manager');
+CREATE TABLE
+    public.image(
+        id uuid PRIMARY KEY NOT NULL,
+        url varchar(255) NOT NULL
+    );
 
 CREATE TABLE
-    public.member (
+    public.flash (
+        id uuid PRIMARY KEY NOT NULL,
         shop_id uuid NOT NULL,
+        image_id uuid NOT NULL,
+        creation_date timestamp NOT NULL DEFAULT NOW(),
+        name varchar(255) NOT NULL,
+        description text,
+        available boolean NOT NULL DEFAULT true,
+        price_range_start integer,
+        price_range_end integer,
+        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id),
+        CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES public.image (id)
+    );
+
+CREATE TYPE public.project_type AS ENUM (
+    'flash',
+    'custom',
+    'adjustment'
+);
+
+CREATE TABLE
+    public.project (
+        id uuid PRIMARY KEY NOT NULL,
         customer_id uuid NOT NULL,
-        type member_type NOT NULL,
-        can_read_message boolean DEFAULT FALSE,
-        can_write_message boolean DEFAULT FALSE,
-        PRIMARY KEY(shop_id, customer_id),
-        CONSTRAINT fk_member_shop FOREIGN KEY(shop_id) REFERENCES public.shop(id),
-        CONSTRAINT fk_member_customer FOREIGN KEY(customer_id) REFERENCES public.customer(id)
+        shop_id uuid NOT NULL,
+        name varchar(255) NOT NULL,
+        types project_type [] NOT NULL,
+        is_first_tattoo boolean NOT NULL,
+        is_cover_up boolean NOT NULL,
+        is_post_operation_or_over_scar boolean NOT NULL,
+        zone varchar(255) NOT NULL,
+        height_cm integer NOT NULL,
+        width_cm integer NOT NULL,
+        additional_information text,
+        is_drawing_done boolean NOT NULL DEFAULT false,
+        is_drawing_approved boolean NOT NULL DEFAULT false,
+        is_paid boolean NOT NULL DEFAULT false,
+        CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES public.customer (id),
+        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
+    );
+
+CREATE TABLE
+    public.project_flash(
+        project_id uuid NOT NULL,
+        flash_id uuid NOT NULL,
+        PRIMARY KEY (project_id, flash_id),
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id),
+        CONSTRAINT fk_flash_id FOREIGN KEY (flash_id) REFERENCES public.flash (id)
+    );
+
+CREATE TABLE
+    public.appointment(
+        id uuid PRIMARY KEY NOT NULL,
+        project_id uuid NOT NULL,
+        creation_date timestamp NOT NULL DEFAULT NOW(),
+        start_date timestamp NOT NULL,
+        end_date timestamp,
+        is_confirmed boolean NOT NULL DEFAULT false,
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
+    );
+
+CREATE TABLE
+    public.chat(
+        id uuid PRIMARY KEY NOT NULL,
+        project_id uuid NOT NULL,
+        creation_date timestamp NOT NULL DEFAULT NOW(),
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
+    );
+
+CREATE TABLE
+    public.message (
+        id uuid PRIMARY KEY NOT NULL,
+        chat_id uuid NOT NULL,
+        creation_date timestamp NOT NULL DEFAULT NOW(),
+        sender_id uuid NOT NULL,
+        content text NOT NULL,
+        is_read boolean NOT NULL DEFAULT false,
+        CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) REFERENCES public.chat (id),
+        CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES public.customer (id)
+    );
+
+CREATE TABLE
+    public.message_attachment(
+        message_id uuid NOT NULL,
+        image_id uuid NOT NULL,
+        PRIMARY KEY (message_id, image_id),
+        CONSTRAINT fk_message_id FOREIGN KEY (message_id) REFERENCES public.message (id),
+        CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES public.image (id)
+    );
+
+CREATE TABLE
+    public.gallery (
+        id uuid PRIMARY KEY NOT NULL,
+        shop_id uuid NOT NULL,
+        image_id uuid NOT NULL,
+        project_id uuid,
+        creation_date timestamp NOT NULL DEFAULT NOW(),
+        name varchar(255) NOT NULL,
+        description text,
+        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id),
+        CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES public.image (id),
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
     );
