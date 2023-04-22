@@ -8,11 +8,26 @@ import {
   inject,
 } from '@angular/core';
 import { CredentialsService } from '@app/auth/credentials.service';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  animations: [
+    trigger('growFromTop', [
+      state('void', style({ maxHeight: 0, borderWidth: 0, opacity: 0 })),
+      state('*', style({ maxHeight: '500px', borderWidth: '*', opacity: 1 })),
+      transition('void <=> *', [animate('0.4s ease-in-out')]),
+      transition('* => void', [animate('0.3s ease-out')]),
+    ]),
+  ],
 })
 export class HeaderComponent {
   private readonly credentialsService = inject(CredentialsService);
@@ -23,7 +38,7 @@ export class HeaderComponent {
 
   // Responsive menu toggle
 
-  @ViewChild('mobileMenu') mobileMenu?: ElementRef;
+  @ViewChild('mobileHeader') mobileHeader?: ElementRef;
 
   public isMobileMenuOpen = false;
 
@@ -33,11 +48,11 @@ export class HeaderComponent {
     'document',
     'click',
     (event: MouseEvent) => {
-      if (!this.mobileMenu || window.innerWidth > 768) {
+      if (!this.mobileHeader || window.innerWidth > 768) {
         return;
       }
 
-      const clickedInsideMenu = this.mobileMenu.nativeElement.contains(
+      const clickedInsideMenu = this.mobileHeader.nativeElement.contains(
         event.target
       );
 
