@@ -3,7 +3,9 @@
     <div class="hamburger-container">
       <app-hamburger [isMobileMenuOpen]="isMobileMenuOpen"></app-hamburger>
     </div>
-    <div class="search"></div>
+    <button class="search" (click)="isMobileMenuOpen = true">
+      <i class="fa-regular fa-magnifying-glass"></i>
+    </button>
     <div class="profile">
       <ng-container *ngIf="credentials$ | async as credentials; else notLogged">
         <button class="profile" [cdkMenuTriggerFor]="profileMenu">
@@ -32,10 +34,9 @@
       </ng-template>
     </div>
   </nav>
+
   <nav class="mobile-menu" *ngIf="isMobileMenuOpen" [@growFromTop]>
-    <div>
-      <input type="text" placeholder="Rechercher" />
-    </div>
+    <app-icon-input icon="search" placeholder="Rechercher"></app-icon-input>
     <ng-container *ngTemplateOutlet="menu"></ng-container>
   </nav>
 </header>

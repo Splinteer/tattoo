@@ -6,11 +6,12 @@ header {
 
     .hamburger-container {
       flex-grow: 1;
+      display: flex;
+      align-items: center;
     }
   }
 
   nav.mobile-menu {
-    width: 100%;
     background-color: var(--bg-color);
     overflow: hidden;
     gap: 1rem;
@@ -18,8 +19,8 @@ header {
     align-items: flex-start;
     border-bottom: none;
     border-bottom: 1px solid var(--primary-color);
-    border-top: 1px solid var(--primary-color);
     padding: 1.5rem 1rem;
+    padding-top: 0.5rem;
 
     ul {
       flex-direction: column;
@@ -36,6 +37,21 @@ ul {
   padding: 0;
   gap: 1rem;
   align-items: center;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  padding: var(--input-padding-x) var(--input-padding-x);
+  border-radius: var(--border-radius);
+  transition: background-color 0.2s ease-in-out;
+  color: var(--gray-800);
+
+  &:hover {
+    background-color: var(--gray-200);
+  }
 }
 
 .profile {

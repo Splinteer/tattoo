@@ -1,0 +1,33 @@
+:host {
+  width: 100%;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+
+  input {
+    width: 100%;
+    padding: var(--input-padding);
+    padding-left: calc(var(--input-padding-x) + 20px);
+    border: 1px solid var(--gray-400);
+    background-color: var(--gray-200);
+    border-radius: var(--border-radius);
+
+    &:focus-visible {
+      border: 1px solid var(--primary-color);
+    }
+
+    &::placeholder {
+      color: var(--gray-800);
+    }
+  }
+  i {
+    position: absolute;
+    height: 100%;
+    top: 2px;
+    left: 7px;
+    padding-top: var(--input-padding-x);
+    pointer-events: none;
+    color: var(--gray-800);
+    font-size: 0.9rem;
+  }
+}

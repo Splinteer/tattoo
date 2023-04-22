@@ -40,7 +40,7 @@ export class HeaderComponent {
 
   @ViewChild('mobileHeader') mobileHeader?: ElementRef;
 
-  public isMobileMenuOpen = false;
+  public isMobileMenuOpen = true;
 
   private readonly renderer = inject(Renderer2);
 
