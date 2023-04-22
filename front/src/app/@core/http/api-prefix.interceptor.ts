@@ -20,7 +20,10 @@ export class ApiPrefixInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (!/^(http|https):/i.test(request.url)) {
+    if (
+      !/^(http|https):/i.test(request.url) &&
+      !request.url.startsWith('/assets')
+    ) {
       let url: string = environment.serverUrl + request.url;
 
       request = request.clone({ url });
