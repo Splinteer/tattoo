@@ -31,6 +31,7 @@ export class SupertokensService {
     private readonly customerService: CustomerService,
   ) {
     const getSocialUserInfo = this.getSocialUserInfo.bind(this);
+    const refreshSession = this.refreshSession.bind(this);
 
     supertokens.init({
       appInfo: config.appInfo,
@@ -81,34 +82,19 @@ export class SupertokensService {
                     await originalImplementation.thirdPartySignInUpPOST(input);
 
                   // Post sign up response, we check if it was successful
-                  if (response.status === 'OK' && response.createdNewUser) {
+                  if (response.status === 'OK') {
                     const { id, email } = response.user;
 
-                    const userInfo = await getSocialUserInfo(
-                      response.user.thirdParty,
-                      response.authCodeResponse,
-                    );
+                    if (response.createdNewUser) {
+                      const userInfo = await getSocialUserInfo(
+                        response.user.thirdParty,
+                        response.authCodeResponse,
+                      );
 
-                    await customerService.create(id, email, userInfo);
+                      await customerService.create(id, email, userInfo);
+                    }
 
-                    const customer =
-                      await customerService.getCustomerCredentials(id);
-
-                    const sessionHandles =
-                      await Session.getAllSessionHandlesForUser(id);
-
-                    await Promise.all(
-                      sessionHandles.map(async (sessionHandle) => {
-                        if (sessionHandle === undefined) {
-                          return;
-                        }
-
-                        await Session.mergeIntoAccessTokenPayload(
-                          sessionHandles[0],
-                          { customer: { ...customer } },
-                        );
-                      }),
-                    );
+                    await refreshSession(id);
                   }
 
                   return response;
@@ -126,13 +112,12 @@ export class SupertokensService {
               return {
                 ...originalImplementation,
                 createNewSession: async function (input) {
-                  const customer = await customerService.getCustomerCredentials(
-                    input.userId,
-                  );
+                  const credentials =
+                    await customerService.getCustomerCredentials(input.userId);
 
                   input.accessTokenPayload = {
                     ...input.accessTokenPayload,
-                    customer,
+                    credentials,
                   };
 
                   return originalImplementation.createNewSession(input);
@@ -144,6 +129,30 @@ export class SupertokensService {
         Dashboard.init(),
       ],
     });
+  }
+
+  public async refreshSession(userId: string) {
+    const sessionHandles = await Session.getAllSessionHandlesForUser(userId);
+
+    if (sessionHandles.length === 0) {
+      return;
+    }
+
+    const credentials = await this.customerService.getCustomerCredentials(
+      userId,
+    );
+
+    await Promise.all(
+      sessionHandles.map(async (sessionHandle) => {
+        if (sessionHandle === undefined) {
+          return;
+        }
+
+        await Session.mergeIntoAccessTokenPayload(sessionHandle, {
+          credentials: { ...credentials },
+        });
+      }),
+    );
   }
 
   private async getSocialUserInfo(
