@@ -1,14 +1,30 @@
 import { DbService } from './../../libs/common/src/db/db.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserInformations } from 'src/auth/supertokens/supertokens.service';
 
 export interface Customer {
   id: string;
-  supertokensId: string;
+  supertokens_id: string;
+  creation_date: Date;
+  last_update: Date;
   email: string;
-  firstname: string;
-  lastname: string;
-  birthday: string;
+  firstname?: string;
+  lastname?: string;
+  birthday?: Date;
+  profile_picture?: string;
+  pronouns?: string;
+  phone?: string;
+  instagram?: string;
+  twitter?: string;
+  personal_information?: string;
+}
+
+export interface Credentials {
+  id: string;
+  email: string;
+  firstname?: string;
+  lastname?: string;
+  profile_picture?: string;
 }
 
 @Injectable()
@@ -30,12 +46,16 @@ export class CustomerService {
     }) as Promise<Customer>;
   }
 
-  async getCustomerCredentials(supertokensId: string): Promise<Customer> {
+  async getCustomerCredentials(supertokensId: string): Promise<Credentials> {
     const { rows } = await this.database.query(
-      'SELECT * FROM customer WHERE supertokens_id = $1',
+      'SELECT id, email, firstname, lastname, profile_picture FROM customer WHERE supertokens_id = $1',
       [supertokensId],
     );
 
-    return rows[0] as Promise<Customer>;
+    if (rows.length === 0) {
+      throw new UnauthorizedException();
+    }
+
+    return rows[0] as Credentials;
   }
 }

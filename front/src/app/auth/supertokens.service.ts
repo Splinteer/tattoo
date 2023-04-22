@@ -10,6 +10,7 @@ import {
 } from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
 import Session from 'supertokens-auth-react/recipe/session';
 import { CredentialsService } from './credentials.service';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,10 @@ export class SupertokensService {
   constructor(private readonly credentialsService: CredentialsService) {
     this.init();
     this.checkSession();
+
+    this.credentialsService.refreshCredentials$.pipe(
+      tap(() => this.checkSession())
+    ).subscribe;
   }
 
   private init(): void {
