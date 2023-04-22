@@ -50,8 +50,17 @@ export class SupertokensService {
   private async checkSession() {
     const sessionExists = await Session.doesSessionExist();
     if (sessionExists) {
-      const { customer } = await Session.getAccessTokenPayloadSecurely();
-      this.credentialsService.credentialsSubject$.next(customer ?? true);
+      const res = await Session.getAccessTokenPayloadSecurely();
+      let customer = res.customer;
+
+      while (!customer) {
+        await Session.attemptRefreshingSession();
+        const res = await Session.getAccessTokenPayloadSecurely();
+        customer = res.customer;
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      this.credentialsService.credentialsSubject$.next(customer);
     }
   }
 }
