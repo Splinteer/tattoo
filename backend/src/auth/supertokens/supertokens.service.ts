@@ -66,45 +66,6 @@ export class SupertokensService {
             }),
           ],
           override: {
-            // functions: (originalImplementation) => {
-            //   return {
-            //     ...originalImplementation,
-            //     thirdPartySignInUpPOST: async function (input) {
-            //       console.log(JSON.stringify(input, null, 2));
-            //       return await originalImplementation.thirdPartySignInUp(input);
-            //     },
-            //   };
-            // },
-
-            // functions: (originalImplementation) => {
-            //   return {
-            //     ...originalImplementation,
-
-            //     // here we are only overriding the function that's responsible
-            //     // for signing in or signing up a user.
-            //     thirdPartySignInUp: async function (input) {
-            //       // TODO: some custom logic
-            //       console.log('oklm');
-            //       console.log(
-            //         await input.userContext._default.request.getJSONBody(),
-            //       );
-            //       // const { code } =
-            //       //   await input.userContext._default.request.getFormData();
-            //       // const test = await getSocialUserInfo(
-            //       //   { id: 'google', userId: 'id' },
-            //       //   code,
-            //       // );
-            //       // console.log(test);
-            //       throw new Error();
-
-            //       // or call the default behaviour as show below
-            //       return await originalImplementation.thirdPartySignInUp(input);
-            //     },
-            //     // ...
-            //     // TODO: override more functions
-            //   };
-            // },
-
             apis: (originalImplementation) => {
               return {
                 ...originalImplementation,
