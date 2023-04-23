@@ -53,7 +53,8 @@ app-root {
         }
 
         &:active {
-          background-color: var(--primary-color-light);
+          color: var(--text-color-light);
+          background-color: var(--primary-color-dark);
           transition: background-color 0.1s ease-in;
         }
       }

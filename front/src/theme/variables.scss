@@ -7,19 +7,18 @@
   --green-yellow-dark: hsl(82, 83%, 58%);
 
   --tropical-indigo: hsl(262, 92%, 76%);
-  --tropical-indigo-dark: hsl(259, 92%, 71%);
+  --tropical-indigo-light: hsl(262, 92%, 82%);
+  --tropical-indigo-dark: hsl(259, 92%, 70%);
 
   --bg-color: var(--antiflash-white);
   --primary-color: var(--tropical-indigo);
+  --primary-color-light: var(--tropical-indigo-light);
   --primary-color-dark: var(--tropical-indigo-dark);
 
   --text-color-dark: #000000;
   --text-color-light: #ffffff;
   --font-size: clamp(0.9rem, 2.8vw, 1rem);
   --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
-
-  --primary-color: #29395b;
-  --primary-color-light: #2b2261;
   --border-radius: 10px;
 
   --input-padding-x: 0.6rem;
