@@ -1,0 +1,74 @@
+<form [formGroup]="form" #ngForm="ngForm">
+  <div role="group" aria-labelledby="group-shop">
+    <div class="group-description">
+      <label id="group-shop">Boutique</label>
+      <small
+        >Ces informations permettront a vos clients de vous retrouver</small
+      >
+    </div>
+
+    <div class="group-inputs">
+      <input
+        formControlName="name"
+        type="text"
+        id="name"
+        name="name"
+        placeholder="Nom de la boutique"
+      />
+
+      <app-url-input
+        formControlName="url"
+        placeholder="Url de la boutique"
+      ></app-url-input>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-logo">
+    <div class="group-description">
+      <label id="group-logo">Logo de la boutique</label>
+      <small>Permettez a vos clients de vous reconaitre</small>
+    </div>
+
+    <div class="group-inputs logo">
+      <img src="/assets/l2u.jpg" />
+
+      <app-file-dropzone formControlName="logo"></app-file-dropzone>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-social">
+    <div class="group-description">
+      <label id="group-social">Réseaux sociaux</label>
+      <small>Permettez a vos clients de suivre votre travail</small>
+    </div>
+
+    <div class="group-inputs">
+      <app-icon-input
+        formControlName="socialInstagram"
+        icon="instagram"
+        iconType="brands"
+        placeholder="Instagram"
+      ></app-icon-input>
+
+      <app-icon-input
+        formControlName="socialTwitter"
+        icon="twitter"
+        iconType="brands"
+        placeholder="Twitter"
+      ></app-icon-input>
+
+      <app-icon-input
+        formControlName="socialFacebook"
+        icon="facebook-f"
+        iconType="brands"
+        placeholder="Facebook"
+      ></app-icon-input>
+
+      <app-icon-input
+        formControlName="socialWebsite"
+        icon="globe"
+        placeholder="Site internet"
+      ></app-icon-input>
+    </div>
+  </div>
+</form>

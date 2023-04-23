@@ -77,4 +77,19 @@ header.desktop {
       font-size: 0.8rem;
     }
   }
+
+  .open-shop {
+    width: 100%;
+    padding-block: 0.5rem;
+    display: flex;
+    align-items: center;
+
+    .button {
+      margin: auto;
+    }
+  }
+
+  a i {
+    margin-right: var(--space-200);
+  }
 }
