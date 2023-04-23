@@ -1,0 +1,42 @@
+:host {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  $gap: 7px;
+
+  input {
+    width: 100%;
+    padding: var(--input-padding);
+    padding-left: calc($gap + var(--text-sm) + $gap);
+    border: 1px solid var(--gray-400);
+    background-color: var(--gray-200);
+    border-radius: var(--border-radius);
+
+    &:focus-visible {
+      border: 1px solid var(--primary-color);
+    }
+
+    &::placeholder {
+      color: var(--gray-800);
+      font-size: var(--text-sm);
+    }
+  }
+
+  .icon-container {
+    position: absolute;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    width: calc($gap + var(--text-sm) + $gap);
+    pointer-events: none;
+    color: var(--gray-800);
+    font-size: var(--text-sm);
+  }
+}

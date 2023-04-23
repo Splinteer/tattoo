@@ -52,10 +52,6 @@ export class CustomerService {
       [supertokensId],
     );
 
-    if (rows.length === 0) {
-      throw new UnauthorizedException();
-    }
-
     return rows[0] as Credentials;
   }
 }
