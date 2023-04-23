@@ -25,6 +25,10 @@ export interface Credentials {
   firstname?: string;
   lastname?: string;
   profile_picture?: string;
+
+  // Shop
+  shop_name?: string;
+  shop_url?: string;
 }
 
 @Injectable()
@@ -47,8 +51,20 @@ export class CustomerService {
   }
 
   async getCustomerCredentials(supertokensId: string): Promise<Credentials> {
+    const select = [
+      'customer.id',
+      'customer.email',
+      'customer.firstname',
+      'customer.lastname',
+      'customer.profile_picture',
+      'shop.name as shop_name',
+      'shop.url as shop_url',
+    ];
+
     const { rows } = await this.database.query(
-      'SELECT id, email, firstname, lastname, profile_picture FROM customer WHERE supertokens_id = $1',
+      `SELECT ${select.join(',')} FROM customer
+        LEFT JOIN shop ON shop.owner_id = customer.id
+        WHERE supertokens_id = $1`,
       [supertokensId],
     );
 

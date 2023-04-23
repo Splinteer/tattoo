@@ -2,19 +2,23 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import Session from 'supertokens-auth-react/recipe/session';
 
-interface Customer {
+export interface Credentials {
   id: string;
   email: string;
   firstname?: string;
   lastname?: string;
   profile_picture?: string;
+
+  // Shop
+  shop_name?: string;
+  shop_url?: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class CredentialsService {
-  public readonly credentialsSubject$ = new BehaviorSubject<Customer | null>(
+  public readonly credentialsSubject$ = new BehaviorSubject<Credentials | null>(
     null
   );
 
