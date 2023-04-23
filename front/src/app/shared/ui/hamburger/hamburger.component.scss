@@ -1,11 +1,12 @@
-$line-height: 3px;
-$space-between-lines: 4px;
+$line-height: 2px;
+$space-between-lines: 5px;
 $size: 7px;
 $line-size: 3px;
 
 .hamburger {
   position: relative;
-  width: 30px;
+  width: 25px;
+  height: 25px;
 }
 
 .hamburger-btn {
@@ -22,8 +23,8 @@ $line-size: 3px;
   width: 100%;
   border-radius: 3px;
   height: $line-height;
-  background: var(--primary-color);
-  transition: all 0.3s;
+  background: var(--text-color-dark);
+  transition: all 0.1s;
   position: relative;
 }
 
@@ -32,27 +33,27 @@ $line-size: 3px;
 }
 
 .active .hamburger-line:nth-child(1) {
-  animation: ease 0.7s top forwards;
+  animation: ease 0.6s top forwards;
 }
 
 .not-active .hamburger-line:nth-child(1) {
-  animation: ease 0.7s top-2 forwards;
+  animation: ease 0.6s top-2 forwards;
 }
 
 .active .hamburger-line:nth-child(2) {
-  animation: ease 0.7s scaled forwards;
+  animation: ease 0.6s scaled forwards;
 }
 
 .not-active .hamburger-line:nth-child(2) {
-  animation: ease 0.7s scaled-2 forwards;
+  animation: ease 0.6s scaled-2 forwards;
 }
 
 .active .hamburger-line:nth-child(3) {
-  animation: ease 0.7s bottom forwards;
+  animation: ease 0.6s bottom forwards;
 }
 
 .not-active .hamburger-line:nth-child(3) {
-  animation: ease 0.7s bottom-2 forwards;
+  animation: ease 0.6s bottom-2 forwards;
 }
 
 @keyframes top {
@@ -66,7 +67,7 @@ $line-size: 3px;
   }
   100% {
     top: $size;
-    transform: rotate(45deg);
+    transform: rotate(45deg) scale(0.9);
   }
 }
 
@@ -92,11 +93,13 @@ $line-size: 3px;
   }
   50% {
     bottom: $size;
+    width: 90%;
     transform: rotate(0);
   }
   100% {
     bottom: $size;
-    transform: rotate(135deg);
+    width: 100%;
+    transform: rotate(135deg) scale(0.9);
   }
 }
 
