@@ -1,13 +1,17 @@
 :host {
   width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   overflow: hidden;
+
+  $gap: 7px;
 
   input {
     width: 100%;
     padding: var(--input-padding);
-    padding-left: calc(var(--input-padding-x) + 20px);
+    padding-left: calc($gap + var(--text-sm) + $gap);
     border: 1px solid var(--gray-400);
     background-color: var(--gray-200);
     border-radius: var(--border-radius);
@@ -18,16 +22,21 @@
 
     &::placeholder {
       color: var(--gray-800);
+      font-size: var(--text-sm);
     }
   }
-  i {
+
+  .icon-container {
     position: absolute;
     height: 100%;
-    top: 2px;
-    left: 7px;
-    padding-top: var(--input-padding-x);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    width: calc($gap + var(--text-sm) + $gap);
     pointer-events: none;
     color: var(--gray-800);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
   }
 }

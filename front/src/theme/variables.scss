@@ -1,17 +1,26 @@
 :root {
-  --antiflash-white: #eff0f4ff;
+  --antiflash-white: #ffffff;
   --raisin-black: #222122ff;
   --dim-gray: #646463ff;
-  --green-yellow: #b4ef50ff;
-  --tropical-indigo: #b48bfaff;
+
+  --green-yellow: hsl(82, 83%, 63%);
+  --green-yellow-dark: hsl(82, 83%, 58%);
+
+  --tropical-indigo: hsl(262, 92%, 76%);
+  --tropical-indigo-dark: hsl(259, 92%, 71%);
 
   --bg-color: var(--antiflash-white);
+  --primary-color: var(--tropical-indigo);
+  --primary-color-dark: var(--tropical-indigo-dark);
+
   --text-color-dark: #000000;
   --text-color-light: #ffffff;
+  --font-size: clamp(0.9rem, 2.8vw, 1rem);
+  --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
 
   --primary-color: #29395b;
   --primary-color-light: #2b2261;
-  --border-radius: 5px;
+  --border-radius: 10px;
 
   --input-padding-x: 0.6rem;
   --input-padding-y: 0.4rem;

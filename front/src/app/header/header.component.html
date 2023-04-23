@@ -1,50 +1,61 @@
-<header #mobileHeader>
-  <nav>
-    <div class="hamburger-container">
-      <app-hamburger [isMobileMenuOpen]="isMobileMenuOpen"></app-hamburger>
-    </div>
-    <button class="search" (click)="isMobileMenuOpen = true">
-      <i class="fa-regular fa-magnifying-glass"></i>
-    </button>
-    <div class="profile">
-      <ng-container *ngIf="credentials$ | async as credentials; else notLogged">
-        <button class="profile" [cdkMenuTriggerFor]="profileMenu">
-          <img
-            src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-            alt=""
-          />
-        </button>
-        <ng-template #profileMenu>
-          <div class="profile-menu" cdkMenu>
-            <div class="profile-info" cdkMenuItem>
-              <div class="name">
-                {{ credentials.firstname }} {{ credentials.lastname }}
-              </div>
-              <div class="email">{{ credentials.email }}</div>
-            </div>
-            <a class="hoverable" cdkMenuItem>Refresh</a>
-            <a class="hoverable" cdkMenuItem>Settings</a>
-            <a class="hoverable" cdkMenuItem>Help</a>
-            <a class="hoverable" cdkMenuItem (click)="logOut()">Sign out</a>
-          </div>
-        </ng-template>
-      </ng-container>
-      <ng-template #notLogged>
-        <a class="button-outline" routerLink="/auth">Se connecter</a>
-      </ng-template>
-    </div>
-  </nav>
-
-  <nav class="mobile-menu" *ngIf="isMobileMenuOpen" [@growFromTop]>
-    <app-icon-input icon="search" placeholder="Rechercher"></app-icon-input>
-    <ng-container *ngTemplateOutlet="menu"></ng-container>
-  </nav>
+<header class="mobile" *ngIf="isMobile$ | async; else isDesktop">
+  <div class="search">
+    <app-icon-input
+      icon="magnifying-glass"
+      placeholder="Trouver un tatoueur..."
+    ></app-icon-input>
+  </div>
+  <ng-container *ngTemplateOutlet="profile"></ng-container>
 </header>
 
-<ng-template #menu>
-  <ul>
-    <li><a routerLink="/artists">Artists</a></li>
-    <li><a routerLink="/tattoos">Tattoos</a></li>
-    <li><a routerLink="/tattooists">Tattooists</a></li>
-  </ul>
+<ng-template #isDesktop>
+  <header class="desktop">
+    <nav>
+      <a class="logo" routerLink="/">Tattoo</a>
+      <ul>
+        <li><a routerLink="/artists">Artists</a></li>
+        <li><a routerLink="/tattoos">Tattoos</a></li>
+        <li><a routerLink="/tattooists">Tattooists</a></li>
+      </ul>
+
+      <div class="right-side">
+        <div class="search">
+          <app-icon-input
+            icon="magnifying-glass"
+            placeholder="Trouver un tatoueur..."
+          ></app-icon-input>
+        </div>
+        <ng-container *ngTemplateOutlet="profile"></ng-container>
+      </div>
+    </nav>
+  </header>
+</ng-template>
+
+<ng-template #profile>
+  <div class="profile">
+    <ng-container *ngIf="credentials$ | async as credentials; else notLogged">
+      <button class="profile" [cdkMenuTriggerFor]="profileMenu">
+        <img
+          src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+          alt=""
+        />
+      </button>
+      <ng-template #profileMenu>
+        <div class="profile-menu" cdkMenu>
+          <div class="profile-info" cdkMenuItem>
+            <div class="name">
+              {{ credentials.firstname }} {{ credentials.lastname }}
+            </div>
+            <div class="email">{{ credentials.email }}</div>
+          </div>
+          <a class="hoverable" cdkMenuItem>Settings</a>
+          <a class="hoverable" cdkMenuItem>Help</a>
+          <a class="hoverable" cdkMenuItem (click)="logOut()">Sign out</a>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #notLogged>
+      <a class="button" routerLink="/auth">Se connecter</a>
+    </ng-template>
+  </div>
 </ng-template>
