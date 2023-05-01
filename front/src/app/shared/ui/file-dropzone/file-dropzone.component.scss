@@ -1,0 +1,38 @@
+.dropzone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  border: 2px dashed var(--gray-400);
+  border-radius: 4px;
+  padding: 16px;
+  height: 200px;
+  background-color: var(--gray-100);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #007bff; // Update this color to match your design
+    background-color: rgba(
+      0,
+      123,
+      255,
+      0.1
+    ); // Update the rgba values to match your design
+  }
+
+  * {
+    pointer-events: none;
+  }
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.dropzone.drag-over {
+  border-color: #2196f3;
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+  background-color: #e3f2fd;
+}

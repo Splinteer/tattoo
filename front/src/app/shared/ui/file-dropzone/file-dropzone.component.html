@@ -1,0 +1,25 @@
+<div
+  class="dropzone"
+  [class.disabled]="disabled"
+  (dragover)="!disabled && onDragOver($event)"
+  (dragleave)="!disabled && onDragLeave($event)"
+  (drop)="!disabled && onDrop($event)"
+  (click)="!disabled && fileInput.click()"
+>
+  <div class="dropzone-icon">
+    <i class="fa-light fa-upload"></i>
+  </div>
+  <p>
+    <span class="underline">Cliquez pour déposer</span> ou glissez déposez un
+    fichier ici
+  </p>
+</div>
+<input
+  #fileInput
+  type="file"
+  [multiple]="multiple"
+  (change)="onFileInputChange($event)"
+  [disabled]="disabled"
+  style="display: none"
+  [accept]="accept"
+/>
