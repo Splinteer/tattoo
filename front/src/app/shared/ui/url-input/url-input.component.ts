@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -34,6 +35,8 @@ export class UrlInputComponent implements ControlValueAccessor, OnInit {
   @Input() formControlName?: string;
 
   @Input() ngForm?: FormGroupDirective;
+
+  @Input() ngClass: NgClass['ngClass'];
 
   public value?: string;
 

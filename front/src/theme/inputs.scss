@@ -13,4 +13,14 @@ input {
     color: var(--gray-800);
     font-size: var(--text-sm);
   }
+
+  &.is-invalid {
+    border-color: var(--error-color);
+  }
+}
+
+.error-group {
+  color: var(--error-color);
+  font-size: 0.8rem;
+  text-align: right;
 }

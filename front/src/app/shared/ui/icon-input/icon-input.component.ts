@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -40,7 +41,9 @@ export class IconInputComponent implements ControlValueAccessor, OnInit {
 
   @Input() ngForm?: FormGroupDirective;
 
-  public value?: string;
+  @Input() ngClass: NgClass['ngClass'];
+
+  public value: string = '';
 
   ngOnInit(): void {
     if (this.formControlName) {
