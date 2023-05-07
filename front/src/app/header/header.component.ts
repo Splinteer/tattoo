@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnInit,
@@ -13,6 +14,7 @@ import { ResponsiveComponent } from '@app/shared/responsive/responsive.component
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent extends ResponsiveComponent {
   private readonly credentialsService = inject(CredentialsService);

@@ -48,7 +48,9 @@
             <div class="name">
               {{ credentials.firstname }} {{ credentials.lastname }}
             </div>
-            <div class="email">{{ credentials.email }}</div>
+            <div class="email">
+              {{ credentials.email }}
+            </div>
           </div>
 
           <div class="open-shop" cdkMenuItem *ngIf="!credentials.shop_name">

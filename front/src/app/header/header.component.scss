@@ -73,8 +73,17 @@ header.desktop {
     text-align: center;
     border-bottom: 1px solid var(--primary-color);
 
-    .email {
+    .shop {
+      font-weight: bold;
+    }
+
+    .shop + .name {
+      color: var(--gray-800);
       font-size: 0.8rem;
+    }
+
+    .email {
+      font-size: 0.7rem;
     }
   }
 
