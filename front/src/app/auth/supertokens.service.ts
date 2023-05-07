@@ -20,9 +20,14 @@ export class SupertokensService {
     this.init();
     this.checkSession();
 
-    this.credentialsService.refreshCredentials$.pipe(
-      tap(() => this.checkSession())
-    ).subscribe;
+    this.credentialsService.refreshCredentials$
+      .pipe(
+        tap(async () => {
+          await Session.attemptRefreshingSession();
+          this.checkSession();
+        })
+      )
+      .subscribe();
   }
 
   private init(): void {

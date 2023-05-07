@@ -3,12 +3,15 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   forwardRef,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Component({
   selector: 'app-file-dropzone',
@@ -68,6 +71,8 @@ export class FileDropzoneComponent implements ControlValueAccessor {
     if (inputElement.files && inputElement.files.length > 0) {
       this.updateFiles(inputElement.files);
     }
+
+    inputElement.value = ''; // to allow re-adding the same file
   }
 
   private updateFiles(newFiles: FileList) {
@@ -90,8 +95,6 @@ export class FileDropzoneComponent implements ControlValueAccessor {
     for (let i = 0; i < limit; i++) {
       this.files$.next([...actualFiles, validFiles[i]]);
     }
-
-    console.log(this.files$.getValue());
 
     this.onChange(this.files$.getValue());
     this.markAsTouched();

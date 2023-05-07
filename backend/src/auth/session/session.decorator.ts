@@ -6,3 +6,15 @@ export const Session = createParamDecorator(
     return request.session;
   },
 );
+
+export const Credentials = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+
+    if (request.session) {
+      const payload = request.session.getAccessTokenPayload();
+
+      return payload?.credentials;
+    }
+  },
+);

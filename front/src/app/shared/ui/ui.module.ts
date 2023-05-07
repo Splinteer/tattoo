@@ -5,9 +5,10 @@ import { IconInputComponent } from './icon-input/icon-input.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UrlInputComponent } from './url-input/url-input.component';
 import { FileDropzoneComponent } from './file-dropzone/file-dropzone.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule],
   declarations: [
     HamburgerComponent,
     IconInputComponent,

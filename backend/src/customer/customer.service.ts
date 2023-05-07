@@ -21,6 +21,7 @@ export interface Customer {
 
 export interface Credentials {
   id: string;
+  supertokens_id: string;
   email: string;
   firstname?: string;
   lastname?: string;
@@ -53,6 +54,7 @@ export class CustomerService {
   async getCustomerCredentials(supertokensId: string): Promise<Credentials> {
     const select = [
       'customer.id',
+      'customer.supertokens_id',
       'customer.email',
       'customer.firstname',
       'customer.lastname',

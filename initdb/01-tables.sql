@@ -1,6 +1,8 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE
     IF NOT EXISTS public.customer (
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         supertokens_id uuid NOT NULL UNIQUE,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         last_update timestamp NOT NULL DEFAULT NOW(),
@@ -18,15 +20,14 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.shop (
-        id uuid PRIMARY KEY NOT NULL,
-        owner_id uuid NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        owner_id uuid NOT NULL UNIQUE,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         last_update timestamp NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,
         url varchar(255) NOT NULL,
         description text,
         profile_picture varchar(255),
-        country varchar(255),
         instagram varchar(255),
         twitter varchar(255),
         facebook varchar(255),
@@ -36,7 +37,7 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.address(
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         last_update timestamp NOT NULL DEFAULT NOW(),
@@ -51,13 +52,13 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.image(
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         url varchar(255) NOT NULL
     );
 
 CREATE TABLE
     IF NOT EXISTS public.flash (
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
         image_id uuid NOT NULL,
         creation_date timestamp NOT NULL DEFAULT NOW(),
@@ -78,7 +79,7 @@ CREATE TYPE public.project_type AS ENUM (
 
 CREATE TABLE
     IF NOT EXISTS public.project (
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         customer_id uuid NOT NULL,
         shop_id uuid NOT NULL,
         name varchar(255) NOT NULL,
@@ -108,7 +109,7 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.appointment(
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         project_id uuid NOT NULL,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         start_date timestamp NOT NULL,
@@ -119,7 +120,7 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.chat(
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         project_id uuid NOT NULL,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
@@ -127,7 +128,7 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.message (
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         chat_id uuid NOT NULL,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         sender_id uuid NOT NULL,
@@ -148,7 +149,7 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.gallery (
-        id uuid PRIMARY KEY NOT NULL,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
         image_id uuid NOT NULL,
         project_id uuid,

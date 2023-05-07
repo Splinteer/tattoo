@@ -9,10 +9,11 @@
   <div class="dropzone-icon">
     <i class="fa-light fa-upload"></i>
   </div>
-  <p>
-    <span class="underline">Cliquez pour déposer</span> ou glissez déposez un
-    fichier ici
-  </p>
+  <p
+    [innerHTML]="
+      'DROPZONE.placeholder' | translate : { count: multiple ? 2 : 1 }
+    "
+  ></p>
 </div>
 <input
   #fileInput

@@ -9,6 +9,7 @@ import { ConfigInjectionToken, AuthModuleConfig } from '../config.interface';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { CustomerService } from 'src/customer/customer.service';
+import { SessionService } from '../session/session.service';
 
 export interface UserInformations {
   firstname?: string;
@@ -29,9 +30,10 @@ export class SupertokensService {
     @Inject(ConfigInjectionToken) private config: AuthModuleConfig,
     private readonly http: HttpService,
     private readonly customerService: CustomerService,
+    private readonly sessionService: SessionService,
   ) {
     const getSocialUserInfo = this.getSocialUserInfo.bind(this);
-    const refreshSession = this.refreshSession.bind(this);
+    const refreshSession = this.sessionService.refreshSession;
 
     supertokens.init({
       appInfo: config.appInfo,
@@ -168,30 +170,6 @@ export class SupertokensService {
         Dashboard.init(),
       ],
     });
-  }
-
-  public async refreshSession(userId: string) {
-    const sessionHandles = await Session.getAllSessionHandlesForUser(userId);
-
-    if (sessionHandles.length === 0) {
-      return;
-    }
-
-    const credentials = await this.customerService.getCustomerCredentials(
-      userId,
-    );
-
-    await Promise.all(
-      sessionHandles.map(async (sessionHandle) => {
-        if (sessionHandle === undefined) {
-          return;
-        }
-
-        await Session.mergeIntoAccessTokenPayload(sessionHandle, {
-          credentials: { ...credentials },
-        });
-      }),
-    );
   }
 
   private async getSocialUserInfo(
