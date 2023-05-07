@@ -18,6 +18,7 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import { ShopModule } from './shop/shop.module';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -26,14 +27,15 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 
 @NgModule({
   imports: [
+    // Angular modules
     BrowserModule,
     CoreModule,
-    CdkMenuModule,
-    AppRoutingModule,
-    AuthModule,
     BrowserAnimationsModule,
-
+    AppRoutingModule,
     HttpClientModule,
+
+    // Third party modules
+    CdkMenuModule,
     TranslateModule.forRoot({
       defaultLanguage: 'fr',
       loader: {
@@ -47,6 +49,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       },
     }),
 
+    // App modules
+    AuthModule,
+    ShopModule,
     SharedModule,
   ],
   declarations: [AppComponent, HomeComponent, HeaderComponent],

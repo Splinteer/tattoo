@@ -13,25 +13,20 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'app-icon-input',
-  templateUrl: './icon-input.component.html',
-  styleUrls: ['./icon-input.component.scss'],
+  selector: 'app-url-input',
+  templateUrl: './url-input.component.html',
+  styleUrls: ['./url-input.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => IconInputComponent),
+      useExisting: forwardRef(() => UrlInputComponent),
       multi: true,
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconInputComponent implements ControlValueAccessor, OnInit {
-  @Input() icon!: string;
-  @Input() iconType: string = 'regular';
-
+export class UrlInputComponent implements ControlValueAccessor, OnInit {
   @Input() id: string = `icon-${Math.floor(Math.random() * 100)}`;
-
-  @Input() type: string = 'text';
 
   @Input() placeholder?: string;
 
@@ -43,7 +38,7 @@ export class IconInputComponent implements ControlValueAccessor, OnInit {
 
   @Input() ngClass: NgClass['ngClass'];
 
-  public value: string = '';
+  public value?: string;
 
   ngOnInit(): void {
     if (this.formControlName) {

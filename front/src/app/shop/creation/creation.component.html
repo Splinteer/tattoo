@@ -1,0 +1,103 @@
+<form [formGroup]="form" #ngForm="ngForm" (ngSubmit)="onSubmit()">
+  <div role="group" aria-labelledby="group-shop">
+    <div class="group-description">
+      <label id="group-shop" translate>SHOP.CREATE.shop_title</label>
+      <small translate>SHOP.CREATE.shop_description</small>
+    </div>
+
+    <div class="input-group">
+      <input
+        formControlName="name"
+        type="text"
+        id="name"
+        name="name"
+        [placeholder]="'SHOP.CREATE.name' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('name')?.touched) &&
+            form.get('name')?.errors
+        }"
+      />
+
+      <app-url-input
+        formControlName="url"
+        [placeholder]="'SHOP.CREATE.url' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('url')?.touched) &&
+            form.get('url')?.errors
+        }"
+      ></app-url-input>
+
+      <div
+        class="error-group"
+        *ngIf="ngForm.submitted && form.invalid"
+        translate
+      >
+        FORM.fill_required
+      </div>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-logo">
+    <div class="group-description">
+      <label id="group-logo" translate>SHOP.CREATE.logo_title</label>
+      <small translate>SHOP.CREATE.logo_description</small>
+    </div>
+
+    <div class="input-group logo">
+      <div *ngIf="logoPreview$ | async as imgPreview">
+        <img [src]="imgPreview" />
+        <button type="button" (click)="form.get('logo')?.setValue([])">
+          <i class="fad fa-trash"></i>
+        </button>
+      </div>
+
+      <app-file-dropzone
+        formControlName="logo"
+        accept="image/png, image/jpeg"
+      ></app-file-dropzone>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-social">
+    <div class="group-description">
+      <label id="group-social" translate>SHOP.CREATE.social_title</label>
+      <small translate>SHOP.CREATE.social_description</small>
+    </div>
+
+    <div class="input-group">
+      <app-icon-input
+        formControlName="instagram"
+        icon="instagram"
+        iconType="brands"
+        placeholder="Instagram"
+      ></app-icon-input>
+
+      <app-icon-input
+        formControlName="twitter"
+        icon="twitter"
+        iconType="brands"
+        placeholder="Twitter"
+      ></app-icon-input>
+
+      <app-icon-input
+        formControlName="facebook"
+        icon="facebook-f"
+        iconType="brands"
+        placeholder="Facebook"
+      ></app-icon-input>
+
+      <app-icon-input
+        formControlName="website"
+        icon="globe"
+        [placeholder]="'SHOP.CREATE.website' | translate"
+      ></app-icon-input>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <a routerLink="/" class="button button-outline" type="button">Annuler</a>
+    <button class="button" type="submit">Ouvrir ma boutique</button>
+  </div>
+</form>

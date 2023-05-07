@@ -10,8 +10,6 @@ import SuperTokensReactComponent from './supertokensAuthComponent';
   template: '<div [id]="rootId"></div>',
 })
 export class AuthComponent implements OnDestroy, AfterViewInit {
-  title = 'angularreactapp';
-
   public rootId = 'rootId';
 
   // We use the ngAfterViewInit lifecycle hook to render the React component after the Angular component  view gets initialized

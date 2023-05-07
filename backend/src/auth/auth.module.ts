@@ -10,10 +10,12 @@ import { ConfigInjectionToken, AuthModuleConfig } from './config.interface';
 import { SupertokensService } from './supertokens/supertokens.service';
 import { HttpModule } from '@nestjs/axios';
 import { CustomerModule } from 'src/customer/customer.module';
+import { SessionService } from './session/session.service';
 
 @Module({
-  providers: [],
-  exports: [],
+  imports: [CustomerModule],
+  providers: [SessionService],
+  exports: [SessionService],
   controllers: [],
 })
 export class AuthModule implements NestModule {
@@ -37,6 +39,7 @@ export class AuthModule implements NestModule {
           provide: ConfigInjectionToken,
         },
         SupertokensService,
+        SessionService,
       ],
       exports: [],
       imports: [HttpModule, CustomerModule],

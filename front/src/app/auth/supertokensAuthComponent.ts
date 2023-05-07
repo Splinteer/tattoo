@@ -6,7 +6,7 @@ class SuperTokensReactComponent extends React.Component {
     if (SuperTokens.canHandleRoute()) {
       return SuperTokens.getRoutingComponent();
     }
-    return 'Route not found';
+    return 'Auth route not found';
   }
 }
 

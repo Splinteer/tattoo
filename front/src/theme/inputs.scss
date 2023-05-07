@@ -1,0 +1,26 @@
+input {
+  width: 100%;
+  padding: var(--input-padding);
+  border: 1px solid var(--gray-400);
+  background-color: var(--gray-200);
+  border-radius: var(--border-radius);
+
+  &:focus-visible {
+    border: 1px solid var(--primary-color);
+  }
+
+  &::placeholder {
+    color: var(--gray-800);
+    font-size: var(--text-sm);
+  }
+
+  &.is-invalid {
+    border-color: var(--error-color);
+  }
+}
+
+.error-group {
+  color: var(--error-color);
+  font-size: 0.8rem;
+  text-align: right;
+}

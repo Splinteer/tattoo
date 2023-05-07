@@ -9,6 +9,7 @@ import { ConfigInjectionToken, AuthModuleConfig } from '../config.interface';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { CustomerService } from 'src/customer/customer.service';
+import { SessionService } from '../session/session.service';
 
 export interface UserInformations {
   firstname?: string;
@@ -29,9 +30,10 @@ export class SupertokensService {
     @Inject(ConfigInjectionToken) private config: AuthModuleConfig,
     private readonly http: HttpService,
     private readonly customerService: CustomerService,
+    private readonly sessionService: SessionService,
   ) {
     const getSocialUserInfo = this.getSocialUserInfo.bind(this);
-    const refreshSession = this.refreshSession.bind(this);
+    const refreshSession = this.sessionService.refreshSession;
 
     supertokens.init({
       appInfo: config.appInfo,
@@ -67,6 +69,45 @@ export class SupertokensService {
             }),
           ],
           override: {
+            // functions: (originalImplementation) => {
+            //   return {
+            //     ...originalImplementation,
+            //     thirdPartySignInUpPOST: async function (input) {
+            //       console.log(JSON.stringify(input, null, 2));
+            //       return await originalImplementation.thirdPartySignInUp(input);
+            //     },
+            //   };
+            // },
+
+            // functions: (originalImplementation) => {
+            //   return {
+            //     ...originalImplementation,
+
+            //     // here we are only overriding the function that's responsible
+            //     // for signing in or signing up a user.
+            //     thirdPartySignInUp: async function (input) {
+            //       // TODO: some custom logic
+            //       console.log('oklm');
+            //       console.log(
+            //         await input.userContext._default.request.getJSONBody(),
+            //       );
+            //       // const { code } =
+            //       //   await input.userContext._default.request.getFormData();
+            //       // const test = await getSocialUserInfo(
+            //       //   { id: 'google', userId: 'id' },
+            //       //   code,
+            //       // );
+            //       // console.log(test);
+            //       throw new Error();
+
+            //       // or call the default behaviour as show below
+            //       return await originalImplementation.thirdPartySignInUp(input);
+            //     },
+            //     // ...
+            //     // TODO: override more functions
+            //   };
+            // },
+
             apis: (originalImplementation) => {
               return {
                 ...originalImplementation,
@@ -129,30 +170,6 @@ export class SupertokensService {
         Dashboard.init(),
       ],
     });
-  }
-
-  public async refreshSession(userId: string) {
-    const sessionHandles = await Session.getAllSessionHandlesForUser(userId);
-
-    if (sessionHandles.length === 0) {
-      return;
-    }
-
-    const credentials = await this.customerService.getCustomerCredentials(
-      userId,
-    );
-
-    await Promise.all(
-      sessionHandles.map(async (sessionHandle) => {
-        if (sessionHandle === undefined) {
-          return;
-        }
-
-        await Session.mergeIntoAccessTokenPayload(sessionHandle, {
-          credentials: { ...credentials },
-        });
-      }),
-    );
   }
 
   private async getSocialUserInfo(

@@ -1,0 +1,80 @@
+form {
+  width: min(100%, 1500px);
+  margin-inline: auto;
+}
+
+div[role="group"] {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+  gap: var(--space-500);
+  padding-block: var(--space-500);
+  border-top: 1px solid var(--gray-300);
+
+  &:last-of-type {
+    border-bottom: 1px solid var(--gray-300);
+  }
+}
+
+.group-description {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 1rem min(2rem, 15px);
+
+  small {
+    font-size: 0.8rem;
+    color: var(--gray-800);
+  }
+}
+
+.input-group {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-500);
+  padding-inline: min(2rem, 15px);
+
+  &.logo {
+    display: flex;
+    flex-direction: row;
+
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--primary-color);
+    }
+
+    button {
+      display: block;
+      margin-top: var(--space-300);
+      margin-inline: auto;
+      color: var(--error-color);
+    }
+
+    app-file-dropzone {
+      flex-grow: 1;
+    }
+  }
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-300);
+  width: 100%;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  div[role="group"] {
+    flex-direction: column;
+  }
+}

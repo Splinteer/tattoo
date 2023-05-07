@@ -1,0 +1,31 @@
+:host {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  $gap: 7px;
+
+  input {
+    padding-left: 97px;
+  }
+
+  .text-container {
+    position: absolute;
+    height: calc(100% - 2px);
+    font-size: var(--text-sm);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 1px;
+    pointer-events: none;
+    color: var(--text-color-light);
+    background-color: var(--gray-600);
+    border-right: 1px solid var(--gray-400);
+    padding: 0 7px;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+  }
+}

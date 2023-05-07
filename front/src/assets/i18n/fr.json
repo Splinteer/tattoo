@@ -1,3 +1,26 @@
 {
-  "title": "Les 100"
+  "SHOP": {
+    "CREATE": {
+      "shop_title": "Boutique",
+      "shop_description": "Ces informations permettront a vos clients de vous retrouver",
+
+      "name": "Nom de la boutique",
+      "url": "Url de la boutique",
+
+      "logo_title": "Logo de la boutique",
+      "logo_description": "Permettez a vos clients de vous reconaitre",
+
+      "social_title": "Réseaux sociaux",
+      "social_description": "Permettez a vos clients de suivre votre travail",
+      "website": "Site internet"
+    }
+  },
+
+  "DROPZONE": {
+    "placeholder": "<span class=\"underline\">Cliquez pour déposer</span> ou glissez déposez {count, plural, one {un fichier ici} other {vos fichiers ici}}"
+  },
+
+  "FORM": {
+    "fill_required": "Veuillez renseigner tous les champs obligatoire"
+  }
 }
