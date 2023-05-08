@@ -19,6 +19,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { ShopModule } from './shop/shop.module';
+import { MobileNavigationComponent } from './mobile-navigation/mobile-navigation.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -54,7 +55,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ShopModule,
     SharedModule,
   ],
-  declarations: [AppComponent, HomeComponent, HeaderComponent],
+  declarations: [AppComponent, HomeComponent, HeaderComponent, MobileNavigationComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

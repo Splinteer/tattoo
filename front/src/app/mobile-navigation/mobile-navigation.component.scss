@@ -1,0 +1,38 @@
+.mobile-menu {
+  display: flex;
+  // border-top: 1px solid var(--gray-400);
+  overflow-x: auto;
+}
+
+a {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-100);
+  padding: var(--space-300) 0;
+
+  font-size: 0.8rem;
+
+  transition: all 2ms;
+
+  i {
+    font-size: 1rem;
+  }
+
+  // border-right: 1px solid var(--gray-400);
+  // &:last-of-type {
+  //   border: none;
+  // }
+}
+
+a:hover,
+a.active {
+  color: var(--primary-color);
+
+  i {
+    font-weight: 900;
+  }
+}

@@ -1,0 +1,24 @@
+<div class="mobile-menu" *ngIf="credentials$ | async as credentials">
+  <ng-container *ngIf="credentials.shop_name">
+    <a
+      routerLink="/shop"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fa-regular fa-shop"></i>
+      Boutique
+    </a>
+    <a routerLink="/shop/gallery" routerLinkActive="active">
+      <i class="fa-regular fa-images"></i>
+      Galerie
+    </a>
+    <a routerLink="/shop/calendar" routerLinkActive="active">
+      <i class="fa-regular fa-calendar"></i>
+      Calendrier
+    </a>
+    <a routerLink="/message" routerLinkActive="active">
+      <i class="fa-regular fa-message"></i>
+      Messagerie
+    </a>
+  </ng-container>
+</div>

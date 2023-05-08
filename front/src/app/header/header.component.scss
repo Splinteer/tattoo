@@ -40,6 +40,10 @@ header.desktop {
 
       li {
         list-style-type: none;
+
+        a.active {
+          color: var(--primary-color);
+        }
       }
     }
 

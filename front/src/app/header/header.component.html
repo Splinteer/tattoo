@@ -8,9 +8,22 @@
     <nav>
       <a class="logo" routerLink="/">Tattoo</a>
       <ul>
-        <li><a routerLink="/artists">Artists</a></li>
-        <li><a routerLink="/tattoos">Tattoos</a></li>
-        <li><a routerLink="/tattooists">Tattooists</a></li>
+        <li><a routerLink="/artists" routerLinkActive="active">Artists</a></li>
+        <li><a routerLink="/tattoos" routerLinkActive="active">Tattoos</a></li>
+        <li>
+          <a routerLink="/tattooists" routerLinkActive="active">Tattooists</a>
+        </li>
+        <ng-container *ngIf="credentials$ | async as credentials">
+          <li>
+            <a
+              routerLink="/shop"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              *ngIf="credentials.shop_name"
+              >Boutique</a
+            >
+          </li>
+        </ng-container>
       </ul>
 
       <div class="right-side">
