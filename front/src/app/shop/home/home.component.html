@@ -1,0 +1,20 @@
+<div *ngIf="credentials$ | async as credentials" [@backInDown]>
+  <div class="header">
+    <img
+      class="logo"
+      src="http://storage.googleapis.com/tattoo-public/shops/6c597e78-9d7c-4dc4-902c-d3b58b638bc7/logo"
+      alt=""
+    />
+    <div class="description">
+      <div class="title">
+        <h1>{{ credentials.shop_name }}</h1>
+        <div class="url">/{{ credentials.shop_url }}</div>
+      </div>
+    </div>
+
+    <a routerLink="/shop/edit" class="settings">
+      <i class="fa-regular fa-gear"></i>
+      Modifier la boutique
+    </a>
+  </div>
+</div>

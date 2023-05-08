@@ -1,3 +1,35 @@
 {
-  "title": "The 100"
+  "SHOP": {
+    "CREATE": {
+      "shop_title": "Shop",
+      "shop_description": "These details will help your customers find you",
+
+      "name": "Shop name",
+      "url": "Shop URL",
+
+      "logo_title": "Shop logo",
+      "logo_description": "Help your customers recognize you",
+
+      "social_title": "Social networks",
+      "social_description": "Allow your customers to follow your work",
+      "website": "Website",
+
+      "create_button": "Open my shop",
+      "update_button": "Update my shop"
+    }
+  },
+
+  "DROPZONE": {
+    "placeholder": "<span class=\"underline\">Click to drop</span> or drag and drop {count, plural, one {one file here} other {your files here}}"
+  },
+
+  "FORM": {
+    "VALIDATORS": {
+      "url_invalid": "Invalid URL. Only alphanumeric characters, hyphens, and underscores are allowed",
+      "fill_required": "Please fill out all required fields"
+    },
+    "BUTTONS": {
+      "cancel": "Cancel"
+    }
+  }
 }

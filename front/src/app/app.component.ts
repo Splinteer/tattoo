@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import * as SuperTokens from 'supertokens-web-js';
 import * as EmailVerification from 'supertokens-web-js/recipe/emailverification';

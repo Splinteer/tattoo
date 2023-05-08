@@ -12,7 +12,10 @@
 
       "social_title": "Réseaux sociaux",
       "social_description": "Permettez a vos clients de suivre votre travail",
-      "website": "Site internet"
+      "website": "Site internet",
+
+      "create_button": "Ouvrir ma boutique",
+      "update_button": "Mettre à jour ma boutique"
     }
   },
 
@@ -21,6 +24,12 @@
   },
 
   "FORM": {
-    "fill_required": "Veuillez renseigner tous les champs obligatoire"
+    "VALIDATORS": {
+      "url_invalid": "URL non valide. Seuls les caractères alphanumériques, les tirets et les underscores sont acceptés",
+      "fill_required": "Veuillez renseigner tous les champs obligatoire"
+    },
+    "BUTTONS": {
+      "cancel": "Annuler"
+    }
   }
 }

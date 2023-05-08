@@ -3,6 +3,22 @@ import { Injectable, inject } from '@angular/core';
 import { CredentialsService } from '@app/auth/credentials.service';
 import { tap } from 'rxjs';
 
+export interface Shop {
+  id: string; // UUID
+  owner_id: string; // UUID (foreign key referencing public.customer)
+  creation_date: string;
+  last_update: string;
+  name: string;
+  url: string;
+  description: string | null;
+  got_profile_picture: boolean;
+  country: string | null;
+  instagram: string | null;
+  twitter: string | null;
+  facebook: string | null;
+  website: string | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +29,17 @@ export class ShopService {
 
   public create(formData: FormData) {
     return this.http
-      .post('/shop/create', formData)
+      .post<Shop>('/shop/create', formData)
+      .pipe(tap(() => this.credentialsService.refreshCredentials()));
+  }
+
+  public get() {
+    return this.http.get<Shop>('/shop');
+  }
+
+  public update(formData: FormData) {
+    return this.http
+      .post<Shop>('/shop/update', formData)
       .pipe(tap(() => this.credentialsService.refreshCredentials()));
   }
 }

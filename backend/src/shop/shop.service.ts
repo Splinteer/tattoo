@@ -39,4 +39,31 @@ export class ShopService {
       [shopId],
     );
   }
+
+  public async get(ownerId: string) {
+    const { rows } = await this.db.query(
+      'SELECT * FROM shop WHERE owner_id=$1',
+      [ownerId],
+    );
+
+    return rows[0];
+  }
+
+  public async update(userId: string, data: any): Promise<any> {
+    const { rows } = await this.db.query(
+      `UPDATE shop SET name = $2, url = $3, instagram = $4, twitter = $5, facebook = $6, website = $7
+        WHERE owner_id = $1 RETURNING *;`,
+      [
+        userId,
+        data.name,
+        data.url,
+        data.instagram ?? null,
+        data.twitter ?? null,
+        data.facebook ?? null,
+        data.website ?? null,
+      ],
+    );
+
+    return rows[0];
+  }
 }

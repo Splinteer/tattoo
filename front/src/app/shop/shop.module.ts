@@ -6,10 +6,12 @@ import { CreationComponent } from './creation/creation.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ShopService } from './shop.service';
+import { HomeComponent } from './home/home.component';
+import { ShopEditComponent } from './shop-edit/shop-edit.component';
 
 @NgModule({
   imports: [CommonModule, ShopRoutingModule, SharedModule, ReactiveFormsModule],
-  declarations: [CreationComponent],
+  declarations: [CreationComponent, HomeComponent, ShopEditComponent],
   providers: [ShopService],
 })
 export class ShopModule {}

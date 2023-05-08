@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UploadedFile,
   UseGuards,
@@ -32,6 +33,34 @@ export class ShopController {
     @UploadedFile() logo: Express.Multer.File,
   ) {
     const newShop = await this.shopService.create(credentials.id, body);
+
+    if (logo) {
+      await this.shopService.updateLogo(newShop.id, logo);
+      newShop.got_profile_picture = true;
+    }
+
+    await this.sessionService.refreshSession(credentials.supertokens_id);
+
+    return newShop;
+  }
+
+  @Get()
+  async get(
+    @Credentials()
+    { id }: ICredentials,
+  ) {
+    return await this.shopService.get(id);
+  }
+
+  @Post('update')
+  @UseInterceptors(FileInterceptor('logo'))
+  async update(
+    @Credentials()
+    credentials: ICredentials,
+    @Body() body: any,
+    @UploadedFile() logo: Express.Multer.File,
+  ) {
+    const newShop = await this.shopService.update(credentials.id, body);
 
     if (logo) {
       await this.shopService.updateLogo(newShop.id, logo);

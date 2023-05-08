@@ -1,4 +1,10 @@
-<form [formGroup]="form" #ngForm="ngForm" (ngSubmit)="onSubmit()">
+<form
+  [formGroup]="form"
+  #ngForm="ngForm"
+  (ngSubmit)="onSubmit()"
+  *ngIf="form"
+  [@backInDown]
+>
   <div role="group" aria-labelledby="group-shop">
     <div class="group-description">
       <label id="group-shop" translate>SHOP.CREATE.shop_title</label>
@@ -19,22 +25,35 @@
         }"
       />
 
-      <app-url-input
-        formControlName="url"
-        [placeholder]="'SHOP.CREATE.url' | translate"
-        [ngClass]="{
-          'is-invalid':
+      <div>
+        <app-url-input
+          formControlName="url"
+          [placeholder]="'SHOP.CREATE.url' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted || form.get('url')?.touched) &&
+              form.get('url')?.errors
+          }"
+        ></app-url-input>
+
+        <div
+          class="error-group"
+          *ngIf="
             (ngForm.submitted || form.get('url')?.touched) &&
-            form.get('url')?.errors
-        }"
-      ></app-url-input>
+            form.get('url')?.errors?.['pattern']
+          "
+          translate
+        >
+          FORM.VALIDATORS.url_invalid
+        </div>
+      </div>
 
       <div
         class="error-group"
         *ngIf="ngForm.submitted && form.invalid"
         translate
       >
-        FORM.fill_required
+        FORM.VALIDATORS.fill_required
       </div>
     </div>
   </div>
@@ -48,7 +67,11 @@
     <div class="input-group logo">
       <div *ngIf="logoPreview$ | async as imgPreview">
         <img [src]="imgPreview" />
-        <button type="button" (click)="form.get('logo')?.setValue([])">
+        <button
+          type="button"
+          (click)="form.get('logo')?.setValue([])"
+          *ngIf="!shop"
+        >
           <i class="fad fa-trash"></i>
         </button>
       </div>
@@ -97,7 +120,15 @@
   </div>
 
   <div class="button-group">
-    <a routerLink="/" class="button button-outline" type="button">Annuler</a>
-    <button class="button" type="submit">Ouvrir ma boutique</button>
+    <a
+      [routerLink]="shop ? '/shop' : '/'"
+      class="button button-outline"
+      type="button"
+      translate
+      >FORM.BUTTONS.cancel</a
+    >
+    <button class="button" type="submit" translate>
+      {{ shop ? "SHOP.CREATE.update_button" : "SHOP.CREATE.create_button" }}
+    </button>
   </div>
 </form>
