@@ -19,6 +19,33 @@
     }
   },
 
+  "FLASH": {
+    "CREATE": {
+      "flash_title": "Détails du flash",
+      "flash_description": "Informations de base pour décrire votre flash",
+
+      "name": "Titre du flash",
+      "description": "Description",
+      "description_long": "Description, taille, informations complémentaires...",
+
+      "image": "{count, plural, one {Illustration} other {Illustrations}}",
+      "image_required": "Veuillez déposer une ou plusieurs images",
+      "multiple_images": "Déposer plusieurs images générera plusieurs flashs avec les mêmes caractéristique",
+      "price": "Prix",
+      "availability": "Disponibilité",
+      "available": "Disponible",
+      "not_available": "Indisponible",
+      "price": "Prix",
+      "price_range_start": "Min.",
+      "price_range_end": "Max.",
+      "price_range_tips": "Renseignez un prix max. pour créer une tranche de prix",
+      "price_range_error": "Veuillez renseigner un prix maximum plus grand que le minimum",
+
+      "create_button": "Ajouter {count, plural, =0 {le flash} one {le flash} other {les flashs}}",
+      "update_button": "Mettre à jour le flash"
+    }
+  },
+
   "DROPZONE": {
     "placeholder": "<span class=\"underline\">Cliquez pour déposer</span> ou glissez déposez {count, plural, one {un fichier ici} other {vos fichiers ici}}"
   },

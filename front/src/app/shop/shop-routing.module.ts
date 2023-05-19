@@ -3,6 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { CreationComponent } from './creation/creation.component';
 import { HomeComponent } from './home/home.component';
 import { ShopEditComponent } from './shop-edit/shop-edit.component';
+import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
+import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.component';
+import { ShopFlashAddComponent } from './shop-flash-add/shop-flash-add.component';
 
 const routes: Routes = [
   {
@@ -16,6 +19,14 @@ const routes: Routes = [
   {
     path: 'edit',
     component: ShopEditComponent,
+  },
+  {
+    path: 'gallery',
+    component: ShopGalleryComponent,
+  },
+  {
+    path: 'gallery/add/flash',
+    component: ShopFlashAddComponent,
   },
 ];
 

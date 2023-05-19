@@ -10,13 +10,17 @@
   --tropical-indigo-light: hsl(262, 92%, 82%);
   --tropical-indigo-dark: hsl(259, 92%, 70%);
 
+  --black: #000;
+  --white: #fff;
+
   --bg-color: var(--antiflash-white);
-  --primary-color: var(--tropical-indigo);
-  --primary-color-light: var(--tropical-indigo-light);
+  --primary-color: var(--black);
+  --primary-color-fade: #444;
   --primary-color-dark: var(--tropical-indigo-dark);
 
   --text-color-dark: #000000;
   --text-color-light: #ffffff;
+
   --font-size: clamp(0.9rem, 2.8vw, 1rem);
   --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
   --border-radius: 10px;
@@ -35,7 +39,7 @@
   --gray-800: #777777;
   --gray-900: #595959;
 
-  --error-color: #e62424;
+  --error-color: rgb(230, 36, 36);
 
   --space-100: 0.25rem;
   --space-200: 0.5rem;

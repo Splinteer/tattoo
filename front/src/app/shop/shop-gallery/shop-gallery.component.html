@@ -1,0 +1,37 @@
+<div class="container flashs">
+  <div class="header">
+    <h1>Flashs</h1>
+    <a
+      routerLink="/shop/gallery/add/flash"
+      class="button button-text button-small"
+    >
+      <i class="fa-regular fa-image"></i>
+      Ajouter un flash
+    </a>
+  </div>
+  <div class="grid">
+    <img [src]="flash" alt="" *ngFor="let flash of flashs" />
+  </div>
+  <div class="show-all">
+    <a href="test">Voir tout</a>
+  </div>
+</div>
+
+<div class="container gallery">
+  <div class="header">
+    <h1>Gallery</h1>
+    <a
+      routerLink="/shop/gallery/add/picture"
+      class="button button-text button-small"
+    >
+      <i class="fa-regular fa-image"></i>
+      Ajouter une image
+    </a>
+  </div>
+  <div class="grid">
+    <img [src]="picture" alt="" *ngFor="let picture of pictures" />
+  </div>
+  <div class="show-all">
+    <a href="test">Voir tout</a>
+  </div>
+</div>

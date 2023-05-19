@@ -33,7 +33,7 @@ export class SupertokensService {
     private readonly sessionService: SessionService,
   ) {
     const getSocialUserInfo = this.getSocialUserInfo.bind(this);
-    const refreshSession = this.sessionService.refreshSession;
+    const refreshSession = this.sessionService.refreshSession.bind(this);
 
     supertokens.init({
       appInfo: config.appInfo,
