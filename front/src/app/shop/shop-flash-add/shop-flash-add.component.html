@@ -1,0 +1,137 @@
+<form
+  class="inline-form"
+  [formGroup]="form"
+  #ngForm="ngForm"
+  (ngSubmit)="onSubmit()"
+  *ngIf="form"
+  [@backInDown]
+>
+  <h1>Nouveau flash</h1>
+
+  <div role="group" aria-labelledby="group-image">
+    <div class="input-group">
+      <label for="name" translate>FLASH.CREATE.name</label>
+      <input
+        id="name"
+        formControlName="name"
+        [placeholder]="'FLASH.CREATE.name' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('name')?.touched) &&
+            form.get('name')?.errors
+        }"
+      />
+    </div>
+    <div class="input-group">
+      <label for="description" translate>FLASH.CREATE.description</label>
+
+      <textarea
+        id="description"
+        formControlName="description"
+        [placeholder]="'FLASH.CREATE.description_long' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('description')?.touched) &&
+            form.get('description')?.errors
+        }"
+      ></textarea>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-image">
+    <div class="input-group image">
+      <label
+        for="image"
+        translate
+        [translateParams]="{ count: !!flash ? 1 : 2 }"
+        >FLASH.CREATE.image</label
+      >
+      <app-file-dropzone
+        formControlName="image"
+        accept="image/png, image/jpeg"
+        [multiple]="!!form"
+        [isInvalid]="
+          (ngForm.submitted || form.get('image')?.touched) &&
+          form.get('image')?.errors
+        "
+      ></app-file-dropzone>
+
+      <small
+        class="error-group"
+        translate
+        *ngIf="
+          (ngForm.submitted || form.get('image')?.touched) &&
+          form.get('image')?.errors
+        "
+        >FLASH.CREATE.image_required</small
+      >
+      <small class="text-muted" *ngIf="!!!flash" translate
+        >FLASH.CREATE.multiple_images</small
+      >
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-price">
+    <div class="input-group price">
+      <label for="price" translate>FLASH.CREATE.price</label>
+      <div class="inline-group">
+        <app-input-number
+          id="price"
+          formControlName="price_range_start"
+          [style.maxWidth]="'150px'"
+          [placeholder]="'FLASH.CREATE.price_range_start' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted || form.get('price_range_start')?.touched) &&
+              form?.errors?.['greaterThan']
+          }"
+        ></app-input-number>
+        <app-input-number
+          id="price"
+          formControlName="price_range_end"
+          [style.maxWidth]="'150px'"
+          [placeholder]="'FLASH.CREATE.price_range_end' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted || form.get('price_range_end')?.touched) &&
+              form?.errors?.['greaterThan']
+          }"
+        ></app-input-number>
+      </div>
+      <small class="error-group" translate *ngIf="form?.errors?.['greaterThan']"
+        >FLASH.CREATE.price_range_error</small
+      >
+      <small translate>FLASH.CREATE.price_range_tips</small>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-availability">
+    <div class="input-group">
+      <label for="name" translate>FLASH.CREATE.availability</label>
+      <app-toggle-group formControlName="available">
+        <app-toggle-group-item [value]="false">
+          <i class="fa-regular fa-times"></i>
+          {{ "FLASH.CREATE.not_available" | translate }}
+        </app-toggle-group-item>
+        <app-toggle-group-item [value]="true">
+          <i class="fa-regular fa-check"></i>
+          {{ "FLASH.CREATE.available" | translate }}
+        </app-toggle-group-item>
+      </app-toggle-group>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button class="button button-outline" type="button" appGoBack translate>
+      FORM.BUTTONS.cancel
+    </button>
+    <button
+      class="button"
+      type="submit"
+      translate
+      [translateParams]="{ count: form.get('image')?.value?.length }"
+    >
+      {{ flash ? "FLASH.CREATE.update_button" : "FLASH.CREATE.create_button" }}
+    </button>
+  </div>
+</form>

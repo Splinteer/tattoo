@@ -4,11 +4,12 @@ import { SharedUiModule } from './ui/ui.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResponsiveComponent } from './responsive/responsive.component';
 import { ResponsiveService } from './responsive/responsive.service';
+import { GoBackDirective } from './go-back.directive';
 
 @NgModule({
-  declarations: [ResponsiveComponent],
+  declarations: [ResponsiveComponent, GoBackDirective],
   imports: [CommonModule, SharedUiModule],
-  exports: [SharedUiModule, TranslateModule],
+  exports: [SharedUiModule, TranslateModule, GoBackDirective],
   providers: [ResponsiveService],
 })
 export class SharedModule {}
