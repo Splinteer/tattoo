@@ -101,13 +101,13 @@ button {
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
-    background-color: var(--primary-color-dark);
+    background-color: var(--primary-color-fade);
   }
 }
 
 .button-outline {
   background: none;
-  color: var(--primary-color-dark);
+  color: var(--primary-color);
   border: 1px solid var(--primary-color);
 
   &:hover {
@@ -119,6 +119,22 @@ button {
 .button-sm {
   padding: 0.1rem 0.5rem;
   font-size: var(--text-sm);
+}
+
+.button-small {
+  padding: 0.4rem 0.8rem;
+  font-size: var(--text-sm);
+}
+
+.button-text {
+  background-color: unset;
+  color: var(--primary-color);
+
+  &:hover {
+    background-color: unset;
+    color: var(--primary-color);
+    text-decoration: underline;
+  }
 }
 
 a {

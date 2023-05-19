@@ -13,6 +13,10 @@
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 
+  &.is-invalid {
+    border-color: var(--error-color);
+  }
+
   &:hover {
     border-color: #007bff; // Update this color to match your design
     background-color: rgba(

@@ -5,6 +5,18 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+  transition: background-color 0.15s ease;
+
+  &:focus-visible,
+  &:hover {
+    .text-container {
+      background-color: var(--primary-color);
+    }
+  }
+
+  &:has(input:focus-visible) .text-container.is-invalid {
+    background-color: var(--primary-color);
+  }
 
   $gap: 7px;
 
@@ -27,5 +39,9 @@
     border-right: 1px solid var(--gray-400);
     padding: 0 7px;
     border-radius: var(--border-radius) 0 0 var(--border-radius);
+
+    &.is-invalid {
+      background-color: var(--error-color);
+    }
   }
 }

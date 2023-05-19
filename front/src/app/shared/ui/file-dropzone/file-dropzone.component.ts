@@ -33,6 +33,8 @@ export class FileDropzoneComponent implements ControlValueAccessor {
 
   @Input() accept?: string;
 
+  @Input() isInvalid: boolean | unknown = false;
+
   @Output() filesDropped: EventEmitter<FileList> = new EventEmitter();
 
   public readonly files$: BehaviorSubject<File[]> = new BehaviorSubject<File[]>(
