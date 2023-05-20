@@ -23,6 +23,7 @@
 
   --font-size: clamp(0.9rem, 2.8vw, 1rem);
   --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
+  --border-radius-small: 2px;
   --border-radius: 10px;
 
   --input-padding-x: 0.6rem;
@@ -39,7 +40,8 @@
   --gray-800: #777777;
   --gray-900: #595959;
 
-  --error-color: rgb(230, 36, 36);
+  --success-color: #5dad11;
+  --error-color: #e62424;
 
   --space-100: 0.25rem;
   --space-200: 0.5rem;

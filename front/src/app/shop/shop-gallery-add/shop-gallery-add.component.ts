@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { Flash, FlashService } from '../flash.service';
+import { Flash, FlashService } from '../../flash/flash.service';
 
 @Component({
   selector: 'app-shop-gallery-add',

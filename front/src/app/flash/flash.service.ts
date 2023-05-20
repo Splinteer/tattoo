@@ -6,11 +6,11 @@ export interface Flash {
   shop_id: string;
   creation_date: Date;
   name: string;
-  description: string | null;
+  description?: string;
   image_url: string;
   available: boolean;
-  price_range_start: number | null;
-  price_range_end: number | null;
+  price_range_start?: number;
+  price_range_end?: number;
 }
 
 @Injectable({
@@ -20,14 +20,18 @@ export class FlashService {
   private readonly http = inject(HttpClient);
 
   public create(formData: FormData) {
-    return this.http.post<Flash>('/flash/create', formData);
+    return this.http.post<void>('/flash/create', formData);
   }
 
-  public get() {
-    return this.http.get<Flash>('/flash');
+  public getMine() {
+    return this.http.get<Flash[]>('/flash');
+  }
+
+  public get(shopId: string) {
+    return this.http.get<Flash[]>('/flash/' + shopId);
   }
 
   public update(formData: FormData) {
-    return this.http.post<Flash>('/flash/update', formData);
+    return this.http.post<void>('/flash/update', formData);
   }
 }

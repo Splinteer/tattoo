@@ -22,7 +22,8 @@ export function greaterThanValidator(
 
     if (
       ignoreNulls &&
-      (control.value === null || comparingControl.value === null)
+      ([null, 0].includes(control.value) ||
+        [null, 0].includes(comparingControl.value))
     ) {
       return null;
     }
@@ -48,7 +49,8 @@ export function smallerThanValidator(
 
     if (
       ignoreNulls &&
-      (control.value === null || comparingControl.value === null)
+      ([null, 0].includes(control.value) ||
+        [null, 0].includes(comparingControl.value))
     ) {
       return null;
     }

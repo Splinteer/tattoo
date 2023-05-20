@@ -2,7 +2,7 @@
   <div class="header">
     <h1>Flashs</h1>
     <a
-      routerLink="/shop/gallery/add/flash"
+      routerLink="/shop/gallery/flash/add"
       class="button button-text button-small"
     >
       <i class="fa-regular fa-image"></i>
@@ -10,7 +10,10 @@
     </a>
   </div>
   <div class="grid">
-    <img [src]="flash" alt="" *ngFor="let flash of flashs" />
+    <app-flash-item
+      *ngFor="let flash of flashs$ | async"
+      [flash]="flash"
+    ></app-flash-item>
   </div>
   <div class="show-all">
     <a href="test">Voir tout</a>
@@ -21,7 +24,7 @@
   <div class="header">
     <h1>Gallery</h1>
     <a
-      routerLink="/shop/gallery/add/picture"
+      routerLink="/shop/gallery/picture/add"
       class="button button-text button-small"
     >
       <i class="fa-regular fa-image"></i>

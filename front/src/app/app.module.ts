@@ -1,5 +1,7 @@
-import { NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,12 +22,14 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { ShopModule } from './shop/shop.module';
 import { MobileNavigationComponent } from './mobile-navigation/mobile-navigation.component';
+import { FlashModule } from './flash/flash.module';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
 }
 
+registerLocaleData(localeFr);
 @NgModule({
   imports: [
     // Angular modules
@@ -54,9 +58,18 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AuthModule,
     ShopModule,
     SharedModule,
+    FlashModule,
   ],
-  declarations: [AppComponent, HomeComponent, HeaderComponent, MobileNavigationComponent],
-  providers: [],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    HeaderComponent,
+    MobileNavigationComponent,
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'fr' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'EUR' },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

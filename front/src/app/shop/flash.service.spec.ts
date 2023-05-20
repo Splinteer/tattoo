@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FlashService } from './flash.service';
+import { FlashService } from '../flash/flash.service';
 
 describe('FlashService', () => {
   let service: FlashService;

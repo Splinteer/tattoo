@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Flash, FlashService } from '../flash.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { Observable, forkJoin, of, startWith, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { backInDown } from '@app/shared/animation';
 import {
@@ -30,6 +30,8 @@ export class ShopFlashAddComponent implements OnInit {
   private readonly router = inject(Router);
 
   public form?: FormGroup;
+
+  public imagesPreview$?: Observable<string[]>;
 
   ngOnInit(): void {
     this.form = new FormGroup(
@@ -54,6 +56,37 @@ export class ShopFlashAddComponent implements OnInit {
           greaterThanValidator('price_range_end', 'price_range_start', true),
         ],
       }
+    );
+
+    this.imagesPreview$ = this.form.get('image')?.valueChanges.pipe(
+      startWith(this.flash ? [this.flash.image_url] : []),
+      switchMap((files) => {
+        if (files.length === 0) {
+          return of([]);
+        } else if (typeof files === 'string') {
+          return of([files]);
+        }
+
+        // Map each file to a FileReader observable and wait for all to complete.
+        const fileReaderObservables = (<File[]>files).map((file) => {
+          const fileReader = new FileReader();
+          const fileReader$ = new Observable<string>((subscriber) => {
+            fileReader.onload = () => {
+              subscriber.next(fileReader.result as string);
+              subscriber.complete();
+            };
+            fileReader.onerror = (error) => {
+              subscriber.error(error);
+            };
+          });
+
+          fileReader.readAsDataURL(file);
+
+          return fileReader$;
+        });
+
+        return forkJoin(fileReaderObservables);
+      })
     );
   }
 
@@ -87,5 +120,12 @@ export class ShopFlashAddComponent implements OnInit {
     return forkJoin(observables).subscribe(() =>
       this.router.navigate(['/shop/gallery/flashs'])
     );
+  }
+
+  public removeImage(index: number) {
+    const images: File[] = this.form?.get('image')?.value;
+    images.splice(index, 1);
+
+    this.form?.get('image')?.setValue(images);
   }
 }

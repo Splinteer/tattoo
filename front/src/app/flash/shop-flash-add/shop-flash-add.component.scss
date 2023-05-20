@@ -1,0 +1,54 @@
+small {
+  display: block;
+  margin-top: var(--space-100);
+}
+
+.input-group.image small {
+  text-align: right;
+}
+
+.input-group.price small.error-group {
+  text-align: left;
+}
+
+.images-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: var(--space-500);
+
+  .image-container {
+    position: relative;
+
+    button {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      border-radius: 50%;
+      border: 1px solid var(--primary-color);
+      padding: 3px;
+
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+
+    img {
+      height: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: var(--border-radius-small);
+      // border: 1px solid var(--primary-color);
+
+      box-shadow: 0px 0px 10px -1px rgba(94, 104, 121, 0.3);
+
+      aspect-ratio: 1;
+    }
+  }
+}

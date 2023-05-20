@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
+import { FlashService } from '../../flash/flash.service';
 
 @Component({
   selector: 'app-shop-gallery',
@@ -10,17 +11,21 @@ export class ShopGalleryComponent
   extends ResponsiveComponent
   implements OnInit
 {
-  public readonly flashs = [
-    'https://l2utattoo.com/assets/img/flash/1638544426_thumb.jpg',
-    'https://l2utattoo.com/assets/img/flash/1638544438_thumb.jpg',
-    'https://l2utattoo.com/assets/img/flash/1629484449.jpg',
-    'https://l2utattoo.com/assets/img/flash/1629485334.jpg',
-    'https://l2utattoo.com/assets/img/flash/1629485173.jpg',
-    'https://l2utattoo.com/assets/img/flash/1588774138.jpg',
-    'https://l2utattoo.com/assets/img/flash/1615734223.jpg',
-    'https://l2utattoo.com/assets/img/flash/1615732738.jpg',
-    'https://l2utattoo.com/assets/img/flash/1615733792.jpg',
-  ];
+  private readonly flashService = inject(FlashService);
+
+  public readonly flashs$ = this.flashService.getMine();
+
+  // [
+  //   'https://l2utattoo.com/assets/img/flash/1638544426_thumb.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1638544438_thumb.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1629484449.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1629485334.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1629485173.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1588774138.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1615734223.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1615732738.jpg',
+  //   'https://l2utattoo.com/assets/img/flash/1615733792.jpg',
+  // ];
 
   public readonly pictures = [
     'https://l2utattoo.com/assets/img/galerie/1615737244.jpeg',

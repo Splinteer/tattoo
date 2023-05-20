@@ -23,7 +23,7 @@ $max-columns: 4;
     grid-gap: $grid-gap;
     margin-block: var(--space-400);
 
-    img:last-child {
+    *:last-child {
       display: none;
     }
   }
@@ -55,7 +55,7 @@ $max-columns: 4;
     grid-template-columns: repeat(3, minmax(0, $max-width));
     grid-gap: var(--space-100);
 
-    img:last-child {
+    *:last-child {
       display: block;
     }
   }

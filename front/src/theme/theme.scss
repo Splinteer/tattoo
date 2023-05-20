@@ -19,8 +19,19 @@ body {
   box-sizing: border-box;
 }
 
+img,
+svg,
+canvas,
+video {
+  max-width: 100%;
+}
+
 app-root {
   flex-grow: 1;
+}
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .cdk-overlay-pane {
@@ -28,9 +39,13 @@ app-root {
   border-radius: var(--border-radius);
   background-color: var(--bg-color);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 90vh;
 
-  transform-origin: top;
-  animation: slide-down 200ms ease-in-out;
+  .cdk-dialog-container {
+    transform-origin: top;
+    animation: slide-down 200ms ease-in-out;
+  }
 
   .cdk-menu {
     display: inline-flex;
@@ -77,6 +92,10 @@ app-root {
   color: var(--gray-800);
 }
 
+.break-lines {
+  white-space: pre-line;
+}
+
 // Reset button styles
 button {
   background: none;
@@ -101,7 +120,7 @@ button {
 }
 
 .button-outline {
-  background: none;
+  background: var(--text-color-light);
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
 
