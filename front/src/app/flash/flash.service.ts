@@ -24,8 +24,8 @@ export class FlashService {
     return this.http.post<void>('/flash/create', formData);
   }
 
-  public getMine() {
-    return this.http.get<Flash[]>('/flash');
+  public getMine(lastDate?: Date, limit?: number) {
+    return this.http.post<Flash[]>('/flash', { lastDate, limit });
   }
 
   public get(flashId: string) {
@@ -38,5 +38,9 @@ export class FlashService {
 
   public update(id: string, formData: FormData) {
     return this.http.post<void>('/flash/' + id, formData);
+  }
+
+  public delete(id: string) {
+    return this.http.delete<void>('/flash/' + id);
   }
 }

@@ -1,4 +1,12 @@
 {
+  "COMMON": {
+    "edit": "Modifier",
+    "CONFIRM": {
+      "title": "Confirmez",
+      "cancel": "Annuler",
+      "confirm": "Je confirme"
+    }
+  },
   "SHOP": {
     "CREATE": {
       "shop_title": "Boutique",
@@ -43,7 +51,13 @@
 
       "create_button": "Ajouter {count, plural, =0 {le flash} one {le flash} other {les flashs}}",
       "update_button": "Mettre à jour le flash"
-    }
+    },
+    "DELETE_DIALOG": {
+      "title": "Voulez-vous supprimer ce flash ?",
+      "description": "Supprimer ce flash annulera toutes réservations de ce motif.",
+      "confirm": "Supprimer le flash"
+    },
+    "book": "Réserver ce flash"
   },
 
   "DROPZONE": {

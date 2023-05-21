@@ -7,6 +7,7 @@ import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
 import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.component';
 import { ShopFlashAddComponent } from '../flash/shop-flash-add/shop-flash-add.component';
 import { FlashEditComponent } from '@app/flash/flash-edit/flash-edit.component';
+import { FlashListComponent } from '@app/flash/flash-list/flash-list.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,8 @@ const routes: Routes = [
     path: 'gallery/flash/add',
     component: ShopFlashAddComponent,
   },
+
+  { path: 'gallery/flash/all', component: FlashListComponent },
 
   {
     path: 'gallery/flash/:id',

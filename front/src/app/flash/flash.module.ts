@@ -9,6 +9,8 @@ import { FlashDialogComponent } from './flash-dialog/flash-dialog.component';
 import { DialogModule } from '@angular/cdk/dialog';
 import { FlashEditComponent } from './flash-edit/flash-edit.component';
 import { RouterModule } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { FlashListComponent } from './flash-list/flash-list.component';
 
 @NgModule({
   imports: [
@@ -17,12 +19,14 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     DialogModule,
     RouterModule,
+    ScrollingModule,
   ],
   declarations: [
     ShopFlashAddComponent,
     FlashItemComponent,
     FlashDialogComponent,
     FlashEditComponent,
+    FlashListComponent,
   ],
   providers: [FlashService],
   exports: [FlashItemComponent],

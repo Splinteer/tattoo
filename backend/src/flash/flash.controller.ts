@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
   Param,
@@ -37,10 +38,13 @@ export class FlashController {
     return flash;
   }
 
-  @Get('')
+  @Post('')
   @UseGuards(new AuthGuard())
-  async getMine(@Credentials() credentials: ICredentials) {
-    return this.flashService.getByShop(credentials.shop_id);
+  async getMine(
+    @Credentials() credentials: ICredentials,
+    @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
+  ) {
+    return this.flashService.getByShop(credentials.shop_id, limit, lastDate);
   }
 
   @Get(':id')
@@ -75,8 +79,26 @@ export class FlashController {
     return updatedFlash;
   }
 
-  @Get('shop/:shopId')
-  async getByShop(@Param('shopId') shopId: string) {
-    return this.flashService.getByShop(shopId);
+  @Delete(':id')
+  @UseGuards(new AuthGuard())
+  async delete(
+    @Param('id') id: string,
+    @Credentials() credentials: ICredentials,
+  ) {
+    const flash = await this.flashService.get(id);
+
+    if (!flash || flash.shop_id !== credentials.shop_id) {
+      throw new ForbiddenException();
+    }
+
+    await this.flashService.delete(id);
+  }
+
+  @Post('shop/:shopId')
+  async getByShop(
+    @Param('shopId') shopId: string,
+    @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
+  ) {
+    return this.flashService.getByShop(shopId, limit, lastDate);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
 import { FlashService } from '../../flash/flash.service';
 
@@ -7,10 +7,7 @@ import { FlashService } from '../../flash/flash.service';
   templateUrl: './shop-gallery.component.html',
   styleUrls: ['./shop-gallery.component.scss'],
 })
-export class ShopGalleryComponent
-  extends ResponsiveComponent
-  implements OnInit
-{
+export class ShopGalleryComponent extends ResponsiveComponent {
   private readonly flashService = inject(FlashService);
 
   public readonly flashs$ = this.flashService.getMine();
@@ -38,6 +35,4 @@ export class ShopGalleryComponent
     'https://l2utattoo.com/assets/img/galerie/1615737481.jpeg',
     'https://l2utattoo.com/assets/img/galerie/1615737436.jpeg',
   ];
-
-  ngOnInit(): void {}
 }

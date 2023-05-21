@@ -4,7 +4,7 @@
 }
 
 .app-content {
-  padding: 1rem;
+  flex-grow: 1;
 }
 
 @media (max-width: 768px) {
@@ -13,7 +13,6 @@
   }
 
   .app-content {
-    flex-grow: 1;
     overflow-y: auto;
   }
 }

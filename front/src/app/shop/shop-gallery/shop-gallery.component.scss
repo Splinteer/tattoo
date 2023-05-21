@@ -5,6 +5,7 @@ $max-columns: 4;
 .container {
   max-width: calc($max-width * $max-columns + $grid-gap * $max-columns);
   margin-inline: auto;
+  padding: var(--page-content-padding);
 
   .header {
     display: flex;

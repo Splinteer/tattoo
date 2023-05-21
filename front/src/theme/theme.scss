@@ -96,6 +96,15 @@ app-root {
   white-space: pre-line;
 }
 
+.underline {
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: var(--primary-color-fade);
+  }
+}
+
 // Reset button styles
 button {
   background: none;
@@ -118,8 +127,16 @@ button {
     margin-right: var(--space-100);
   }
 
+  &.button-danger {
+    background-color: var(--error-color);
+  }
+
   &:hover {
     background-color: var(--primary-color-fade);
+
+    &.button-danger {
+      background-color: var(--error-color-fade);
+    }
   }
 }
 
@@ -128,9 +145,23 @@ button {
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
 
+  &.button-danger {
+    background: var(--text-color-light);
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+
+    &:focus-visible {
+      outline-color: var(--error-color);
+    }
+  }
+
   &:hover {
     color: var(--text-color-light);
     background-color: var(--primary-color);
+
+    &.button-danger {
+      background-color: var(--error-color);
+    }
   }
 }
 

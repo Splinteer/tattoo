@@ -9,6 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ToggleGroupComponent } from '../toggle-group/toggle-group.component';
 import { ToggleGroupItemComponent } from './toggleGroup/toggle-group-item/toggle-group-item.component';
 import { InputNumberComponent } from './input-number/input-number.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ConfirmService } from './confirm.service';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule],
@@ -20,6 +22,7 @@ import { InputNumberComponent } from './input-number/input-number.component';
     ToggleGroupComponent,
     ToggleGroupItemComponent,
     InputNumberComponent,
+    ConfirmDialogComponent,
   ],
   exports: [
     HamburgerComponent,
@@ -29,6 +32,8 @@ import { InputNumberComponent } from './input-number/input-number.component';
     ToggleGroupComponent,
     ToggleGroupItemComponent,
     InputNumberComponent,
+    ConfirmDialogComponent,
   ],
+  providers: [ConfirmService],
 })
 export class SharedUiModule {}

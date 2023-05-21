@@ -41,7 +41,8 @@
   --gray-900: #595959;
 
   --success-color: #5dad11;
-  --error-color: #e62424;
+  --error-color: hsl(0, 80%, 52%);
+  --error-color-fade: hsl(0, 60%, 52%);
 
   --space-100: 0.25rem;
   --space-200: 0.5rem;
@@ -49,4 +50,6 @@
   --space-400: 1rem;
   --space-500: 1.25rem;
   --space-600: 1.5rem;
+
+  --page-content-padding: var(--space-400);
 }

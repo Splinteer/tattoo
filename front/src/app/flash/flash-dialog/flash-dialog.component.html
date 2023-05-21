@@ -20,14 +20,38 @@
             </ng-container>
           </div>
         </div>
-        <a
-          [routerLink]="'shop/gallery/flash/' + flash.id"
-          (click)="dialog.close()"
-          class="button button-outline"
-        >
-          <i class="fa-regular fa-edit button-icon-left"></i>
-          Modifier
-        </a>
+        <ng-container *ngIf="{ credentials: credentials$ | async } as vm">
+          <span
+            class="button-group"
+            *ngIf="
+              vm.credentials && vm.credentials.shop_id === flash.shop_id;
+              else bookButton
+            "
+          >
+            <a
+              [routerLink]="'shop/gallery/flash/' + flash.id"
+              (click)="dialog.close()"
+              class="button button-outline"
+              translate
+            >
+              <i class="fa-regular fa-edit button-icon-left"></i>
+              COMMON.edit
+            </a>
+            <button
+              (click)="delete()"
+              class="button button-outline button-danger"
+              translate
+            >
+              <i class="fa-regular fa-trash"></i>
+            </button>
+          </span>
+        </ng-container>
+        <ng-template #bookButton>
+          <button class="button" translate>
+            <i class="fa-regular fa-calendar button-icon-left"></i>
+            FLASH.book
+          </button>
+        </ng-template>
       </div>
       <p class="break-lines" *ngIf="flash.description">
         {{ flash.description }}

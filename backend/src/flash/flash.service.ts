@@ -77,11 +77,16 @@ export class FlashService {
     return key;
   }
 
-  public async getByShop(shopId: string, limit = 9) {
-    const { rows } = await this.db.query<Flash>(
-      'SELECT * FROM flash WHERE shop_id=$1 ORDER BY creation_date DESC LIMIT $2',
-      [shopId, limit],
-    );
+  public async getByShop(shopId: string, limit: number, lastDate?: string) {
+    let query = 'SELECT * FROM flash WHERE shop_id=$1';
+    const values: any = [shopId, limit];
+    if (lastDate) {
+      query += ' AND creation_date < $3';
+      values.push(new Date(lastDate));
+    }
+    query += ' ORDER BY creation_date DESC LIMIT $2';
+
+    const { rows } = await this.db.query<Flash>(query, values);
 
     return rows;
   }
@@ -89,6 +94,15 @@ export class FlashService {
   public async get(id: string) {
     const { rows } = await this.db.query<Flash>(
       'SELECT * FROM flash WHERE id=$1',
+      [id],
+    );
+
+    return rows[0];
+  }
+
+  public async delete(id: string) {
+    const { rows } = await this.db.query<Flash>(
+      'DELETE FROM flash WHERE id=$1',
       [id],
     );
 

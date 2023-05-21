@@ -1,3 +1,8 @@
+:host {
+  display: block;
+  padding: var(--page-content-padding);
+}
+
 .logo {
   display: flex;
   flex-direction: row;
