@@ -34,6 +34,11 @@ export class ShopFlashAddComponent implements OnInit {
   public imagesPreview$?: Observable<string[]>;
 
   ngOnInit(): void {
+    const imageValidators = [];
+    if (!this.flash) {
+      imageValidators.push(Validators.required);
+    }
+
     this.form = new FormGroup(
       {
         name: new FormControl<string | null>(this.flash?.name ?? null, [
@@ -42,7 +47,7 @@ export class ShopFlashAddComponent implements OnInit {
         description: new FormControl<string | null>(
           this.flash?.description ?? null
         ),
-        image: new FormControl<File[]>([], [Validators.required]),
+        image: new FormControl<File[]>([], imageValidators),
         available: new FormControl<boolean>(this.flash?.available ?? true),
         price_range_start: new FormControl<number | null>(
           this.flash?.price_range_start ?? null
@@ -59,11 +64,20 @@ export class ShopFlashAddComponent implements OnInit {
     );
 
     this.imagesPreview$ = this.form.get('image')?.valueChanges.pipe(
-      startWith(this.flash ? [this.flash.image_url] : []),
+      startWith(
+        this.flash
+          ? [
+              'http://storage.googleapis.com/tattoo-public/' +
+                this.flash.image_url +
+                '?v=' +
+                this.flash.image_version,
+            ]
+          : []
+      ),
       switchMap((files) => {
         if (files.length === 0) {
           return of([]);
-        } else if (typeof files === 'string') {
+        } else if (typeof files[0] === 'string') {
           return of([files]);
         }
 
@@ -96,30 +110,41 @@ export class ShopFlashAddComponent implements OnInit {
     }
 
     this.form?.disable();
-    const service = this.flash ? 'update' : 'create';
+    const valueToMap = this.flash ? [false] : this.form?.value.image;
 
-    const observables = this.form?.value.image.map(
-      (image: File, index: number) => {
-        const formData: FormData = new FormData();
+    const observables = valueToMap.map((image: File, index: number) => {
+      const formData: FormData = new FormData();
+      if (image) {
         formData.append('image', image);
-
-        Object.entries(this.form?.getRawValue()).forEach(([key, value]) => {
-          if (value !== null && key !== 'image') {
-            formData.append(key, Array.isArray(value) ? value[0] : value);
-          }
-        });
-
-        if (this.form?.value.image.length > 1 && index > 0) {
-          formData.set('name', `${formData.get('name')} ${index + 1}`);
-        }
-
-        return this.flashService[service](formData);
       }
-    );
 
-    return forkJoin(observables).subscribe(() =>
-      this.router.navigate(['/shop/gallery/flashs'])
-    );
+      Object.entries(this.form?.getRawValue()).forEach(([key, value]) => {
+        if (value !== null && key !== 'image') {
+          formData.append(key, Array.isArray(value) ? value[0] : value);
+        }
+      });
+
+      console.log('la');
+
+      if (this.form?.value.image.length > 1 && index > 0) {
+        formData.set('name', `${formData.get('name')} ${index + 1}`);
+      }
+
+      if (this.flash) {
+        console.log('oio');
+        return this.flashService.update(this.flash.id, formData);
+      }
+
+      console.log('no');
+      return this.flashService.create(formData);
+    });
+
+    console.log('oklmmm');
+
+    return forkJoin(observables).subscribe(() => {
+      console.log('oklm');
+      return this.router.navigate(['/shop/gallery']);
+    });
   }
 
   public removeImage(index: number) {

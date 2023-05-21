@@ -9,6 +9,7 @@ export interface Flash {
   name: string;
   description?: string;
   image_url: string;
+  image_version: number;
   available: boolean;
   price_range_start?: number;
   price_range_end?: number;
@@ -38,6 +39,26 @@ export class FlashService {
     return rows[0];
   }
 
+  public async update(id: string, data: any): Promise<Flash> {
+    const { rows } = await this.db.query<Flash>(
+      'UPDATE flash SET name = $2, description = $3, available = $4, price_range_start = $5, price_range_end = $6 WHERE id = $1 RETURNING *',
+      [
+        id,
+        data.name,
+        data.description ?? null,
+        data.available,
+        data.price_range_start ?? null,
+        data.price_range_end ?? null,
+      ],
+    );
+
+    if (!rows[0]) {
+      throw new Error(`No flash found with id: ${id}`);
+    }
+
+    return rows[0];
+  }
+
   public async updateImage(
     shopId: string,
     flashId: string,
@@ -48,20 +69,29 @@ export class FlashService {
     await file.save(image.buffer);
     await file.makePublic();
 
-    await this.db.query('UPDATE flash SET image_url=$2 WHERE id=$1', [
-      flashId,
-      key,
-    ]);
+    await this.db.query(
+      'UPDATE flash SET image_url=$2, image_version = image_version + 1  WHERE id=$1',
+      [flashId, key],
+    );
 
     return key;
   }
 
-  public async get(shopId: string, limit = 9) {
+  public async getByShop(shopId: string, limit = 9) {
     const { rows } = await this.db.query<Flash>(
       'SELECT * FROM flash WHERE shop_id=$1 ORDER BY creation_date DESC LIMIT $2',
       [shopId, limit],
     );
 
     return rows;
+  }
+
+  public async get(id: string) {
+    const { rows } = await this.db.query<Flash>(
+      'SELECT * FROM flash WHERE id=$1',
+      [id],
+    );
+
+    return rows[0];
   }
 }

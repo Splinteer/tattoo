@@ -49,7 +49,7 @@
       <app-file-dropzone
         formControlName="image"
         accept="image/png, image/jpeg"
-        [multiple]="!!form"
+        [multiple]="!!!flash"
         [isInvalid]="
           (ngForm.submitted || form.get('image')?.touched) &&
           form.get('image')?.errors
@@ -83,6 +83,7 @@
           type="button"
           class="button button-outline"
           (click)="removeImage(imageIndex)"
+          *ngIf="!flash"
         >
           <i class="fa-regular fa-times"></i>
         </button>

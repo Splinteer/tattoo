@@ -114,6 +114,10 @@ button {
   background-color: var(--primary-color);
   transition: background-color 0.2s ease-in-out;
 
+  .button-icon-left {
+    margin-right: var(--space-100);
+  }
+
   &:hover {
     background-color: var(--primary-color-fade);
   }

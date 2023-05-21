@@ -13,7 +13,15 @@
 .container {
   position: relative;
 
-  button {
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-400);
+  }
+
+  button.close {
     position: absolute;
     top: 5px;
     right: 5px;

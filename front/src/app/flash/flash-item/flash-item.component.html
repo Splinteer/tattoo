@@ -16,7 +16,12 @@
     }}
   </div>
   <img
-    [src]="'http://storage.googleapis.com/tattoo-public/' + flash.image_url"
+    [src]="
+      'http://storage.googleapis.com/tattoo-public/' +
+      flash.image_url +
+      '?v=' +
+      flash.image_version
+    "
     [alt]="flash.name"
   />
 </div>

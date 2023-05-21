@@ -23,6 +23,7 @@ export class FlashItemComponent {
 
   public openModal() {
     this.dialog.open(FlashDialogComponent, {
+      maxWidth: '80%',
       data: this.flash,
     });
   }

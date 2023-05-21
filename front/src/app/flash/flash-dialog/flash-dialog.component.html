@@ -1,16 +1,33 @@
 <div class="container">
-  <button type="button" class="button button-outline" (click)="dialog.close()">
+  <button
+    type="button"
+    class="button button-outline close"
+    (click)="dialog.close()"
+  >
     <i class="fa-regular fa-times"></i>
   </button>
   <div class="scrollable-content">
     <app-flash-item [flash]="flash" [clickable]="false"> </app-flash-item>
     <div class="info-panel">
-      <h1>{{ flash.name }}</h1>
-      <div class="price" *ngIf="flash.price_range_start">
-        {{ flash.price_range_start | currency }}
-        <ng-container *ngIf="flash.price_range_end">
-          - {{ flash.price_range_end | currency }}
-        </ng-container>
+      <div class="head">
+        <div>
+          <h1>{{ flash.name }}</h1>
+
+          <div class="price" *ngIf="flash.price_range_start">
+            {{ flash.price_range_start | currency }}
+            <ng-container *ngIf="flash.price_range_end">
+              - {{ flash.price_range_end | currency }}
+            </ng-container>
+          </div>
+        </div>
+        <a
+          [routerLink]="'shop/gallery/flash/' + flash.id"
+          (click)="dialog.close()"
+          class="button button-outline"
+        >
+          <i class="fa-regular fa-edit button-icon-left"></i>
+          Modifier
+        </a>
       </div>
       <p class="break-lines" *ngIf="flash.description">
         {{ flash.description }}
