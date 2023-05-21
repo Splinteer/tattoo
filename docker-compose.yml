@@ -23,6 +23,23 @@ services:
       timeout: 5s
       retries: 5
 
+  supertokensdb:
+    image: "postgres:latest"
+    environment:
+      POSTGRES_USER: supertokens_user
+      POSTGRES_PASSWORD: somePassword
+      POSTGRES_DB: supertokens
+    ports:
+      - 5432:5432
+    networks:
+      - tattoo_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   supertokens:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:4.4
     depends_on:
@@ -31,7 +48,8 @@ services:
     ports:
       - 3567:3567
     environment:
-      postgresql_connection_uri: "postgresql://tattoo_user:passssword@tattoo_db:5432/tattoo"
+      postgresql_connection_uri: "postgresql://supertokens_user:somePassword@supertokensdb:5432/supertokens"
+
     networks:
       - tattoo_network
     restart: unless-stopped
