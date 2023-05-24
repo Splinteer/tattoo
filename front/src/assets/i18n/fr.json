@@ -29,8 +29,7 @@
 
   "FLASH": {
     "CREATE": {
-      "flash_title": "Détails du flash",
-      "flash_description": "Informations de base pour décrire votre flash",
+      "title": "Nouveau flash",
 
       "name": "Titre du flash",
       "description": "Description",
@@ -38,7 +37,7 @@
 
       "image": "{count, plural, one {Illustration} other {Illustrations}}",
       "image_required": "Veuillez déposer une ou plusieurs images",
-      "multiple_images": "Déposer plusieurs images générera plusieurs flashs avec les mêmes caractéristique",
+      "multiple_images": "Déposer plusieurs images générera plusieurs flashs avec les mêmes caractéristiques",
       "price": "Prix",
       "availability": "Disponibilité",
       "available": "Disponible",
@@ -52,12 +51,38 @@
       "create_button": "Ajouter {count, plural, =0 {le flash} one {le flash} other {les flashs}}",
       "update_button": "Mettre à jour le flash"
     },
+    "LIST": {
+      "title_shop": "Mes flashs"
+    },
     "DELETE_DIALOG": {
       "title": "Voulez-vous supprimer ce flash ?",
       "description": "Supprimer ce flash annulera toutes réservations de ce motif.",
       "confirm": "Supprimer le flash"
     },
     "book": "Réserver ce flash"
+  },
+
+  "GALLERY": {
+    "CREATE": {
+      "title": "Ajouter à la galerie",
+      "name": "Titre de l'illustration",
+      "description": "Description",
+      "description_long": "Informations complémentaires...",
+
+      "image": "{count, plural, one {Illustration} other {Illustrations}}",
+      "image_required": "Veuillez déposer une ou plusieurs images",
+      "multiple_images": "Déposer plusieurs images générera plusieurs illustrations avec les mêmes caractéristiques",
+
+      "create_button": "Ajouter {count, plural, =0 {l'illustration} one {l'illustration} other {les illustrations}}",
+      "update_button": "Mettre à jour l'illustration"
+    },
+    "LIST": {
+      "title_shop": "Ma galerie"
+    },
+    "DELETE_DIALOG": {
+      "title": "Voulez-vous supprimer cette illustration ?",
+      "confirm": "Supprimer l'illustration"
+    }
   },
 
   "DROPZONE": {

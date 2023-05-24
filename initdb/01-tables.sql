@@ -146,6 +146,7 @@ CREATE TABLE
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
         image_url varchar(255) NOT NULL,
+        image_version integer NOT NULL DEFAULT 0,
         project_id uuid,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,

@@ -4,7 +4,7 @@
   (scrolledIndexChange)="onScroll($event)"
 >
   <div class="grid">
-    <h1>Flashs</h1>
+    <h1 translate>FLASH.LIST.title_shop</h1>
     <app-flash-item
       [flash]="flash"
       *cdkVirtualFor="let flash of flashs$ | async; trackBy: trackByIdx"

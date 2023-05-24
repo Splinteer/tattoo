@@ -37,6 +37,12 @@ const routes: Routes = [
     path: 'gallery/flash/:id',
     component: FlashEditComponent,
   },
+
+  {
+    path: 'gallery',
+    loadChildren: () =>
+      import('../gallery/gallery.module').then((m) => m.GalleryModule),
+  },
 ];
 
 @NgModule({

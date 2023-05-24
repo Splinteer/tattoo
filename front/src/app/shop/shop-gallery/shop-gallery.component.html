@@ -9,32 +9,36 @@
       Ajouter un flash
     </a>
   </div>
-  <div class="grid">
-    <app-flash-item
-      *ngFor="let flash of flashs$ | async"
-      [flash]="flash"
-    ></app-flash-item>
-  </div>
-  <div class="show-all">
-    <a class="underline" routerLink="/shop/gallery/flash/all">Voir tout</a>
-  </div>
+  <ng-container *ngIf="flashs$ | async as flashs">
+    <div class="grid" [class.hide-last]="flashs.length === 9">
+      <app-flash-item
+        *ngFor="let flash of flashs"
+        [flash]="flash"
+      ></app-flash-item>
+    </div>
+    <div class="show-all" *ngIf="flashs.length === 9">
+      <a class="underline" routerLink="/shop/gallery/flash/all">Voir tout</a>
+    </div>
+  </ng-container>
 </div>
 
-<div class="container gallery">
+<div class="container flashs">
   <div class="header">
-    <h1>Gallery</h1>
-    <a
-      routerLink="/shop/gallery/picture/add"
-      class="button button-text button-small"
-    >
+    <h1>Ma galerie</h1>
+    <a routerLink="/shop/gallery/add" class="button button-text button-small">
       <i class="fa-regular fa-image"></i>
-      Ajouter une image
+      Ajouter une illustration
     </a>
   </div>
-  <div class="grid">
-    <img [src]="picture" alt="" *ngFor="let picture of pictures" />
-  </div>
-  <div class="show-all">
-    <a class="underline" href="test">Voir tout</a>
-  </div>
+  <ng-container *ngIf="gallerys$ | async as gallerys">
+    <div class="grid" [class.hide-last]="gallerys.length === 9">
+      <app-gallery-item
+        *ngFor="let gallery of gallerys"
+        [gallery]="gallery"
+      ></app-gallery-item>
+    </div>
+    <div class="show-all" *ngIf="gallerys.length === 9">
+      <a class="underline" routerLink="/shop/gallery/all">Voir tout</a>
+    </div>
+  </ng-container>
 </div>

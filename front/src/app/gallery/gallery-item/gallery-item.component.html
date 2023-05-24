@@ -1,0 +1,15 @@
+<div
+  class="container"
+  [class.clickable]="clickable"
+  (click)="clickable && openModal()"
+>
+  <img
+    [src]="
+      'http://storage.googleapis.com/tattoo-public/' +
+      gallery.image_url +
+      '?v=' +
+      gallery.image_version
+    "
+    [alt]="gallery.name"
+  />
+</div>

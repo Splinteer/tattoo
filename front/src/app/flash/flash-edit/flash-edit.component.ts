@@ -10,8 +10,11 @@ import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-flash-edit',
-  templateUrl: './flash-edit.component.html',
-  styleUrls: ['./flash-edit.component.scss'],
+  template: `
+    <ng-container *ngIf="flash$ | async as flash">
+      <app-shop-flash-add [flash]="flash"></app-shop-flash-add>
+    </ng-container>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlashEditComponent {

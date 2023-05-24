@@ -24,7 +24,7 @@ $max-columns: 4;
     grid-gap: $grid-gap;
     margin-block: var(--space-400);
 
-    *:last-child {
+    &.hide-last *:last-child {
       display: none;
     }
   }
@@ -56,7 +56,7 @@ $max-columns: 4;
     grid-template-columns: repeat(3, minmax(0, $max-width));
     grid-gap: var(--space-100);
 
-    *:last-child {
+    &.hide-last *:last-child {
       display: block;
     }
   }

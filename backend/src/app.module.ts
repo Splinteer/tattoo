@@ -6,6 +6,7 @@ import { CustomerModule } from './customer/customer.module';
 import { ShopModule } from './shop/shop.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { FlashModule } from './flash/flash.module';
+import { GalleryModule } from './gallery/gallery.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FlashModule } from './flash/flash.module';
     CustomerModule,
     ShopModule,
     FlashModule,
+    GalleryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

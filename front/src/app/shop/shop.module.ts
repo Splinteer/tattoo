@@ -11,6 +11,7 @@ import { ShopEditComponent } from './shop-edit/shop-edit.component';
 import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
 import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.component';
 import { FlashModule } from '@app/flash/flash.module';
+import { GalleryModule } from '@app/gallery/gallery.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { FlashModule } from '@app/flash/flash.module';
     SharedModule,
     ReactiveFormsModule,
     FlashModule,
+    GalleryModule,
   ],
   declarations: [
     CreationComponent,
