@@ -68,7 +68,6 @@ export class FlashController {
 
     const updatedFlash = await this.flashService.update(id, body);
     if (image) {
-      console.log(image);
       await this.flashService.updateImage(
         updatedFlash.shop_id,
         updatedFlash.id,

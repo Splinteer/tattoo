@@ -8,10 +8,13 @@ import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.com
 import { ShopFlashAddComponent } from '../flash/shop-flash-add/shop-flash-add.component';
 import { FlashEditComponent } from '@app/flash/flash-edit/flash-edit.component';
 import { FlashListComponent } from '@app/flash/flash-list/flash-list.component';
+import { ShopGuard } from './shop.guard';
+import { ShopProfileComponent } from './shop-profile/shop-profile.component';
 
 const routes: Routes = [
   {
     path: '',
+    canActivate: [ShopGuard],
     component: HomeComponent,
   },
   {
@@ -20,28 +23,41 @@ const routes: Routes = [
   },
   {
     path: 'edit',
+    canActivate: [ShopGuard],
     component: ShopEditComponent,
   },
   {
     path: 'gallery',
+    canActivate: [ShopGuard],
     component: ShopGalleryComponent,
   },
   {
     path: 'gallery/flash/add',
+    canActivate: [ShopGuard],
     component: ShopFlashAddComponent,
   },
 
-  { path: 'gallery/flash/all', component: FlashListComponent },
+  {
+    path: 'gallery/flash/all',
+    canActivate: [ShopGuard],
+    component: FlashListComponent,
+  },
 
   {
     path: 'gallery/flash/:id',
+    canActivate: [ShopGuard],
     component: FlashEditComponent,
   },
 
   {
     path: 'gallery',
+    canActivate: [ShopGuard],
     loadChildren: () =>
       import('../gallery/gallery.module').then((m) => m.GalleryModule),
+  },
+  {
+    path: ':shopUrl',
+    component: ShopProfileComponent,
   },
 ];
 

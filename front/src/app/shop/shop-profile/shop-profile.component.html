@@ -1,0 +1,26 @@
+<ng-container *ngIf="shop$ | async as shop">
+  <div class="header">
+    <img
+      class="logo"
+      [src]="
+        'http://storage.googleapis.com/tattoo-public/shops/' +
+        shop.id +
+        '/logo?v=' +
+        shop.profile_picture_version
+      "
+      [alt]="shop.name"
+    />
+    <div class="description">
+      <div class="title">
+        <h1>{{ shop.name }}</h1>
+        <div class="note">
+          <i class="fa-solid fa-star"></i>
+          4.8 (128 rendez-vous)
+        </div>
+      </div>
+      <p class="description break-lines">
+        {{ shop.description }}
+      </p>
+    </div>
+  </div>
+</ng-container>

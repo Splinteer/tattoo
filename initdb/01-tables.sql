@@ -27,7 +27,7 @@ CREATE TABLE
         name varchar(255) NOT NULL,
         url varchar(255) NOT NULL,
         description text,
-        profile_picture varchar(255),
+        got_profile_picture boolean NOT NULL DEFAULT false,
         profile_picture_version integer NOT NULL DEFAULT 0,
         instagram varchar(255),
         twitter varchar(255),

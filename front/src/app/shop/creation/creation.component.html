@@ -59,28 +59,29 @@
     </div>
   </div>
 
-  <div role="group" aria-labelledby="group-logo">
+  <div role="group" aria-labelledby="group-description">
     <div class="group-description">
-      <label id="group-logo" translate>SHOP.CREATE.logo_title</label>
-      <small translate>SHOP.CREATE.logo_description</small>
+      <label id="group-description" translate
+        >SHOP.CREATE.description_title</label
+      >
+      <small translate>SHOP.CREATE.description_description</small>
     </div>
 
-    <div class="input-group logo">
-      <div *ngIf="logoPreview$ | async as imgPreview">
-        <img [src]="imgPreview" />
-        <button
-          type="button"
-          (click)="form.get('logo')?.setValue([])"
-          *ngIf="!shop"
-        >
-          <i class="fad fa-trash"></i>
-        </button>
-      </div>
+    <div class="input-group">
+      <label for="description" translate>FLASH.CREATE.description</label>
 
-      <app-file-dropzone
-        formControlName="logo"
-        accept="image/png, image/jpeg"
-      ></app-file-dropzone>
+      <textarea
+        id="description"
+        class="break-lines"
+        formControlName="description"
+        rows="6"
+        [placeholder]="'SHOP.CREATE.description_placeholder' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('description')?.touched) &&
+            form.get('description')?.errors
+        }"
+      ></textarea>
     </div>
   </div>
 

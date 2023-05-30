@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  padding: var(--page-content-padding);
+  max-width: 1000px;
+  margin-inline: auto;
+  background-color: azure;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-gap: 2rem;
+  justify-items: center;
+  align-items: center;
+  padding: var(--space-400);
+
+  img.logo {
+    border-radius: 50%;
+    border: 1px solid var(--gray-500);
+    aspect-ratio: 1;
+    object-fit: cover;
+    min-width: 60px;
+  }
+
+  .description {
+    .title {
+      h1 {
+        margin-bottom: var(--space-100);
+      }
+
+      .note {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-100);
+        font-size: 0.9rem;
+
+        i {
+          font-size: 0.7rem;
+        }
+      }
+    }
+
+    .description {
+      color: var(--gray-800);
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+}

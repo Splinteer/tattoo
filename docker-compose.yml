@@ -34,6 +34,8 @@ services:
     networks:
       - tattoo_network
     restart: unless-stopped
+    volumes:
+      - /volumes/pg-data/supertokensdb_tattoo/:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 5s

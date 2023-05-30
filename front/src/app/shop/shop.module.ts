@@ -12,6 +12,7 @@ import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
 import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.component';
 import { FlashModule } from '@app/flash/flash.module';
 import { GalleryModule } from '@app/gallery/gallery.module';
+import { ShopProfileComponent } from './shop-profile/shop-profile.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { GalleryModule } from '@app/gallery/gallery.module';
     ShopEditComponent,
     ShopGalleryComponent,
     ShopGalleryAddComponent,
+    ShopProfileComponent,
   ],
   providers: [ShopService],
 })

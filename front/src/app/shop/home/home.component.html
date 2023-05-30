@@ -2,8 +2,13 @@
   <div class="header">
     <img
       class="logo"
-      src="http://storage.googleapis.com/tattoo-public/shops/6c597e78-9d7c-4dc4-902c-d3b58b638bc7/logo"
-      alt=""
+      [src]="
+        'http://storage.googleapis.com/tattoo-public/shops/' +
+        credentials.shop_id +
+        '/logo?v=' +
+        credentials.shop_image_version
+      "
+      [alt]="credentials.shop_name"
     />
     <div class="description">
       <div class="title">

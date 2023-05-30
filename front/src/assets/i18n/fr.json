@@ -15,6 +15,10 @@
       "name": "Nom de la boutique",
       "url": "Url de la boutique",
 
+      "description_title": "Description de la boutique",
+      "description_description": "Décrivez brièvement votre salon et ce qui le distingue des autres.",
+      "description_placeholder": "Ville, style du salon, description de l'équipe, horaires d'ouverture...",
+
       "logo_title": "Logo de la boutique",
       "logo_description": "Permettez a vos clients de vous reconaitre",
 
