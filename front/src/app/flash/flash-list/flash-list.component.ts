@@ -1,15 +1,24 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { Flash, FlashService } from '../flash.service';
 import {
+  BehaviorSubject,
+  Observable,
   Subject,
   combineLatest,
   scan,
+  share,
   shareReplay,
   switchMap,
   takeWhile,
   tap,
 } from 'rxjs';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
 
 @Component({
@@ -17,54 +26,93 @@ import { ResponsiveComponent } from '@app/shared/responsive/responsive.component
   templateUrl: './flash-list.component.html',
   styleUrls: ['./flash-list.component.scss'],
 })
-export class FlashListComponent extends ResponsiveComponent {
-  @ViewChild(CdkVirtualScrollViewport) viewPort!: CdkVirtualScrollViewport;
+export class FlashListComponent
+  extends ResponsiveComponent
+  implements OnChanges
+{
+  @Input() shop?: string;
 
   private readonly flashService = inject(FlashService);
 
-  private fetchMore = new Subject<void>();
+  private fetchMore = new BehaviorSubject<boolean>(true);
 
   private allDataLoaded = false;
 
   private lastDate?: Date;
 
-  public readonly flashs$ = combineLatest({
-    isMobile: this.isMobile$,
-    fetchMore: this.fetchMore,
-  }).pipe(
-    switchMap(({ isMobile }) =>
-      this.flashService.getMine(this.lastDate, isMobile ? 9 : 8).pipe(
-        tap((flashs) => {
-          this.lastDate = flashs.at(-1)?.creation_date;
+  public flashs$?: Observable<Flash[]>;
 
-          setTimeout(() => {
-            const end = this.viewPort.getRenderedRange().end;
-            const total = this.viewPort.getDataLength();
+  ngOnChanges(changes: SimpleChanges): void {
+    // if (this.shop) {
+    //   this.flashs$ = this.isMobile$.pipe(
+    //     switchMap((isMobile) =>
+    //       this.flashService.getByShop(
+    //         <string>this.shop,
+    //         this.lastDate,
+    //         isMobile ? 9 : 8
+    //       )
+    //     )
+    //   );
+    // }
 
-            console.log(end, total);
+    // this.flashs$ = combineLatest({
+    //   isMobile: this.isMobile$,
+    //   fetchMore: this.fetchMore,
+    // }).pipe(
+    //   shareReplay(1),
+    //   switchMap(({ isMobile }) => {
+    //     return this.flashService.getByShop(
+    //       <string>this.shop,
+    //       this.lastDate,
+    //       isMobile ? 9 : 8
+    //     );
+    //   })
+    // );
+    console.log('init');
+    this.flashs$ = combineLatest({
+      isMobile: this.isMobile$,
+      fetchMore: this.fetchMore,
+    }).pipe(
+      switchMap(({ isMobile }) =>
+        (this.shop
+          ? this.flashService.getByShop(
+              this.shop,
+              this.lastDate,
+              isMobile ? 9 : 8
+            )
+          : this.flashService.getMine(this.lastDate, isMobile ? 9 : 8)
+        ).pipe(
+          tap((flashs) => {
+            console.log('result', flashs);
+            this.lastDate = flashs.at(-1)?.creation_date;
 
-            if (end === total && !this.allDataLoaded) {
-              this.fetchMore.next();
-            }
-          });
-        })
-      )
-    ),
-    scan((acc, newPage) => {
-      if (newPage.length === 0) {
-        this.allDataLoaded = true;
-      }
+            setTimeout(() => {
+              if (!this.allDataLoaded) {
+                // this.fetchMore.next(true);
+              }
+            });
+          })
+        )
+      ),
+      scan((acc, newPage) => {
+        if (newPage.length === 0) {
+          console.log('oh non', acc, newPage);
+          this.allDataLoaded = true;
+        }
 
-      return [...acc, ...newPage];
-    }),
-    takeWhile(() => !this.allDataLoaded),
-    shareReplay(1)
-  );
+        return [...acc, ...newPage];
+      }),
+      takeWhile(() => !this.allDataLoaded),
+      shareReplay(1)
+    );
+  }
 
-  onScroll(index: number) {
-    if (!this.allDataLoaded && index >= this.viewPort.getDataLength() - 8) {
-      this.fetchMore.next();
-    }
+  onScroll() {
+    console.log('onScroll');
+    this.fetchMore.next(true);
+    // if (!this.allDataLoaded && index >= this.viewPort.getDataLength() - 8) {
+    //   this.fetchMore.next();
+    // }
   }
 
   trackByIdx(index: number, item: Flash): string {

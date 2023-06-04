@@ -1,14 +1,51 @@
-<cdk-virtual-scroll-viewport
-  itemSize="50"
-  class="viewport"
-  (scrolledIndexChange)="onScroll($event)"
->
-  <div class="grid">
-    <h1 translate>FLASH.LIST.title_shop</h1>
-    <app-flash-item
-      [flash]="flash"
-      *cdkVirtualFor="let flash of flashs$ | async; trackBy: trackByIdx"
-    >
-    </app-flash-item>
-  </div>
-</cdk-virtual-scroll-viewport>
+<div class="grid" infiniteScroll (scrolled)="onScroll()">
+  <h1 *ngIf="!shop" translate>FLASH.LIST.title_shop</h1>
+  <app-flash-item
+    infiniteScroll
+    [flash]="flash"
+    *ngFor="let flash of flashs$ | async; trackBy: trackByIdx"
+  >
+  </app-flash-item>
+</div>
+
+<!--
+
+
+    // this.flashs$ = combineLatest({
+    //   isMobile: this.isMobile$,
+    //   fetchMore: this.fetchMore,
+    // }).pipe(
+    //   switchMap(({ isMobile }) =>
+    //     (this.shop
+    //       ? this.flashService.getByShop(
+    //           this.shop,
+    //           this.lastDate,
+    //           isMobile ? 9 : 8
+    //         )
+    //       : this.flashService.getMine(this.lastDate, isMobile ? 9 : 8)
+    //     ).pipe(
+    //       tap((flashs) => {
+    //         this.lastDate = flashs.at(-1)?.creation_date;
+
+    //         setTimeout(() => {
+    //           // const end = this.viewPort.getRenderedRange().end;
+    //           // const total = this.viewPort.getDataLength();
+    //           // if (end === total && !this.allDataLoaded) {
+    //           //   this.fetchMore.next();
+    //           // }
+    //         });
+    //       })
+    //     )
+    //   ),
+    //   scan((acc, newPage) => {
+    //     if (newPage.length === 0) {
+    //       this.allDataLoaded = true;
+    //     }
+
+    //     return [...acc, ...newPage];
+    //   }),
+    //   takeWhile(() => !this.allDataLoaded),
+    //   shareReplay(1)
+    // );
+
+ -->

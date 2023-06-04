@@ -121,7 +121,7 @@ button {
   padding: 0.5rem 1rem;
   color: var(--text-color-light);
   background-color: var(--primary-color);
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease;
 
   .button-icon-left {
     margin-right: var(--space-100);

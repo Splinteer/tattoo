@@ -44,7 +44,7 @@ export class FlashController {
     @Credentials() credentials: ICredentials,
     @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
   ) {
-    return this.flashService.getByShop(credentials.shop_id, limit, lastDate);
+    return this.flashService.getByShop(credentials.shop_url, limit, lastDate);
   }
 
   @Get(':id')
@@ -92,12 +92,11 @@ export class FlashController {
 
     await this.flashService.delete(id);
   }
-
-  @Post('shop/:shopId')
+  @Post('shop/:shopUrl')
   async getByShop(
-    @Param('shopId') shopId: string,
+    @Param('shopUrl') shopUrl: string,
     @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
   ) {
-    return this.flashService.getByShop(shopId, limit, lastDate);
+    return this.flashService.getByShop(shopUrl, limit, lastDate);
   }
 }

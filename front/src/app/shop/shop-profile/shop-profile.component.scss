@@ -1,9 +1,13 @@
 :host {
-  display: block;
-  padding: var(--page-content-padding);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   max-width: 1000px;
   margin-inline: auto;
   background-color: azure;
+  width: 100%;
+  height: 100%;
 }
 
 .header {
@@ -23,27 +27,70 @@
   }
 
   .description {
-    .title {
-      h1 {
-        margin-bottom: var(--space-100);
-      }
+    .description-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
 
-      .note {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: var(--space-100);
-        font-size: 0.9rem;
+      .title {
+        h1 {
+          margin-bottom: var(--space-100);
+        }
 
-        i {
-          font-size: 0.7rem;
+        .note {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: var(--space-100);
+          font-size: 0.9rem;
+
+          i {
+            font-size: 0.7rem;
+          }
         }
       }
     }
 
-    .description {
+    .bio {
       color: var(--gray-800);
     }
+  }
+}
+
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-300);
+  margin-block: var(--space-300);
+
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--text-color-light);
+    background-color: var(--text-color-dark);
+    padding: 0.8rem;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--primary-color-fade);
+    }
+  }
+}
+
+.tabs {
+  flex-grow: 1;
+  display: flex;
+  width: 100%;
+
+  & > * {
+    flex-grow: 1;
   }
 }
 

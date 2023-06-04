@@ -11,16 +11,33 @@
       [alt]="shop.name"
     />
     <div class="description">
-      <div class="title">
-        <h1>{{ shop.name }}</h1>
-        <div class="note">
-          <i class="fa-solid fa-star"></i>
-          4.8 (128 rendez-vous)
+      <div class="description-head">
+        <div class="title">
+          <h1>{{ shop.name }}</h1>
+          <div class="note">
+            <i class="fa-solid fa-star"></i>
+            4.8 (128 rendez-vous)
+          </div>
+        </div>
+        <div class="appointment">
+          <button class="button">Prendre rendez-vous</button>
         </div>
       </div>
-      <p class="description break-lines">
+      <p class="bio break-lines">
         {{ shop.description }}
       </p>
+    </div>
+  </div>
+  <div class="social" *ngIf="shop.socials.length">
+    <ng-container *ngFor="let social of shop.socials">
+      <a [href]="social.url" target="_blank">
+        <i [ngClass]="social.icon"></i>
+      </a>
+    </ng-container>
+  </div>
+  <div class="tabs">
+    <div class="flashs">
+      <app-flash-list [shop]="shop.url"></app-flash-list>
     </div>
   </div>
 </ng-container>

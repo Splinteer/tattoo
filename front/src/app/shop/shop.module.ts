@@ -13,6 +13,7 @@ import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.com
 import { FlashModule } from '@app/flash/flash.module';
 import { GalleryModule } from '@app/gallery/gallery.module';
 import { ShopProfileComponent } from './shop-profile/shop-profile.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { ShopProfileComponent } from './shop-profile/shop-profile.component';
     ReactiveFormsModule,
     FlashModule,
     GalleryModule,
+    ScrollingModule,
   ],
   declarations: [
     CreationComponent,

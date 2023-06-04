@@ -32,8 +32,11 @@ export class FlashService {
     return this.http.get<Flash>('/flash/' + flashId);
   }
 
-  public getByShop(shopId: string) {
-    return this.http.get<Flash[]>('/flash/shop/' + shopId);
+  public getByShop(shopId: string, lastDate?: Date, limit?: number) {
+    return this.http.post<Flash[]>('/flash/shop/' + shopId, {
+      lastDate,
+      limit,
+    });
   }
 
   public update(id: string, formData: FormData) {

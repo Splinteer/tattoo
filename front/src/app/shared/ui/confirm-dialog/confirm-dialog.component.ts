@@ -1,5 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { Component, Inject, OnInit, Optional, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 interface ConfirmDialogData {
   title?: string;
