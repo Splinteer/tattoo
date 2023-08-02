@@ -1,0 +1,27 @@
+<ul class="chat-list">
+  <li
+    *ngFor="let chat of chats$ | async"
+    [class.unread]="!chat.read"
+    (click)="chatService.selectChat(chat)"
+  >
+    <img
+      class="profile-pic"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png"
+      alt="Profile Picture"
+    />
+    <div class="details">
+      <span class="contact-name">{{ chat.contact }}</span>
+      <div class="sub">
+        <ng-container *ngIf="chat.messages$ | async as messages">
+          <div class="last-message">
+            {{ messages[messages.length - 1].message }}
+          </div>
+          <div class="last-update">
+            {{ messages[messages.length - 1].date | timeAgo : "short" | async }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <span *ngIf="!chat.read" class="unread-indicator"></span>
+  </li>
+</ul>
