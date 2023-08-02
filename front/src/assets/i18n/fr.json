@@ -31,5 +31,20 @@
     "BUTTONS": {
       "cancel": "Annuler"
     }
+  },
+  "PIPE": {
+    "TIMEAGO": {
+      "just_now": "A l'instant",
+      "short": {
+        "year": "a",
+        "month": "m",
+        "week": "sem",
+        "day": "j",
+        "hour": "h",
+        "minute": "min",
+        "second": "s",
+        "time_ago": "{count}{unit}"
+      }
+    }
   }
 }
