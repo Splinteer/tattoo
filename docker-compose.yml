@@ -23,17 +23,20 @@ services:
       timeout: 5s
       retries: 5
 
-  supertokens:
-    image: registry.supertokens.io/supertokens/supertokens-postgresql:4.4
+  tattoo_supertokens:
+    container_name: tattoo_supertokens
+    image: registry.supertokens.io/supertokens/supertokens-postgresql
     depends_on:
       tattoo_db:
         condition: service_healthy
     ports:
       - 3567:3567
     environment:
-      postgresql_connection_uri: "postgresql://tattoo_user:passssword@tattoo_db:5432/tattoo"
-    networks:
-      - tattoo_network
+      POSTGRESQL_USER: "tattoo_user"
+      POSTGRESQL_PASSWORD: "passssword"
+      POSTGRESQL_HOST: "tattoo_db"
+      POSTGRESQL_PORT: "5432"
+      POSTGRESQL_DATABASE_NAME: "tattoo"
     restart: unless-stopped
     healthcheck:
       test: >
@@ -41,7 +44,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 networks:
   tattoo_network:
     driver: bridge
