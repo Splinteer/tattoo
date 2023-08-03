@@ -31,12 +31,15 @@ services:
         condition: service_healthy
     ports:
       - 3567:3567
+    networks:
+      - tattoo_network
     environment:
       POSTGRESQL_USER: "tattoo_user"
       POSTGRESQL_PASSWORD: "passssword"
       POSTGRESQL_HOST: "tattoo_db"
       POSTGRESQL_PORT: "5432"
       POSTGRESQL_DATABASE_NAME: "tattoo"
+      POSTGRESQL_TABLE_NAMES_PREFIX: "supertokens"
     restart: unless-stopped
     healthcheck:
       test: >
