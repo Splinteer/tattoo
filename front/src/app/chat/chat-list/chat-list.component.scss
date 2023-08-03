@@ -1,5 +1,5 @@
 :host {
-  flex: 1;
+  max-width: 250px;
   border-right: 1px solid #ccc;
   overflow: auto;
 
@@ -10,9 +10,11 @@
 
     li {
       display: flex;
+      justify-content: space-around;
       align-items: center;
       padding: var(--space-300);
       border-bottom: 1px solid var(--gray-300);
+      gap: var(--space-200);
       cursor: pointer;
       width: 100%;
 
@@ -31,6 +33,7 @@
         .sub {
           margin-top: var(--space-100);
           display: flex;
+          gap: var(--space-200);
           flex-wrap: wrap;
           justify-content: space-between;
           font-size: var(--text-sm);
@@ -53,7 +56,7 @@
         .unread-indicator {
           height: 10px;
           width: 10px;
-          background-color: #0099ff;
+          background-color: var(--primary-color);
           border-radius: 50%;
           display: inline-block;
           position: absolute;
@@ -63,12 +66,42 @@
         }
       }
 
-      .profile-pic {
+      .profile-pic img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        margin-right: 10px;
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    width: 80px;
+  }
+
+  :host .chat-list li {
+    flex-wrap: wrap;
+    text-align: center;
+
+    .profile-pic {
+      flex-basis: 100%;
+    }
+
+    .last-message,
+    .details .sub {
+      display: none;
+    }
+
+    .details {
+      flex-grow: 0;
+      margin-right: 0;
+    }
+
+    .unread-indicator {
+      position: inherit !important;
+      right: 0 !important;
+      transform: none !important;
     }
   }
 }

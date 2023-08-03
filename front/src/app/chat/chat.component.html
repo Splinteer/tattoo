@@ -34,8 +34,8 @@
           *ngIf="
             index === 0 ||
             (messages[index - 1] &&
-              (messages[index - 1].date | date : 'm/MM/Y') !==
-                (message.date | date : 'm/MM/Y'))
+              (messages[index - 1].date | date : 'mediumDate') !==
+                (message.date | date : 'mediumDate'))
           "
         >
           {{ message.date | date : "mediumDate" }}
@@ -52,7 +52,7 @@
       <input
         [(ngModel)]="newMessage"
         type="text"
-        placeholder="Type your message here..."
+        placeholder="Aa"
         (keyup.enter)="addMessage(selectedChat)"
       />
       <button class="send-btn" (click)="addMessage(selectedChat)">

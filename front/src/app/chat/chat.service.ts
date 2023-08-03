@@ -60,45 +60,45 @@ export class ChatService {
   private readonly getChats$ = of([
     {
       id: 'chat1',
-      last_update: new Date('January 23, 2023 10:23:45.678'),
+      last_update: new Date('Febuary 26, 2023 10:23:45.678'),
       contact: 'Jane',
       messages: [
         {
           id: '4',
           message: 'Great, see you then!',
           sender: true,
-          date: new Date('January 23, 2023 10:21:45.678'),
+          date: new Date('Febuary 26, 2023 10:21:45.678'),
         },
         {
           id: '3',
           message: "Let's meet at 5pm?",
           sender: false,
-          date: new Date('January 23, 2023 10:20:45.678'),
+          date: new Date('Febuary 23, 2023 10:20:45.678'),
         },
         {
           id: '2',
           message: 'Oui et toi?',
           sender: true,
-          date: new Date('January 23, 2023 10:19:45.678'),
+          date: new Date('Febuary 23, 2023 10:19:45.678'),
         },
         {
           id: '1',
           message: 'Salut ca va?',
           sender: false,
-          date: new Date('January 23, 2023 10:18:45.678'),
+          date: new Date('Febuary 21, 2023 10:18:45.678'),
         },
       ],
     },
     {
       id: 'chat2',
-      last_update: new Date('January 27, 2023 12:23:45.678'),
+      last_update: new Date('January 30, 2023 12:23:45.678'),
       contact: 'Henry',
       messages: [
         {
           id: '3',
           message: 'On fait ca?',
           sender: true,
-          date: new Date('January 27, 2023 12:22:45.678'),
+          date: new Date('January 30, 2023 12:22:45.678'),
         },
         {
           id: '2',

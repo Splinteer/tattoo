@@ -36,6 +36,7 @@
     "@angular-devkit/build-angular": "^15.2.9",
     "@angular/cli": "~15.2.9",
     "@angular/compiler-cli": "^15.2.9",
+    "@angular/localize": "^15.2.9",
     "@types/jasmine": "~4.0.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",

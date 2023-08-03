@@ -21,11 +21,16 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
 import { ShopModule } from './shop/shop.module';
 import { MobileNavigationComponent } from './mobile-navigation/mobile-navigation.component';
 import { ChatModule } from './chat/chat.module';
+import { LOCALE_ID } from '@angular/core';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
 }
+
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr);
 
 @NgModule({
   imports: [
@@ -63,7 +68,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HeaderComponent,
     MobileNavigationComponent,
   ],
-  providers: [],
+  providers: [{ provide: LOCALE_ID, useValue: 'fr' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
