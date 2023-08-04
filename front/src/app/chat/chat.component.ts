@@ -62,6 +62,10 @@ export class ChatComponent {
   addMessage(chat: ReactiveChat): void {
     const message = this.newMessage.trim();
 
+    if (!message.length) {
+      return;
+    }
+
     const newMessage: Message = {
       id: Date.now().toString(),
       message,

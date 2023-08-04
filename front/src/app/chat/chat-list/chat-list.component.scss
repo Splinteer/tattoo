@@ -39,6 +39,15 @@
           font-size: var(--text-sm);
           color: var(--gray-800);
 
+          .last-message {
+            max-width: calc(100% - 30px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+          }
+
           .last-update {
             font-size: var(--text-xs);
           }
@@ -83,6 +92,7 @@
   :host .chat-list li {
     flex-wrap: wrap;
     text-align: center;
+    padding: var(--space-100);
 
     .profile-pic {
       flex-basis: 100%;

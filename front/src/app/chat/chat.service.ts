@@ -65,7 +65,7 @@ export class ChatService {
       messages: [
         {
           id: '4',
-          message: 'Great, see you then!',
+          message: 'Great, see you then! Im super excited',
           sender: true,
           date: new Date('Febuary 26, 2023 10:21:45.678'),
         },

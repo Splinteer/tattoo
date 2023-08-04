@@ -108,13 +108,14 @@
         flex: 1;
       }
 
-      button.send-btn {
+      button.send-btn,
+      button.media-btn {
         color: var(--primary-color);
         border-radius: 50%;
         transition: background-color 0.2s ease-in;
         width: 40px;
         height: 40px;
-        font-size: 25px;
+        font-size: 20px;
         text-align: center;
 
         &:hover {
