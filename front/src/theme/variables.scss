@@ -20,14 +20,14 @@
 
   --text-color-dark: #000000;
   --text-color-light: #ffffff;
-
-  --font-size: clamp(0.9rem, 2.8vw, 1rem);
+  --font-size: clamp(0.8rem, 2.8vw, 0.95rem);
   --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
+  --text-xs: clamp(0.7rem, 0.8rem, 0.8rem);
+  --border-radius: 20px;
   --border-radius-small: 2px;
-  --border-radius: 10px;
 
-  --input-padding-x: 0.6rem;
-  --input-padding-y: 0.4rem;
+  --input-padding-x: 0.3rem;
+  --input-padding-y: 1rem;
   --input-padding: var(--input-padding-x) var(--input-padding-y);
 
   --gray-100: #f9f9f9;

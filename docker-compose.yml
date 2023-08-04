@@ -12,7 +12,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - /volumes/pg-data/tattoo/:/var/lib/postgresql/data/
+      - ~/volumes/pg-data/tattoo/:/var/lib/postgresql/data/
       - ./initdb:/docker-entrypoint-initdb.d/
     networks:
       - tattoo_network
@@ -23,35 +23,23 @@ services:
       timeout: 5s
       retries: 5
 
-  supertokensdb:
-    image: "postgres:latest"
-    environment:
-      POSTGRES_USER: supertokens_user
-      POSTGRES_PASSWORD: somePassword
-      POSTGRES_DB: supertokens
-    ports:
-      - 5432:5432
-    networks:
-      - tattoo_network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "pg_isready"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  supertokens:
-    image: registry.supertokens.io/supertokens/supertokens-postgresql:4.4
+  tattoo_supertokens:
+    container_name: tattoo_supertokens
+    image: registry.supertokens.io/supertokens/supertokens-postgresql
     depends_on:
       tattoo_db:
         condition: service_healthy
     ports:
       - 3567:3567
-    environment:
-      postgresql_connection_uri: "postgresql://supertokens_user:somePassword@supertokensdb:5432/supertokens"
-
     networks:
       - tattoo_network
+    environment:
+      POSTGRESQL_USER: "tattoo_user"
+      POSTGRESQL_PASSWORD: "passssword"
+      POSTGRESQL_HOST: "tattoo_db"
+      POSTGRESQL_PORT: "5432"
+      POSTGRESQL_DATABASE_NAME: "tattoo"
+      POSTGRESQL_TABLE_NAMES_PREFIX: "supertokens"
     restart: unless-stopped
     healthcheck:
       test: >
@@ -59,7 +47,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 networks:
   tattoo_network:
     driver: bridge

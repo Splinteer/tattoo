@@ -1,18 +1,10 @@
 :host {
   display: flex;
   flex-direction: column;
-}
-
-.app-content {
-  flex-grow: 1;
-}
-
-@media (max-width: 768px) {
-  :host {
-    min-height: 100vh;
-  }
+  height: 100%;
 
   .app-content {
-    overflow-y: auto;
+    flex: 1;
+    display: flex; /* if you want to use flex properties on its children */
   }
 }
