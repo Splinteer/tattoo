@@ -6,19 +6,11 @@ import {
   inject,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  Observable,
-  Subject,
-  map,
-  of,
-  filter,
-  switchMap,
-  tap,
-  startWith,
-} from 'rxjs';
+import { Observable, of, switchMap, startWith, first } from 'rxjs';
 import { Shop, ShopService } from '../shop.service';
 import { Router } from '@angular/router';
 import { backInDown } from '@shared/animation';
+import { CredentialsService } from '@app/auth/credentials.service';
 
 @Component({
   selector: 'app-creation',
@@ -33,6 +25,10 @@ export class CreationComponent implements OnInit {
   private readonly shopService = inject(ShopService);
 
   private readonly router = inject(Router);
+
+  private readonly credentialsService = inject(CredentialsService);
+
+  public readonly credentials$ = this.credentialsService.credentials$;
 
   public form?: FormGroup;
 
@@ -58,35 +54,39 @@ export class CreationComponent implements OnInit {
       website: new FormControl<string | null>(this.shop?.website || null),
     });
 
-    this.logoPreview$ = this.form.get('logo')?.valueChanges.pipe(
-      startWith(
-        this.shop?.got_profile_picture
-          ? 'http://storage.googleapis.com/tattoo-public/shops/6c597e78-9d7c-4dc4-902c-d3b58b638bc7/logo'
-          : ''
-      ),
-      switchMap((files) => {
-        if (files.length === 0) {
-          return of(null);
-        } else if (typeof files === 'string') {
-          return of(files);
-        }
+    this.credentials$.pipe(first()).subscribe((credentials) => {
+      this.logoPreview$ = this.form!.get('logo')?.valueChanges.pipe(
+        startWith(
+          this.shop?.got_profile_picture
+            ? 'http://storage.googleapis.com/tattoo-public/shops/' +
+                credentials?.shop_id +
+                '/logo'
+            : ''
+        ),
+        switchMap((files) => {
+          if (files.length === 0) {
+            return of(null);
+          } else if (typeof files === 'string') {
+            return of(files);
+          }
 
-        const fileReader = new FileReader();
-        const fileReader$ = new Observable<string>((subscriber) => {
-          fileReader.onload = () => {
-            subscriber.next(fileReader.result as string);
-            subscriber.complete();
-          };
-          fileReader.onerror = (error) => {
-            subscriber.error(error);
-          };
-        });
+          const fileReader = new FileReader();
+          const fileReader$ = new Observable<string>((subscriber) => {
+            fileReader.onload = () => {
+              subscriber.next(fileReader.result as string);
+              subscriber.complete();
+            };
+            fileReader.onerror = (error) => {
+              subscriber.error(error);
+            };
+          });
 
-        fileReader.readAsDataURL((<File[]>files)[0]);
+          fileReader.readAsDataURL((<File[]>files)[0]);
 
-        return fileReader$;
-      })
-    );
+          return fileReader$;
+        })
+      );
+    });
   }
 
   public onSubmit() {

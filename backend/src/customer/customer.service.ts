@@ -59,6 +59,7 @@ export class CustomerService {
       'customer.firstname',
       'customer.lastname',
       'customer.profile_picture',
+      'shop.id as shop_id',
       'shop.name as shop_name',
       'shop.url as shop_url',
     ];
