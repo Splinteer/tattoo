@@ -6,7 +6,7 @@
   "scripts": {
     "start:frontend": "cd front && npm run start",
     "start:backend": "cd backend && npm run start:dev",
-    "start:dependencies": "docker compose up tattoo_db supertokens -d",
+    "start:dependencies": "docker compose up tattoo_db tattoo_supertokens -d",
     "start": "npm-run-all --parallel start:dependencies start:frontend start:backend"
   },
   "keywords": [],

@@ -97,7 +97,7 @@ export class ShopService {
         data.twitter ?? null,
         data.facebook ?? null,
         data.website ?? null,
-        data.description.replace(/\n+/g, '\n').trim(),
+        (data.description ?? '').replace(/\n+/g, '\n').trim(),
       ],
     );
 

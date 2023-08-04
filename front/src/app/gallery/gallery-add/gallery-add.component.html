@@ -6,7 +6,9 @@
   *ngIf="form"
   [@backInDown]
 >
-  <h1 translate>GALLERY.CREATE.title</h1>
+  <h1 translate>
+    {{ !!gallery ? "GALLERY.CREATE.edit_title" : "GALLERY.CREATE.title" }}
+  </h1>
 
   <div role="group" aria-labelledby="group-image">
     <div class="input-group">

@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { GalleryAddComponent } from './gallery-add/gallery-add.component';
 import { GalleryEditComponent } from './gallery-edit/gallery-edit.component';
 import { GalleryListComponent } from './gallery-list/gallery-list.component';
-import { ShopGuard } from '@app/shop/shop.guard';
 
 const routes: Routes = [
   {

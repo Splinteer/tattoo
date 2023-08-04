@@ -92,6 +92,7 @@ export class FlashController {
 
     await this.flashService.delete(id);
   }
+
   @Post('shop/:shopUrl')
   async getByShop(
     @Param('shopUrl') shopUrl: string,

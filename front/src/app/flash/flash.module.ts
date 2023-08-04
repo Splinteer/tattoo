@@ -9,8 +9,9 @@ import { FlashDialogComponent } from './flash-dialog/flash-dialog.component';
 import { DialogModule } from '@angular/cdk/dialog';
 import { FlashEditComponent } from './flash-edit/flash-edit.component';
 import { RouterModule } from '@angular/router';
-import { FlashListComponent } from './flash-list/flash-list.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { FlashListComponent } from './flash-list/flash-list.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     DialogModule,
     RouterModule,
     InfiniteScrollModule,
+    ScrollingModule,
   ],
   declarations: [
     ShopFlashAddComponent,

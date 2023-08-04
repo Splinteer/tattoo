@@ -13,12 +13,12 @@ import {
   Subject,
   combineLatest,
   scan,
-  share,
   shareReplay,
   switchMap,
   takeWhile,
   tap,
 } from 'rxjs';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
 
 @Component({
@@ -35,6 +35,9 @@ export class FlashListComponent
   private readonly flashService = inject(FlashService);
 
   private fetchMore = new BehaviorSubject<boolean>(true);
+  // private fetchMore = new Subject<void>();
+
+  @ViewChild(CdkVirtualScrollViewport) viewPort!: CdkVirtualScrollViewport;
 
   private allDataLoaded = false;
 

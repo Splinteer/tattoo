@@ -15,6 +15,13 @@ import { switchMap } from 'rxjs';
       <app-shop-flash-add [flash]="flash"></app-shop-flash-add>
     </ng-container>
   `,
+  styles: [
+    `
+      :host {
+        width: 100%;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlashEditComponent {

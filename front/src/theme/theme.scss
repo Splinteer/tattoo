@@ -131,6 +131,14 @@ button {
     background-color: var(--error-color);
   }
 
+  .button-icon-left {
+    margin-right: var(--space-100);
+  }
+
+  &.button-danger {
+    background-color: var(--error-color);
+  }
+
   &:hover {
     background-color: var(--primary-color-fade);
 

@@ -34,6 +34,7 @@
   "FLASH": {
     "CREATE": {
       "title": "Nouveau flash",
+      "edit_title": "Modifier le flash",
 
       "name": "Titre du flash",
       "description": "Description",
@@ -69,6 +70,8 @@
   "GALLERY": {
     "CREATE": {
       "title": "Ajouter à la galerie",
+      "edit_title": "Modifier l'illustration",
+
       "name": "Titre de l'illustration",
       "description": "Description",
       "description_long": "Informations complémentaires...",
@@ -100,6 +103,21 @@
     },
     "BUTTONS": {
       "cancel": "Annuler"
+    }
+  },
+  "PIPE": {
+    "TIMEAGO": {
+      "just_now": "A l'instant",
+      "short": {
+        "year": "a",
+        "month": "m",
+        "week": "sem",
+        "day": "j",
+        "hour": "h",
+        "minute": "min",
+        "second": "s",
+        "time_ago": "{count}{unit}"
+      }
     }
   }
 }
