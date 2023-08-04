@@ -1,5 +1,6 @@
 <div
   class="dropzone"
+  [class.is-invalid]="isInvalid"
   [class.disabled]="disabled"
   (dragover)="!disabled && onDragOver($event)"
   (dragleave)="!disabled && onDragLeave($event)"
@@ -23,4 +24,5 @@
   [disabled]="disabled"
   style="display: none"
   [accept]="accept"
+  (click)="markAsTouched()"
 />

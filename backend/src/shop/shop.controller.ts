@@ -20,9 +20,7 @@ export class ShopController {
   constructor(
     private readonly shopService: ShopService,
     private readonly sessionService: SessionService,
-  ) {
-    this.sessionService.refreshSession('4a898b5c-4801-440c-83d4-84f76c28905f');
-  }
+  ) {}
 
   @Post('create')
   @UseInterceptors(FileInterceptor('logo'))

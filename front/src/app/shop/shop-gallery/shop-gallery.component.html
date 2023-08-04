@@ -1,0 +1,44 @@
+<div class="container flashs">
+  <div class="header">
+    <h1>Flashs</h1>
+    <a
+      routerLink="/shop/gallery/flash/add"
+      class="button button-text button-small"
+    >
+      <i class="fa-regular fa-image"></i>
+      Ajouter un flash
+    </a>
+  </div>
+  <ng-container *ngIf="flashs$ | async as flashs">
+    <div class="grid" [class.hide-last]="flashs.length === 9">
+      <app-flash-item
+        *ngFor="let flash of flashs"
+        [flash]="flash"
+      ></app-flash-item>
+    </div>
+    <div class="show-all" *ngIf="flashs.length === 9">
+      <a class="underline" routerLink="/shop/gallery/flash/all">Voir tout</a>
+    </div>
+  </ng-container>
+</div>
+
+<div class="container flashs">
+  <div class="header">
+    <h1>Ma galerie</h1>
+    <a routerLink="/shop/gallery/add" class="button button-text button-small">
+      <i class="fa-regular fa-image"></i>
+      Ajouter une illustration
+    </a>
+  </div>
+  <ng-container *ngIf="gallerys$ | async as gallerys">
+    <div class="grid" [class.hide-last]="gallerys.length === 9">
+      <app-gallery-item
+        *ngFor="let gallery of gallerys"
+        [gallery]="gallery"
+      ></app-gallery-item>
+    </div>
+    <div class="show-all" *ngIf="gallerys.length === 9">
+      <a class="underline" routerLink="/shop/gallery/all">Voir tout</a>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,14 @@
+<cdk-virtual-scroll-viewport
+  itemSize="50"
+  class="viewport"
+  (scrolledIndexChange)="onScroll($event)"
+>
+  <div class="grid">
+    <h1 translate>FLASH.LIST.title_shop</h1>
+    <app-flash-item
+      [flash]="flash"
+      *cdkVirtualFor="let flash of flashs$ | async; trackBy: trackByIdx"
+    >
+    </app-flash-item>
+  </div>
+</cdk-virtual-scroll-viewport>

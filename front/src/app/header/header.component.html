@@ -23,6 +23,15 @@
               >Boutique</a
             >
           </li>
+          <li>
+            <a
+              routerLink="/shop/gallery"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              *ngIf="credentials.shop_name"
+              >Galerie</a
+            >
+          </li>
         </ng-container>
       </ul>
 

@@ -1,7 +1,7 @@
 header.mobile {
   display: flex;
   gap: 15px;
-  padding: 15px;
+  padding: var(--page-content-padding);
   justify-content: space-between;
   align-items: stretch;
   flex-wrap: wrap;
@@ -21,7 +21,8 @@ header.mobile {
 }
 
 header.desktop {
-  padding: 15px 20px;
+  padding: var(--page-content-padding);
+
   nav {
     display: flex;
     gap: 15px;

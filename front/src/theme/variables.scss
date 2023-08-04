@@ -10,9 +10,12 @@
   --tropical-indigo-light: hsl(262, 92%, 82%);
   --tropical-indigo-dark: hsl(259, 92%, 70%);
 
+  --black: #000;
+  --white: #fff;
+
   --bg-color: var(--antiflash-white);
-  --primary-color: var(--tropical-indigo);
-  --primary-color-light: var(--tropical-indigo-light);
+  --primary-color: var(--black);
+  --primary-color-fade: #444;
   --primary-color-dark: var(--tropical-indigo-dark);
 
   --text-color-dark: #000000;
@@ -21,9 +24,10 @@
   --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
   --text-xs: clamp(0.7rem, 0.8rem, 0.8rem);
   --border-radius: 20px;
+  --border-radius-small: 2px;
 
-  --input-padding-x: 0.3rem;
-  --input-padding-y: 1rem;
+  --input-padding-x: 0.6rem;
+  --input-padding-y: 0.4rem;
   --input-padding: var(--input-padding-x) var(--input-padding-y);
 
   --gray-100: #f9f9f9;
@@ -36,7 +40,9 @@
   --gray-800: #777777;
   --gray-900: #595959;
 
-  --error-color: #e62424;
+  --success-color: #5dad11;
+  --error-color: hsl(0, 80%, 52%);
+  --error-color-fade: hsl(0, 60%, 52%);
 
   --space-100: 0.25rem;
   --space-200: 0.5rem;
@@ -44,4 +50,6 @@
   --space-400: 1rem;
   --space-500: 1.25rem;
   --space-600: 1.5rem;
+
+  --page-content-padding: 1.2rem;
 }

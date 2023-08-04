@@ -33,6 +33,8 @@ export class FileDropzoneComponent implements ControlValueAccessor {
 
   @Input() accept?: string;
 
+  @Input() isInvalid: boolean | unknown = false;
+
   @Output() filesDropped: EventEmitter<FileList> = new EventEmitter();
 
   public readonly files$: BehaviorSubject<File[]> = new BehaviorSubject<File[]>(
@@ -93,7 +95,8 @@ export class FileDropzoneComponent implements ControlValueAccessor {
     const actualFiles = this.multiple ? this.files$.getValue() : [];
 
     for (let i = 0; i < limit; i++) {
-      this.files$.next([...actualFiles, validFiles[i]]);
+      actualFiles.push(validFiles[i]);
+      this.writeValue(actualFiles);
     }
 
     this.onChange(this.files$.getValue());

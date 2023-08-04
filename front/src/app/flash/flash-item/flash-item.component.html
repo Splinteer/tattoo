@@ -1,0 +1,27 @@
+<div
+  class="container"
+  [class.clickable]="clickable"
+  (click)="clickable && openModal()"
+>
+  <div
+    class="availability"
+    [ngClass]="flash.available ? 'available' : 'not_available'"
+  >
+    <div class="circle"></div>
+    {{
+      (flash.available
+        ? "FLASH.CREATE.available"
+        : "FLASH.CREATE.not_available"
+      ) | translate
+    }}
+  </div>
+  <img
+    [src]="
+      'http://storage.googleapis.com/tattoo-public/' +
+      flash.image_url +
+      '?v=' +
+      flash.image_version
+    "
+    [alt]="flash.name"
+  />
+</div>

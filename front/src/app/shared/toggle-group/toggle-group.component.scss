@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  width: fit-content;
+  background-color: var(--gray-100);
+  padding: var(--space-100);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  gap: var(--space-100);
+}
+
+::ng-deep {
+  app-toggle-group-item {
+    flex-grow: 1;
+  }
+
+  app-toggle-group-item div {
+    color: var(--gray-800);
+
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: var(--space-300);
+    padding: var(--space-100) var(--space-400);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease-out, transform none;
+
+    &.selected {
+      color: var(--text-color-dark);
+      box-shadow: 0px 0px 10px -1px rgba(255, 255, 255, 0.45),
+        0px 0px 10px -1px rgba(94, 104, 121, 0.3);
+      background: linear-gradient(
+        to bottom,
+        var(--gray-100) 0%,
+        var(--text-color-light) 40%,
+        var(--text-color-light) 60%,
+        var(--gray-100) 100%
+      );
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

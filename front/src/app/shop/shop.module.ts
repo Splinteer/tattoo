@@ -8,10 +8,25 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ShopService } from './shop.service';
 import { HomeComponent } from './home/home.component';
 import { ShopEditComponent } from './shop-edit/shop-edit.component';
+import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
+import { FlashModule } from '@app/flash/flash.module';
+import { GalleryModule } from '@app/gallery/gallery.module';
 
 @NgModule({
-  imports: [CommonModule, ShopRoutingModule, SharedModule, ReactiveFormsModule],
-  declarations: [CreationComponent, HomeComponent, ShopEditComponent],
+  imports: [
+    CommonModule,
+    ShopRoutingModule,
+    SharedModule,
+    ReactiveFormsModule,
+    FlashModule,
+    GalleryModule,
+  ],
+  declarations: [
+    CreationComponent,
+    HomeComponent,
+    ShopEditComponent,
+    ShopGalleryComponent,
+  ],
   providers: [ShopService],
 })
 export class ShopModule {}

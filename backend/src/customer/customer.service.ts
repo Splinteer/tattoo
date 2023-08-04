@@ -28,6 +28,7 @@ export interface Credentials {
   profile_picture?: string;
 
   // Shop
+  shop_id?: string;
   shop_name?: string;
   shop_url?: string;
 }

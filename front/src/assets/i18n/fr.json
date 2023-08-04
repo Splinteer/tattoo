@@ -1,4 +1,12 @@
 {
+  "COMMON": {
+    "edit": "Modifier",
+    "CONFIRM": {
+      "title": "Confirmez",
+      "cancel": "Annuler",
+      "confirm": "Je confirme"
+    }
+  },
   "SHOP": {
     "CREATE": {
       "shop_title": "Boutique",
@@ -16,6 +24,67 @@
 
       "create_button": "Ouvrir ma boutique",
       "update_button": "Mettre à jour ma boutique"
+    }
+  },
+
+  "FLASH": {
+    "CREATE": {
+      "title": "Nouveau flash",
+      "edit_title": "Modifier le flash",
+
+      "name": "Titre du flash",
+      "description": "Description",
+      "description_long": "Description, taille, informations complémentaires...",
+
+      "image": "{count, plural, one {Illustration} other {Illustrations}}",
+      "image_required": "Veuillez déposer une ou plusieurs images",
+      "multiple_images": "Déposer plusieurs images générera plusieurs flashs avec les mêmes caractéristiques",
+      "price": "Prix",
+      "availability": "Disponibilité",
+      "available": "Disponible",
+      "not_available": "Indisponible",
+      "price": "Prix",
+      "price_range_start": "Min.",
+      "price_range_end": "Max.",
+      "price_range_tips": "Renseignez un prix max. pour créer une tranche de prix",
+      "price_range_error": "Veuillez renseigner un prix maximum plus grand que le minimum",
+
+      "create_button": "Ajouter {count, plural, =0 {le flash} one {le flash} other {les flashs}}",
+      "update_button": "Mettre à jour le flash"
+    },
+    "LIST": {
+      "title_shop": "Mes flashs"
+    },
+    "DELETE_DIALOG": {
+      "title": "Voulez-vous supprimer ce flash ?",
+      "description": "Supprimer ce flash annulera toutes réservations de ce motif.",
+      "confirm": "Supprimer le flash"
+    },
+    "book": "Réserver ce flash"
+  },
+
+  "GALLERY": {
+    "CREATE": {
+      "title": "Ajouter à la galerie",
+      "edit_title": "Modifier l'illustration",
+
+      "name": "Titre de l'illustration",
+      "description": "Description",
+      "description_long": "Informations complémentaires...",
+
+      "image": "{count, plural, one {Illustration} other {Illustrations}}",
+      "image_required": "Veuillez déposer une ou plusieurs images",
+      "multiple_images": "Déposer plusieurs images générera plusieurs illustrations avec les mêmes caractéristiques",
+
+      "create_button": "Ajouter {count, plural, =0 {l'illustration} one {l'illustration} other {les illustrations}}",
+      "update_button": "Mettre à jour l'illustration"
+    },
+    "LIST": {
+      "title_shop": "Ma galerie"
+    },
+    "DELETE_DIALOG": {
+      "title": "Voulez-vous supprimer cette illustration ?",
+      "confirm": "Supprimer l'illustration"
     }
   },
 

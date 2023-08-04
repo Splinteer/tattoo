@@ -1,0 +1,113 @@
+<form
+  class="inline-form"
+  [formGroup]="form"
+  #ngForm="ngForm"
+  (ngSubmit)="onSubmit()"
+  *ngIf="form"
+  [@backInDown]
+>
+  <h1 translate>
+    {{ !!gallery ? "GALLERY.CREATE.edit_title" : "GALLERY.CREATE.title" }}
+  </h1>
+
+  <div role="group" aria-labelledby="group-image">
+    <div class="input-group">
+      <label for="name" translate>GALLERY.CREATE.name</label>
+      <input
+        id="name"
+        formControlName="name"
+        [placeholder]="'GALLERY.CREATE.name' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('name')?.touched) &&
+            form.get('name')?.errors
+        }"
+      />
+    </div>
+    <div class="input-group">
+      <label for="description" translate>GALLERY.CREATE.description</label>
+
+      <textarea
+        id="description"
+        formControlName="description"
+        [placeholder]="'GALLERY.CREATE.description_long' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('description')?.touched) &&
+            form.get('description')?.errors
+        }"
+      ></textarea>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-image">
+    <div class="input-group image">
+      <label
+        for="image"
+        translate
+        [translateParams]="{ count: !!gallery ? 1 : 2 }"
+        >GALLERY.CREATE.image</label
+      >
+      <app-file-dropzone
+        formControlName="image"
+        accept="image/png, image/jpeg"
+        [multiple]="!!!gallery"
+        [isInvalid]="
+          (ngForm.submitted || form.get('image')?.touched) &&
+          form.get('image')?.errors
+        "
+      ></app-file-dropzone>
+
+      <small
+        class="error-group"
+        translate
+        *ngIf="
+          (ngForm.submitted || form.get('image')?.touched) &&
+          form.get('image')?.errors
+        "
+        >GALLERY.CREATE.image_required</small
+      >
+      <small class="text-muted" *ngIf="!!!gallery" translate
+        >GALLERY.CREATE.multiple_images</small
+      >
+    </div>
+
+    <div
+      class="images-container"
+      *ngIf="imagesPreview$ | async as imagesPreview"
+    >
+      <div
+        class="image-container"
+        *ngFor="let image of imagesPreview; let imageIndex = index"
+      >
+        <img [src]="image" />
+        <button
+          type="button"
+          class="button button-outline"
+          (click)="removeImage(imageIndex)"
+          *ngIf="!gallery"
+        >
+          <i class="fa-regular fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button class="button button-outline" type="button" appGoBack translate>
+      FORM.BUTTONS.cancel
+    </button>
+    <button
+      class="button"
+      type="submit"
+      translate
+      [translateParams]="{ count: form.get('image')?.value?.length }"
+    >
+      {{
+        gallery
+          ? "GALLERY.CREATE.update_button"
+          : "GALLERY.CREATE.create_button"
+      }}
+    </button>
+  </div>
+</form>

@@ -51,24 +51,18 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    IF NOT EXISTS public.image(
-        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-        url varchar(255) NOT NULL
-    );
-
-CREATE TABLE
     IF NOT EXISTS public.flash (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
-        image_id uuid NOT NULL,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,
         description text,
+        image_url varchar(255) NOT NULL,
+        image_version integer NOT NULL DEFAULT 0,
         available boolean NOT NULL DEFAULT true,
         price_range_start integer,
         price_range_end integer,
-        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id),
-        CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES public.image (id)
+        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );
 
 CREATE TYPE public.project_type AS ENUM (
@@ -141,22 +135,21 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS public.message_attachment(
         message_id uuid NOT NULL,
-        image_id uuid NOT NULL,
-        PRIMARY KEY (message_id, image_id),
-        CONSTRAINT fk_message_id FOREIGN KEY (message_id) REFERENCES public.message (id),
-        CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES public.image (id)
+        image_url varchar(255) NOT NULL,
+        PRIMARY KEY (message_id, image_url),
+        CONSTRAINT fk_message_id FOREIGN KEY (message_id) REFERENCES public.message (id)
     );
 
 CREATE TABLE
     IF NOT EXISTS public.gallery (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
-        image_id uuid NOT NULL,
+        image_url varchar(255) NOT NULL,
+        image_version integer NOT NULL DEFAULT 0,
         project_id uuid,
         creation_date timestamp NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,
         description text,
         CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id),
-        CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES public.image (id),
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
     );

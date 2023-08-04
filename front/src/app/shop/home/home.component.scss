@@ -1,3 +1,9 @@
+:host {
+  display: block;
+  width: 100%;
+  padding: var(--page-content-padding);
+}
+
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -11,6 +17,7 @@
     width: 50px;
     height: 50px;
     aspect-ratio: 1;
+    object-fit: cover;
   }
 
   .description {
