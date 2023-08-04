@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { switchMap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
 const intervals = {
   year: 31536000,
@@ -21,36 +22,42 @@ export class TimeAgoPipe implements PipeTransform {
     @Inject(TranslateService) private translateService: TranslateService
   ) {}
 
-  transform(value: Date, type: 'long' | 'short' = 'long'): any {
-    if (value) {
-      const seconds = Math.floor((+new Date() - +new Date(value)) / 1000);
-      if (seconds < 29) {
-        return this.translateService.get('PIPE.TIMEAGO.just_now');
-      }
-
-      let count: number = 0;
-      const interval = (
-        Object.keys(intervals) as Array<keyof typeof intervals>
-      ).find((key) => {
-        count = Math.floor(seconds / intervals[key]);
-        return count > 0;
-      });
-
-      console.log('pipe');
-      return this.translateService
-        .get(`PIPE.TIMEAGO.${type}.${interval}`, {
-          count: count,
-        })
-        .pipe(
-          switchMap((unit) =>
-            this.translateService.get(`PIPE.TIMEAGO.${type}.time_ago`, {
-              count: count,
-              unit,
-            })
-          )
-        );
+  transform(value: Date, type: 'long' | 'short' = 'long') {
+    if (!value) {
+      return value;
     }
 
-    return value;
+    return combineLatest([
+      this.translateService.onLangChange.pipe(
+        startWith({}), // To trigger immediately
+        switchMap(() => {
+          const seconds = Math.floor((+new Date() - +new Date(value)) / 1000);
+          if (seconds < 29) {
+            return this.translateService.get('PIPE.TIMEAGO.just_now');
+          }
+
+          let count: number = 0;
+          const interval = (
+            Object.keys(intervals) as Array<keyof typeof intervals>
+          ).find((key) => {
+            count = Math.floor(seconds / intervals[key]);
+            return count > 0;
+          });
+
+          return this.translateService
+            .get(`PIPE.TIMEAGO.${type}.${interval}`, {
+              count: count,
+            })
+            .pipe(
+              switchMap((unit) =>
+                this.translateService.get(`PIPE.TIMEAGO.${type}.time_ago`, {
+                  count: count,
+                  unit,
+                })
+              )
+            );
+        })
+      ),
+    ]);
   }
 }
