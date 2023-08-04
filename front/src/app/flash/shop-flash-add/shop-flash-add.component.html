@@ -6,7 +6,9 @@
   *ngIf="form"
   [@backInDown]
 >
-  <h1 translate>FLASH.CREATE.title</h1>
+  <h1 translate>
+    {{ !!flash ? "FLASH.CREATE.edit_title" : "FLASH.CREATE.title" }}
+  </h1>
 
   <div role="group" aria-labelledby="group-image">
     <div class="input-group">

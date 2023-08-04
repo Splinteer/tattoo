@@ -4,7 +4,6 @@ import { CreationComponent } from './creation/creation.component';
 import { HomeComponent } from './home/home.component';
 import { ShopEditComponent } from './shop-edit/shop-edit.component';
 import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
-import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.component';
 import { ShopFlashAddComponent } from '../flash/shop-flash-add/shop-flash-add.component';
 import { FlashEditComponent } from '@app/flash/flash-edit/flash-edit.component';
 import { FlashListComponent } from '@app/flash/flash-list/flash-list.component';

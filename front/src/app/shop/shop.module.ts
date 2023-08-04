@@ -9,7 +9,6 @@ import { ShopService } from './shop.service';
 import { HomeComponent } from './home/home.component';
 import { ShopEditComponent } from './shop-edit/shop-edit.component';
 import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
-import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.component';
 import { FlashModule } from '@app/flash/flash.module';
 import { GalleryModule } from '@app/gallery/gallery.module';
 
@@ -27,7 +26,6 @@ import { GalleryModule } from '@app/gallery/gallery.module';
     HomeComponent,
     ShopEditComponent,
     ShopGalleryComponent,
-    ShopGalleryAddComponent,
   ],
   providers: [ShopService],
 })
