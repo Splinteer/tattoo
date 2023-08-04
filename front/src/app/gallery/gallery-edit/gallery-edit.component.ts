@@ -15,6 +15,13 @@ import { switchMap } from 'rxjs';
       <app-gallery-add [gallery]="gallery"></app-gallery-add>
     </ng-container>
   `,
+  styles: [
+    `
+      :host {
+        width: 100%;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryEditComponent {
