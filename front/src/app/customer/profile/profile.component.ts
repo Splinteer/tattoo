@@ -87,7 +87,9 @@ export class ProfileComponent implements OnInit {
       startWith(
         this.customer?.got_profile_picture
           ? 'http://storage.googleapis.com/tattoo-public/profile_picture/' +
-              this.customer.id
+              this.customer.id +
+              '?v=' +
+              this.customer.profile_picture_version
           : ''
       ),
       switchMap((files) => {
