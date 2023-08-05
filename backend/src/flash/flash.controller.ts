@@ -42,9 +42,19 @@ export class FlashController {
   @UseGuards(new AuthGuard())
   async getMine(
     @Credentials() credentials: ICredentials,
-    @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
+    @Body()
+    {
+      lastDate,
+      available,
+      limit = 9,
+    }: { lastDate?: string; available?: boolean; limit?: number },
   ) {
-    return this.flashService.getByShop(credentials.shop_url, limit, lastDate);
+    return this.flashService.getByShop(
+      credentials.shop_url,
+      limit,
+      available,
+      lastDate,
+    );
   }
 
   @Get(':id')
@@ -96,8 +106,13 @@ export class FlashController {
   @Post('shop/:shopUrl')
   async getByShop(
     @Param('shopUrl') shopUrl: string,
-    @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
+    @Body()
+    {
+      lastDate,
+      available,
+      limit = 9,
+    }: { lastDate?: string; available?: boolean; limit?: number },
   ) {
-    return this.flashService.getByShop(shopUrl, limit, lastDate);
+    return this.flashService.getByShop(shopUrl, limit, available, lastDate);
   }
 }

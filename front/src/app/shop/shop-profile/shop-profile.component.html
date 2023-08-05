@@ -48,8 +48,8 @@
     </li>
     <li>
       <button
-        [class.active]="activeTab === 'flashs2'"
-        (click)="activeTab = 'flashs2'"
+        [class.active]="activeTab === 'flashs-unavailable'"
+        (click)="activeTab = 'flashs-unavailable'"
       >
         <i class="fa-solid fa-calendar-xmark"></i>
         <span class="text">Flashs Indisponible</span>
@@ -67,7 +67,13 @@
   </ul>
   <div class="tabs">
     <div class="flashs" [hidden]="activeTab !== 'flashs'">
-      <app-flash-list [shop]="shop.url"></app-flash-list>
+      <app-flash-list [available]="true" [shop]="shop.url"></app-flash-list>
+    </div>
+    <div
+      class="flashs-unavailable"
+      [hidden]="activeTab !== 'flashs-unavailable'"
+    >
+      <app-flash-list [available]="false" [shop]="shop.url"></app-flash-list>
     </div>
     <div class="gallery" [hidden]="activeTab !== 'gallery'">
       <app-gallery-list [shop]="shop.url"></app-gallery-list>

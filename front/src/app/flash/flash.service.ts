@@ -24,17 +24,23 @@ export class FlashService {
     return this.http.post<void>('/flash/create', formData);
   }
 
-  public getMine(lastDate?: Date, limit?: number) {
-    return this.http.post<Flash[]>('/flash', { lastDate, limit });
+  public getMine(lastDate?: Date, available?: boolean, limit?: number) {
+    return this.http.post<Flash[]>('/flash', { lastDate, available, limit });
   }
 
   public get(flashId: string) {
     return this.http.get<Flash>('/flash/' + flashId);
   }
 
-  public getByShop(shopId: string, lastDate?: Date, limit?: number) {
+  public getByShop(
+    shopId: string,
+    lastDate?: Date,
+    available?: boolean,
+    limit?: number
+  ) {
     return this.http.post<Flash[]>('/flash/shop/' + shopId, {
       lastDate,
+      available,
       limit,
     });
   }

@@ -34,6 +34,8 @@ export class FlashListComponent
 {
   @Input() shop?: string;
 
+  @Input() available?: boolean;
+
   private readonly flashService = inject(FlashService);
 
   private fetchMore = new BehaviorSubject<boolean>(true);
@@ -58,9 +60,14 @@ export class FlashListComponent
           ? this.flashService.getByShop(
               this.shop,
               this.lastDate,
+              this.available,
               isMobile ? 9 : 8
             )
-          : this.flashService.getMine(this.lastDate, isMobile ? 9 : 8)
+          : this.flashService.getMine(
+              this.lastDate,
+              this.available,
+              isMobile ? 9 : 8
+            )
         ).pipe(
           tap((flashs) => {
             console.log('fetched');

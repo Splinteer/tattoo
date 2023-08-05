@@ -77,13 +77,22 @@ export class FlashService {
     return key;
   }
 
-  public async getByShop(shopUrl: string, limit: number, lastDate?: string) {
+  public async getByShop(
+    shopUrl: string,
+    limit: number,
+    available?: boolean,
+    lastDate?: string,
+  ) {
     let query =
       'SELECT flash.* FROM flash INNER JOIN shop ON shop.id=flash.shop_id WHERE shop.url=$1';
     const values: any = [shopUrl, limit];
     if (lastDate) {
-      query += ' AND flash.creation_date < $3';
+      query += ' AND flash.creation_date < $' + (values.length + 1);
       values.push(new Date(lastDate));
+    }
+    if (available !== undefined) {
+      query += ' AND flash.available=$' + (values.length + 1);
+      values.push(available);
     }
     query += ' ORDER BY flash.creation_date DESC LIMIT $2';
 
