@@ -44,7 +44,7 @@ export class GalleryController {
     @Credentials() credentials: ICredentials,
     @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
   ) {
-    return this.galleryService.getByShop(credentials.shop_id, limit, lastDate);
+    return this.galleryService.getByShop(credentials.shop_url, limit, lastDate);
   }
 
   @Get(':id')
