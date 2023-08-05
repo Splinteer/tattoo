@@ -10,13 +10,19 @@ export interface Shop {
   last_update: string;
   name: string;
   url: string;
-  description: string | null;
+  description: string;
   got_profile_picture: boolean;
+  profile_picture_version: number;
   country: string | null;
   instagram: string | null;
   twitter: string | null;
   facebook: string | null;
   website: string | null;
+}
+
+export interface ShopWithRating extends Shop {
+  note: string;
+  appointments: number;
 }
 
 @Injectable({
@@ -35,6 +41,10 @@ export class ShopService {
 
   public get() {
     return this.http.get<Shop>('/shop');
+  }
+
+  public getByUrl(url: string) {
+    return this.http.get<ShopWithRating>('/shop/' + url);
   }
 
   public update(formData: FormData) {

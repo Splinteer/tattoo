@@ -27,7 +27,8 @@ CREATE TABLE
         name varchar(255) NOT NULL,
         url varchar(255) NOT NULL,
         description text,
-        got_profile_picture BOOLEAN DEFAULT FALSE,
+        got_profile_picture boolean NOT NULL DEFAULT false,
+        profile_picture_version integer NOT NULL DEFAULT 0,
         instagram varchar(255),
         twitter varchar(255),
         facebook varchar(255),
@@ -88,6 +89,8 @@ CREATE TABLE
         is_drawing_done boolean NOT NULL DEFAULT false,
         is_drawing_approved boolean NOT NULL DEFAULT false,
         is_paid boolean NOT NULL DEFAULT false,
+        customer_rating integer,
+        shop_rating integer,
         CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES public.customer (id),
         CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );

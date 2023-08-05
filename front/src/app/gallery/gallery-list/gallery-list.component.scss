@@ -17,9 +17,9 @@ $max-columns: 4;
   display: grid;
   grid-template-columns: repeat($max-columns, minmax(0, $max-width));
   grid-gap: $grid-gap;
-  margin-block: var(--space-600);
   margin-inline: auto;
-  padding: var(--page-content-padding);
+  // margin-block: var(--space-600);
+  // padding: var(--page-content-padding);
 
   h1 {
     grid-column: 1 / -1;
@@ -30,12 +30,5 @@ $max-columns: 4;
   .grid {
     grid-template-columns: repeat(3, minmax(0, $max-width));
     grid-gap: var(--space-100);
-  }
-}
-
-::ng-deep {
-  .cdk-virtual-scroll-content-wrapper {
-    display: flex;
-    flex-direction: column;
   }
 }

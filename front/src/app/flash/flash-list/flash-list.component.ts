@@ -1,8 +1,19 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { Flash, FlashService } from '../flash.service';
 import {
+  BehaviorSubject,
+  Observable,
   Subject,
   combineLatest,
+  debounceTime,
   scan,
   shareReplay,
   switchMap,
@@ -17,53 +28,81 @@ import { ResponsiveComponent } from '@app/shared/responsive/responsive.component
   templateUrl: './flash-list.component.html',
   styleUrls: ['./flash-list.component.scss'],
 })
-export class FlashListComponent extends ResponsiveComponent {
-  @ViewChild(CdkVirtualScrollViewport) viewPort!: CdkVirtualScrollViewport;
+export class FlashListComponent
+  extends ResponsiveComponent
+  implements OnChanges
+{
+  @Input() shop?: string;
+
+  @Input() available?: boolean;
 
   private readonly flashService = inject(FlashService);
 
-  private fetchMore = new Subject<void>();
+  private fetchMore = new BehaviorSubject<boolean>(true);
 
   private allDataLoaded = false;
 
   private lastDate?: Date;
 
-  public readonly flashs$ = combineLatest({
-    isMobile: this.isMobile$,
-    fetchMore: this.fetchMore,
-  }).pipe(
-    switchMap(({ isMobile }) =>
-      this.flashService.getMine(this.lastDate, isMobile ? 9 : 8).pipe(
-        tap((flashs) => {
-          this.lastDate = flashs.at(-1)?.creation_date;
+  public flashs$?: Observable<Flash[]>;
 
-          setTimeout(() => {
-            const end = this.viewPort.getRenderedRange().end;
-            const total = this.viewPort.getDataLength();
+  ngOnChanges(): void {
+    this.flashs$ = combineLatest({
+      isMobile: this.isMobile$,
+      fetchMore: this.fetchMore,
+      windowHeight: this.screenHeight$.pipe(
+        takeWhile(() => !this.allDataLoaded),
+        debounceTime(1000)
+      ),
+    }).pipe(
+      switchMap(({ isMobile }) =>
+        (this.shop
+          ? this.flashService.getByShop(
+              this.shop,
+              this.lastDate,
+              this.available,
+              isMobile ? 9 : 8
+            )
+          : this.flashService.getMine(
+              this.lastDate,
+              this.available,
+              isMobile ? 9 : 8
+            )
+        ).pipe(
+          tap((flashs) => {
+            console.log('fetched');
+            this.lastDate = flashs.at(-1)?.creation_date;
 
-            console.log(end, total);
+            setTimeout(() => {
+              if (!this.allDataLoaded) {
+                if (!this.checkIfGridIsScrollable()) {
+                  this.fetchMore.next(true);
+                }
+              }
+            });
+          })
+        )
+      ),
+      scan((acc, newPage) => {
+        if (newPage.length === 0) {
+          this.allDataLoaded = true;
+          return acc;
+        }
 
-            if (end === total && !this.allDataLoaded) {
-              this.fetchMore.next();
-            }
-          });
-        })
-      )
-    ),
-    scan((acc, newPage) => {
-      if (newPage.length === 0) {
-        this.allDataLoaded = true;
-      }
+        return [...acc, ...newPage];
+      }),
+      takeWhile(() => !this.allDataLoaded),
+      shareReplay(1)
+    );
+  }
 
-      return [...acc, ...newPage];
-    }),
-    takeWhile(() => !this.allDataLoaded),
-    shareReplay(1)
-  );
+  checkIfGridIsScrollable(): boolean {
+    return document.documentElement.scrollHeight > window.innerHeight;
+  }
 
-  onScroll(index: number) {
-    if (!this.allDataLoaded && index >= this.viewPort.getDataLength() - 8) {
-      this.fetchMore.next();
+  onScroll() {
+    if (!this.allDataLoaded) {
+      this.fetchMore.next(true);
     }
   }
 

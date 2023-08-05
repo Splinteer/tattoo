@@ -94,11 +94,11 @@ export class GalleryController {
     await this.galleryService.delete(id);
   }
 
-  @Post('shop/:shopId')
+  @Post('shop/:shopUrl')
   async getByShop(
-    @Param('shopId') shopId: string,
+    @Param('shopUrl') shopUrl: string,
     @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
   ) {
-    return this.galleryService.getByShop(shopId, limit, lastDate);
+    return this.galleryService.getByShop(shopUrl, limit, lastDate);
   }
 }

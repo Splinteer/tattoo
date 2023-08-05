@@ -1,0 +1,85 @@
+<ng-container *ngIf="shop$ | async as shop">
+  <div class="header">
+    <img
+      class="logo"
+      [src]="
+        'http://storage.googleapis.com/tattoo-public/shops/' +
+        shop.id +
+        '/logo?v=' +
+        shop.profile_picture_version
+      "
+      [alt]="shop.name"
+    />
+
+    <div class="description">
+      <div class="title">
+        <h1>{{ shop.name }}</h1>
+        <div class="note" *ngIf="shop.note !== null">
+          <i class="fa-solid fa-star"></i>
+          {{ shop.note }} ({{
+            "SHOP.PROFILE.appointments"
+              | translate : { count: shop.appointments }
+          }})
+        </div>
+      </div>
+      <div class="appointment">
+        <button class="button" translate>PROJECT.take_appointment</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="bio break-lines">
+    {{ shop.description }}
+  </p>
+
+  <div class="social" *ngIf="shop.socials.length">
+    <ng-container *ngFor="let social of shop.socials">
+      <a [href]="social.url" target="_blank">
+        <i [ngClass]="social.icon"></i>
+      </a>
+    </ng-container>
+  </div>
+  <ul class="tabs-navigation">
+    <li>
+      <button
+        [class.active]="activeTab === 'flashs'"
+        (click)="activeTab = 'flashs'"
+      >
+        <i class="fa-solid fa-sparkles"></i>
+        <span class="text" translate>SHOP.PROFILE.available_flashs</span>
+      </button>
+    </li>
+    <li>
+      <button
+        [class.active]="activeTab === 'flashs-unavailable'"
+        (click)="activeTab = 'flashs-unavailable'"
+      >
+        <i class="fa-solid fa-calendar-xmark"></i>
+        <span class="text" translate>SHOP.PROFILE.unavailable_flashs</span>
+      </button>
+    </li>
+    <li>
+      <button
+        [class.active]="activeTab === 'gallery'"
+        (click)="activeTab = 'gallery'"
+      >
+        <i class="fa-solid fa-grid"></i>
+        <span class="text" translate>SHOP.PROFILE.gallery</span>
+      </button>
+    </li>
+  </ul>
+  <div class="tabs">
+    <div class="flashs" [hidden]="activeTab !== 'flashs'">
+      <app-flash-list [available]="true" [shop]="shop.url"></app-flash-list>
+    </div>
+    <div
+      class="flashs-unavailable"
+      [hidden]="activeTab !== 'flashs-unavailable'"
+    >
+      <app-flash-list [available]="false" [shop]="shop.url"></app-flash-list>
+    </div>
+    <div class="gallery" [hidden]="activeTab !== 'gallery'">
+      <app-gallery-list [shop]="shop.url"></app-gallery-list>
+    </div>
+  </div>
+</ng-container>

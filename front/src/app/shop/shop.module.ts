@@ -9,8 +9,11 @@ import { ShopService } from './shop.service';
 import { HomeComponent } from './home/home.component';
 import { ShopEditComponent } from './shop-edit/shop-edit.component';
 import { ShopGalleryComponent } from './shop-gallery/shop-gallery.component';
+import { ShopGalleryAddComponent } from './shop-gallery-add/shop-gallery-add.component';
 import { FlashModule } from '@app/flash/flash.module';
 import { GalleryModule } from '@app/gallery/gallery.module';
+import { ShopProfileComponent } from './shop-profile/shop-profile.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   imports: [
@@ -20,12 +23,15 @@ import { GalleryModule } from '@app/gallery/gallery.module';
     ReactiveFormsModule,
     FlashModule,
     GalleryModule,
+    ScrollingModule,
   ],
   declarations: [
     CreationComponent,
     HomeComponent,
     ShopEditComponent,
     ShopGalleryComponent,
+    ShopGalleryAddComponent,
+    ShopProfileComponent,
   ],
   providers: [ShopService],
 })

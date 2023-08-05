@@ -13,6 +13,7 @@ export interface Credentials {
   shop_id?: string;
   shop_name?: string;
   shop_url?: string;
+  shop_image_version?: number;
 }
 
 @Injectable({

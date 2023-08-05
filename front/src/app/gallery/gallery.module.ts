@@ -31,6 +31,6 @@ import { GalleryService } from './gallery.service';
     ScrollingModule,
   ],
   providers: [GalleryService],
-  exports: [GalleryItemComponent],
+  exports: [GalleryItemComponent, GalleryListComponent],
 })
 export class GalleryModule {}

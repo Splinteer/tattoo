@@ -42,9 +42,19 @@ export class FlashController {
   @UseGuards(new AuthGuard())
   async getMine(
     @Credentials() credentials: ICredentials,
-    @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
+    @Body()
+    {
+      lastDate,
+      available,
+      limit = 9,
+    }: { lastDate?: string; available?: boolean; limit?: number },
   ) {
-    return this.flashService.getByShop(credentials.shop_id, limit, lastDate);
+    return this.flashService.getByShop(
+      credentials.shop_url,
+      limit,
+      available,
+      lastDate,
+    );
   }
 
   @Get(':id')
@@ -68,7 +78,6 @@ export class FlashController {
 
     const updatedFlash = await this.flashService.update(id, body);
     if (image) {
-      console.log(image);
       await this.flashService.updateImage(
         updatedFlash.shop_id,
         updatedFlash.id,
@@ -94,11 +103,16 @@ export class FlashController {
     await this.flashService.delete(id);
   }
 
-  @Post('shop/:shopId')
+  @Post('shop/:shopUrl')
   async getByShop(
-    @Param('shopId') shopId: string,
-    @Body() { lastDate, limit = 9 }: { lastDate?: string; limit?: number },
+    @Param('shopUrl') shopUrl: string,
+    @Body()
+    {
+      lastDate,
+      available,
+      limit = 9,
+    }: { lastDate?: string; available?: boolean; limit?: number },
   ) {
-    return this.flashService.getByShop(shopId, limit, lastDate);
+    return this.flashService.getByShop(shopUrl, limit, available, lastDate);
   }
 }

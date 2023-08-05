@@ -31,6 +31,7 @@ export interface Credentials {
   shop_id?: string;
   shop_name?: string;
   shop_url?: string;
+  shop_image_version?: number;
 }
 
 @Injectable()
@@ -63,6 +64,7 @@ export class CustomerService {
       'shop.id as shop_id',
       'shop.name as shop_name',
       'shop.url as shop_url',
+      'shop.profile_picture_version as shop_image_version',
     ];
 
     const { rows } = await this.database.query(

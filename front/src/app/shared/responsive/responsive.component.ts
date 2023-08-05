@@ -5,7 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { ResponsiveService } from './responsive.service';
-import { tap } from 'rxjs';
+import { distinctUntilChanged, tap } from 'rxjs';
 
 @Component({
   template: '',
@@ -15,4 +15,8 @@ export class ResponsiveComponent {
   private readonly responsiveService = inject(ResponsiveService);
 
   public readonly isMobile$ = this.responsiveService.isMobile$;
+
+  public readonly screenHeight$ = this.responsiveService.screenHeight$
+    .asObservable()
+    .pipe(distinctUntilChanged());
 }

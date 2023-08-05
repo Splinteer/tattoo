@@ -77,14 +77,24 @@ export class FlashService {
     return key;
   }
 
-  public async getByShop(shopId: string, limit: number, lastDate?: string) {
-    let query = 'SELECT * FROM flash WHERE shop_id=$1';
-    const values: any = [shopId, limit];
+  public async getByShop(
+    shopUrl: string,
+    limit: number,
+    available?: boolean,
+    lastDate?: string,
+  ) {
+    let query =
+      'SELECT flash.* FROM flash INNER JOIN shop ON shop.id=flash.shop_id WHERE shop.url=$1';
+    const values: any = [shopUrl, limit];
     if (lastDate) {
-      query += ' AND creation_date < $3';
+      query += ' AND flash.creation_date < $' + (values.length + 1);
       values.push(new Date(lastDate));
     }
-    query += ' ORDER BY creation_date DESC LIMIT $2';
+    if (available !== undefined) {
+      query += ' AND flash.available=$' + (values.length + 1);
+      values.push(available);
+    }
+    query += ' ORDER BY flash.creation_date DESC LIMIT $2';
 
     const { rows } = await this.db.query<Flash>(query, values);
 

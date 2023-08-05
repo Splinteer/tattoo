@@ -47,6 +47,7 @@ export class CreationComponent implements OnInit {
         ],
         nonNullable: true,
       }),
+      description: new FormControl<string>(this.shop?.description || ''),
       logo: new FormControl<File[]>([], { nonNullable: true }),
       instagram: new FormControl<string | null>(this.shop?.instagram || null),
       twitter: new FormControl<string | null>(this.shop?.twitter || null),
@@ -57,10 +58,11 @@ export class CreationComponent implements OnInit {
     this.credentials$.pipe(first()).subscribe((credentials) => {
       this.logoPreview$ = this.form!.get('logo')?.valueChanges.pipe(
         startWith(
-          this.shop?.got_profile_picture
+          credentials && this.shop?.got_profile_picture
             ? 'http://storage.googleapis.com/tattoo-public/shops/' +
-                credentials?.shop_id +
-                '/logo'
+                credentials.shop_id +
+                '/logo?v=' +
+                credentials.shop_image_version
             : ''
         ),
         switchMap((files) => {

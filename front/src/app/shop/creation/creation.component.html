@@ -84,6 +84,32 @@
     </div>
   </div>
 
+  <div role="group" aria-labelledby="group-description">
+    <div class="group-description">
+      <label id="group-description" translate
+        >SHOP.CREATE.description_title</label
+      >
+      <small translate>SHOP.CREATE.description_description</small>
+    </div>
+
+    <div class="input-group">
+      <label for="description" translate>FLASH.CREATE.description</label>
+
+      <textarea
+        id="description"
+        class="break-lines"
+        formControlName="description"
+        rows="6"
+        [placeholder]="'SHOP.CREATE.description_placeholder' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('description')?.touched) &&
+            form.get('description')?.errors
+        }"
+      ></textarea>
+    </div>
+  </div>
+
   <div role="group" aria-labelledby="group-social">
     <div class="group-description">
       <label id="group-social" translate>SHOP.CREATE.social_title</label>

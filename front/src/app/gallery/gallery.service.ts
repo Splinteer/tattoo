@@ -29,8 +29,11 @@ export class GalleryService {
     return this.http.get<Gallery>('/gallery/' + galleryId);
   }
 
-  public getByShop(shopId: string) {
-    return this.http.get<Gallery[]>('/gallery/shop/' + shopId);
+  public getByShop(shopId: string, lastDate?: Date, limit?: number) {
+    return this.http.post<Gallery[]>('/gallery/shop/' + shopId, {
+      lastDate,
+      limit,
+    });
   }
 
   public update(id: string, formData: FormData) {

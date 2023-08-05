@@ -1,14 +1,8 @@
-<cdk-virtual-scroll-viewport
-  itemSize="50"
-  class="viewport"
-  (scrolledIndexChange)="onScroll($event)"
->
-  <div class="grid">
-    <h1 translate>GALLERY.LIST.title_shop</h1>
-    <app-gallery-item
-      [gallery]="gallery"
-      *cdkVirtualFor="let gallery of gallerys$ | async; trackBy: trackByIdx"
-    >
-    </app-gallery-item>
-  </div>
-</cdk-virtual-scroll-viewport>
+<div class="grid" infiniteScroll (scrolled)="onScroll()">
+  <h1 *ngIf="!shop" translate>GALLERY.LIST.title_shop</h1>
+  <app-gallery-item
+    [gallery]="item"
+    *ngFor="let item of gallery$ | async; trackBy: trackByIdx"
+  >
+  </app-gallery-item>
+</div>

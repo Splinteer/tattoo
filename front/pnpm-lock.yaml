@@ -41,6 +41,9 @@ dependencies:
   '@ngx-translate/http-loader':
     specifier: ^7.0.0
     version: 7.0.0(@angular/common@15.2.9)(@ngx-translate/core@14.0.0)(rxjs@7.5.7)
+  ngx-infinite-scroll:
+    specifier: ^15.0.0
+    version: 15.0.0(@angular/common@15.2.9)(@angular/core@15.2.9)
   ngx-translate-messageformat-compiler:
     specifier: ^6.2.0
     version: 6.2.0(@angular/core@15.2.9)(@messageformat/core@3.1.0)(@ngx-translate/core@14.0.0)
@@ -5147,6 +5150,17 @@ packages:
   /neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
+
+  /ngx-infinite-scroll@15.0.0(@angular/common@15.2.9)(@angular/core@15.2.9):
+    resolution: {integrity: sha512-FSP5UphRdl47vW8f/dRnPAU+napzruAKizBX2HS7MH292Ca+va6IU0J5+UQQmO5rXod2RZV7UhJ6+7g4xLfs1A==}
+    peerDependencies:
+      '@angular/common': '>=15.0.0 <16.0.0'
+      '@angular/core': '>=15.0.0 <16.0.0'
+    dependencies:
+      '@angular/common': 15.2.9(@angular/core@15.2.9)(rxjs@7.5.7)
+      '@angular/core': 15.2.9(rxjs@7.5.7)(zone.js@0.11.8)
+      tslib: 2.5.0
+    dev: false
 
   /ngx-translate-messageformat-compiler@6.2.0(@angular/core@15.2.9)(@messageformat/core@3.1.0)(@ngx-translate/core@14.0.0):
     resolution: {integrity: sha512-niGhub53gMw8GbmP3u3OB7SVJn7z5JZodQxQxDb6ZE0A9c0WeVBzz30WbekQshBF7ijzLYE/qcM+lzTCpWkRmg==}
