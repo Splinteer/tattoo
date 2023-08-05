@@ -12,23 +12,27 @@ import Session from 'supertokens-auth-react/recipe/session';
 import { CredentialsService } from './credentials.service';
 import { tap } from 'rxjs';
 import * as EmailVerification from 'supertokens-auth-react/recipe/emailverification';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SupertokensService {
   constructor(private readonly credentialsService: CredentialsService) {
-    this.init();
-    this.checkSession();
-
     this.credentialsService.refreshCredentials$
       .pipe(
         tap(async () => {
           await Session.attemptRefreshingSession();
           this.checkSession();
-        })
+        }),
+        takeUntilDestroyed()
       )
       .subscribe();
+  }
+
+  public async initializeApp(): Promise<void> {
+    this.init();
+    await this.checkSession();
   }
 
   private init(): void {

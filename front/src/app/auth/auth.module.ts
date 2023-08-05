@@ -6,6 +6,12 @@ import { AuthComponent } from './auth.component';
 import { SupertokensService } from './supertokens.service';
 import { CredentialsService } from './credentials.service';
 
+export function initializeSupertokens(
+  supertokensService: SupertokensService
+): () => Promise<void> {
+  return () => supertokensService.initializeApp();
+}
+
 @NgModule({
   declarations: [AuthComponent],
   imports: [CommonModule, AuthRoutingModule],
@@ -13,8 +19,9 @@ import { CredentialsService } from './credentials.service';
     CredentialsService,
     {
       provide: APP_INITIALIZER,
-      useClass: SupertokensService,
-      deps: [CredentialsService],
+      useFactory: initializeSupertokens,
+      multi: true,
+      deps: [SupertokensService],
     },
   ],
 })
