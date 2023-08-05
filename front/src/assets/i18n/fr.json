@@ -7,6 +7,22 @@
       "confirm": "Je confirme"
     }
   },
+
+  "HEADER": {
+    "shop": "Boutique",
+    "gallery": "Galerie",
+    "search": "Ville, nom d'un artiste...",
+    "signin": "Se connecter"
+  },
+
+  "CUSTOMER": {
+    "MENU": {
+      "profile": "Mon profil",
+      "open_shop": "Ouvrir un shop",
+      "signout": "Se déconnecter"
+    }
+  },
+
   "SHOP": {
     "CREATE": {
       "shop_title": "Boutique",

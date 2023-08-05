@@ -36,8 +36,7 @@ header.desktop {
 
     ul {
       display: flex;
-      gap: 15px;
-      align-items: center;
+      gap: var(--space-300);
 
       li a.active {
         color: var(--primary-color);

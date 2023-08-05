@@ -14,24 +14,26 @@
           <a routerLink="/tattooists" routerLinkActive="active">Tattooists</a>
         </li>
         <ng-container *ngIf="credentials$ | async as credentials">
-          <li>
-            <a
-              routerLink="/shop"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              *ngIf="credentials.shop_name"
-              >Boutique</a
-            >
-          </li>
-          <li>
-            <a
-              routerLink="/shop/gallery"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              *ngIf="credentials.shop_name"
-              >Galerie</a
-            >
-          </li>
+          <ng-container *ngIf="credentials.shop_name">
+            <li>
+              <a
+                routerLink="/shop"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                translate
+                >HEADER.shop</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/shop/gallery"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                translate
+                >HEADER.gallery</a
+              >
+            </li>
+          </ng-container>
         </ng-container>
       </ul>
 
@@ -47,7 +49,7 @@
   <div class="search">
     <app-icon-input
       icon="magnifying-glass"
-      placeholder="Ville, nom d'un artiste..."
+      [placeholder]="'HEADER.search' | translate"
     ></app-icon-input>
   </div>
 </ng-template>
@@ -75,27 +77,34 @@
             </div>
           </div>
 
-          <div class="open-shop" cdkMenuItem *ngIf="!credentials.shop_name">
-            <a
-              routerLink="/shop/create"
-              class="button button-outline button-sm"
-            >
-              Ouvrir un shop
-            </a>
-          </div>
-
-          <a class="hoverable" cdkMenuItem>Settings</a>
-          <a class="hoverable" cdkMenuItem>Help</a>
+          <a cdkMenuItem routerLink="/me" class="hoverable" translate>
+            <i class="fa-solid fa-user"></i>
+            CUSTOMER.MENU.profile
+          </a>
           <hr />
-          <a class="hoverable" cdkMenuItem (click)="logOut()">
-            <i class="fa-regular fa-sign-out"></i>
-            Sign out
+
+          <ng-container *ngIf="!credentials.shop_name">
+            <a
+              cdkMenuItem
+              routerLink="/shop/create"
+              class="hoverable"
+              translate
+            >
+              <i class="fa-solid fa-shop"></i>
+              CUSTOMER.MENU.open_shop
+            </a>
+            <hr />
+          </ng-container>
+
+          <a cdkMenuItem (click)="logOut()" class="hoverable" translate>
+            <i class="fa-solid fa-power-off"></i>
+            CUSTOMER.MENU.signout
           </a>
         </div>
       </ng-template>
     </ng-container>
     <ng-template #notLogged>
-      <a class="button" routerLink="/auth">Se connecter</a>
+      <a class="button" routerLink="/auth" translate>HEADER.signin</a>
     </ng-template>
   </div>
 </ng-template>
