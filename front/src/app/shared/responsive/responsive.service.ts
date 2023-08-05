@@ -31,14 +31,17 @@ export class ResponsiveService {
 
   private readonly rendered2 = this.rendererFactory.createRenderer(null, null);
 
-  private readonly screenWidth$ = new BehaviorSubject<number>(
-    window.innerWidth
+  public readonly screenHeight$ = new BehaviorSubject<number>(
+    window.innerHeight
   );
+
+  public readonly screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
 
   private readonly onResizeListener$ = this.rendered2.listen(
     'window',
     'resize',
     () => {
+      this.screenHeight$.next(window.innerHeight);
       this.screenWidth$.next(window.innerWidth);
     }
   );

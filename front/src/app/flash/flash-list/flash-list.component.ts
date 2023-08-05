@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   Input,
   OnChanges,
   SimpleChanges,
@@ -12,6 +13,7 @@ import {
   Observable,
   Subject,
   combineLatest,
+  debounceTime,
   scan,
   shareReplay,
   switchMap,
@@ -35,9 +37,6 @@ export class FlashListComponent
   private readonly flashService = inject(FlashService);
 
   private fetchMore = new BehaviorSubject<boolean>(true);
-  // private fetchMore = new Subject<void>();
-
-  @ViewChild(CdkVirtualScrollViewport) viewPort!: CdkVirtualScrollViewport;
 
   private allDataLoaded = false;
 
@@ -45,36 +44,14 @@ export class FlashListComponent
 
   public flashs$?: Observable<Flash[]>;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // if (this.shop) {
-    //   this.flashs$ = this.isMobile$.pipe(
-    //     switchMap((isMobile) =>
-    //       this.flashService.getByShop(
-    //         <string>this.shop,
-    //         this.lastDate,
-    //         isMobile ? 9 : 8
-    //       )
-    //     )
-    //   );
-    // }
-
-    // this.flashs$ = combineLatest({
-    //   isMobile: this.isMobile$,
-    //   fetchMore: this.fetchMore,
-    // }).pipe(
-    //   shareReplay(1),
-    //   switchMap(({ isMobile }) => {
-    //     return this.flashService.getByShop(
-    //       <string>this.shop,
-    //       this.lastDate,
-    //       isMobile ? 9 : 8
-    //     );
-    //   })
-    // );
-    console.log('init');
+  ngOnChanges(): void {
     this.flashs$ = combineLatest({
       isMobile: this.isMobile$,
       fetchMore: this.fetchMore,
+      windowHeight: this.screenHeight$.pipe(
+        takeWhile(() => !this.allDataLoaded),
+        debounceTime(1000)
+      ),
     }).pipe(
       switchMap(({ isMobile }) =>
         (this.shop
@@ -86,12 +63,14 @@ export class FlashListComponent
           : this.flashService.getMine(this.lastDate, isMobile ? 9 : 8)
         ).pipe(
           tap((flashs) => {
-            console.log('result', flashs);
+            console.log('fetched');
             this.lastDate = flashs.at(-1)?.creation_date;
 
             setTimeout(() => {
               if (!this.allDataLoaded) {
-                // this.fetchMore.next(true);
+                if (!this.checkIfGridIsScrollable()) {
+                  this.fetchMore.next(true);
+                }
               }
             });
           })
@@ -99,8 +78,8 @@ export class FlashListComponent
       ),
       scan((acc, newPage) => {
         if (newPage.length === 0) {
-          console.log('oh non', acc, newPage);
           this.allDataLoaded = true;
+          return acc;
         }
 
         return [...acc, ...newPage];
@@ -110,12 +89,14 @@ export class FlashListComponent
     );
   }
 
+  checkIfGridIsScrollable(): boolean {
+    return document.documentElement.scrollHeight > window.innerHeight;
+  }
+
   onScroll() {
-    console.log('onScroll');
-    this.fetchMore.next(true);
-    // if (!this.allDataLoaded && index >= this.viewPort.getDataLength() - 8) {
-    //   this.fetchMore.next();
-    // }
+    if (!this.allDataLoaded) {
+      this.fetchMore.next(true);
+    }
   }
 
   trackByIdx(index: number, item: Flash): string {

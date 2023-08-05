@@ -1,7 +1,6 @@
 <div class="grid" infiniteScroll (scrolled)="onScroll()">
   <h1 *ngIf="!shop" translate>FLASH.LIST.title_shop</h1>
   <app-flash-item
-    infiniteScroll
     [flash]="flash"
     *ngFor="let flash of flashs$ | async; trackBy: trackByIdx"
   >
