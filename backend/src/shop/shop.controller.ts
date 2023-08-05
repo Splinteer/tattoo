@@ -73,6 +73,13 @@ export class ShopController {
 
   @Get(':url')
   async getByUrl(@Param('url') url: string) {
-    return await this.shopService.getByUrl(url);
+    const shop = await this.shopService.getByUrl(url);
+    const { note, appointments } = await this.shopService.getRating(shop.id);
+
+    return {
+      ...shop,
+      note,
+      appointments,
+    };
   }
 }

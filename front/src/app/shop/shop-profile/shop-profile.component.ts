@@ -5,7 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Shop, ShopService } from '../shop.service';
+import { ShopWithRating, ShopService } from '../shop.service';
 import { Observable, map, switchMap } from 'rxjs';
 
 @Component({
@@ -22,7 +22,7 @@ export class ShopProfileComponent {
   public activeTab: string = 'flashs';
 
   public readonly shop$: Observable<
-    Shop & { socials: { icon: string; url: string }[] }
+    ShopWithRating & { socials: { icon: string; url: string }[] }
   > = this.route.params.pipe(
     switchMap(({ shopUrl }) => this.shopService.getByUrl(shopUrl)),
     map((shop) => {

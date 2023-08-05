@@ -20,6 +20,11 @@ export interface Shop {
   website: string | null;
 }
 
+export interface ShopWithRating extends Shop {
+  note: string;
+  appointments: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -39,7 +44,7 @@ export class ShopService {
   }
 
   public getByUrl(url: string) {
-    return this.http.get<Shop>('/shop/' + url);
+    return this.http.get<ShopWithRating>('/shop/' + url);
   }
 
   public update(formData: FormData) {

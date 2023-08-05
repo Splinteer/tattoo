@@ -103,4 +103,19 @@ export class ShopService {
 
     return rows[0];
   }
+
+  public async getRating(shopId: string) {
+    const { rows } = await this.db.query<{
+      appointments: number;
+      note: number | null;
+    }>(
+      `SELECT COUNT(p.id) AS appointments, round(CAST(AVG(p.shop_rating) as numeric), 1)
+      AS note  FROM project p
+      INNER JOIN appointment a ON a.project_id =p.id AND a.is_confirmed = TRUE AND a.start_date <  NOW()
+      WHERE p.shop_id=$1;`,
+      [shopId],
+    );
+
+    return rows[0];
+  }
 }

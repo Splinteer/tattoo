@@ -28,7 +28,17 @@
 
       "create_button": "Ouvrir ma boutique",
       "update_button": "Mettre à jour ma boutique"
+    },
+    "PROFILE": {
+      "appointments": "{count} {count, plural, one{rendez-vous} other{rendez-vous}}",
+      "available_flashs": "Flashs disponibles",
+      "unavailable_flashs": "Flashs réservés",
+      "gallery": "Galerie"
     }
+  },
+
+  "PROJECT": {
+    "take_appointment": "Prendre rendez-vous"
   },
 
   "FLASH": {

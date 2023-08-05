@@ -14,13 +14,16 @@
     <div class="description">
       <div class="title">
         <h1>{{ shop.name }}</h1>
-        <div class="note">
+        <div class="note" *ngIf="shop.note !== null">
           <i class="fa-solid fa-star"></i>
-          4.8 (128 rendez-vous)
+          {{ shop.note }} ({{
+            "SHOP.PROFILE.appointments"
+              | translate : { count: shop.appointments }
+          }})
         </div>
       </div>
       <div class="appointment">
-        <button class="button">Prendre rendez-vous</button>
+        <button class="button" translate>PROJECT.take_appointment</button>
       </div>
     </div>
   </div>
@@ -43,7 +46,7 @@
         (click)="activeTab = 'flashs'"
       >
         <i class="fa-solid fa-sparkles"></i>
-        <span class="text">Flashs disponible</span>
+        <span class="text" translate>SHOP.PROFILE.available_flashs</span>
       </button>
     </li>
     <li>
@@ -52,7 +55,7 @@
         (click)="activeTab = 'flashs-unavailable'"
       >
         <i class="fa-solid fa-calendar-xmark"></i>
-        <span class="text">Flashs Indisponible</span>
+        <span class="text" translate>SHOP.PROFILE.unavailable_flashs</span>
       </button>
     </li>
     <li>
@@ -61,7 +64,7 @@
         (click)="activeTab = 'gallery'"
       >
         <i class="fa-solid fa-grid"></i>
-        <span class="text">Gallerie</span>
+        <span class="text" translate>SHOP.PROFILE.gallery</span>
       </button>
     </li>
   </ul>
