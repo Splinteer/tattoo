@@ -8,6 +8,13 @@ import SuperTokensReactComponent from './supertokensAuthComponent';
 @Component({
   selector: 'app-auth',
   template: '<div [id]="rootId"></div>',
+  styles: [
+    `
+      :host {
+        width: 100%;
+      }
+    `,
+  ],
 })
 export class AuthComponent implements OnDestroy, AfterViewInit {
   public rootId = 'rootId';

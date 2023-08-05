@@ -71,48 +71,31 @@ export class SupertokensService {
             }),
           ],
           override: {
-            // functions: (originalImplementation) => {
-            //   return {
-            //     ...originalImplementation,
-            //     thirdPartySignInUpPOST: async function (input) {
-            //       console.log(JSON.stringify(input, null, 2));
-            //       return await originalImplementation.thirdPartySignInUp(input);
-            //     },
-            //   };
-            // },
-
-            // functions: (originalImplementation) => {
-            //   return {
-            //     ...originalImplementation,
-
-            //     // here we are only overriding the function that's responsible
-            //     // for signing in or signing up a user.
-            //     thirdPartySignInUp: async function (input) {
-            //       // TODO: some custom logic
-            //       console.log('oklm');
-            //       console.log(
-            //         await input.userContext._default.request.getJSONBody(),
-            //       );
-            //       // const { code } =
-            //       //   await input.userContext._default.request.getFormData();
-            //       // const test = await getSocialUserInfo(
-            //       //   { id: 'google', userId: 'id' },
-            //       //   code,
-            //       // );
-            //       // console.log(test);
-            //       throw new Error();
-
-            //       // or call the default behaviour as show below
-            //       return await originalImplementation.thirdPartySignInUp(input);
-            //     },
-            //     // ...
-            //     // TODO: override more functions
-            //   };
-            // },
-
             apis: (originalImplementation) => {
               return {
                 ...originalImplementation,
+                emailPasswordSignUpPOST: async function (input) {
+                  if (
+                    originalImplementation.emailPasswordSignUpPOST === undefined
+                  ) {
+                    throw Error('Should never come here');
+                  }
+                  const response =
+                    await originalImplementation.emailPasswordSignUpPOST(input);
+
+                  // Post sign up response, we check if it was successful
+                  if (response.status === 'OK') {
+                    const { id, email } = response.user;
+
+                    const userInfo = await getSocialUserInfo(response.user);
+
+                    await customerService.create(id, email, userInfo);
+
+                    await refreshSession(id);
+                  }
+
+                  return response;
+                },
                 thirdPartySignInUpPOST: async function (input) {
                   if (
                     originalImplementation.thirdPartySignInUpPOST === undefined
@@ -176,7 +159,7 @@ export class SupertokensService {
 
   private async getSocialUserInfo(
     thirdParty: { id: string; userId: string },
-    authCodeResponse: any,
+    authCodeResponse?: any,
   ): Promise<UserInformations> {
     if (thirdParty.id === 'google') {
       return this.getGoogleUserInfo(

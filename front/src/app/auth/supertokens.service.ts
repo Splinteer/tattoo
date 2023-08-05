@@ -11,6 +11,7 @@ import {
 import Session from 'supertokens-auth-react/recipe/session';
 import { CredentialsService } from './credentials.service';
 import { tap } from 'rxjs';
+import * as EmailVerification from 'supertokens-auth-react/recipe/emailverification';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +53,7 @@ export class SupertokensService {
             }
           },
         }),
+        EmailVerification.init({ mode: 'REQUIRED' }),
         Session.init(),
       ],
     });
@@ -60,16 +62,20 @@ export class SupertokensService {
   private async checkSession() {
     const sessionExists = await Session.doesSessionExist();
     if (sessionExists) {
-      const res = await Session.getAccessTokenPayloadSecurely();
-      let credentials = res.credentials;
+      let credentials;
       let attempt = 0;
 
-      while (!credentials && attempt++ < 5) {
+      while (!credentials && attempt++ <= 5) {
         await Session.attemptRefreshingSession();
         const res = await Session.getAccessTokenPayloadSecurely();
-        credentials = res.credentials;
-        console.log(res);
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        const verified = this.checkVerified(res);
+
+        if (verified) {
+          credentials = res.credentials;
+        }
+        if (!credentials) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
       }
 
       if (!credentials) {
@@ -79,5 +85,11 @@ export class SupertokensService {
 
       this.credentialsService.credentialsSubject$.next(credentials);
     }
+  }
+
+  private checkVerified(
+    token: Partial<{ 'st-ev': { v: boolean; t: number } }>
+  ) {
+    return token['st-ev']?.v;
   }
 }
