@@ -10,6 +10,7 @@ import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { CustomerService } from 'src/customer/customer.service';
 import { SessionService } from '../session/session.service';
+import { CredentialsService } from '../credentials/credentials.service';
 
 export interface UserInformations {
   firstname?: string;
@@ -29,7 +30,7 @@ export class SupertokensService {
   constructor(
     @Inject(ConfigInjectionToken) private config: AuthModuleConfig,
     private readonly http: HttpService,
-    private readonly customerService: CustomerService,
+    private readonly credentialsService: CredentialsService,
     private readonly sessionService: SessionService,
   ) {
     const getSocialUserInfo = this.getSocialUserInfo.bind(this);
@@ -89,7 +90,7 @@ export class SupertokensService {
 
                     const userInfo = await getSocialUserInfo(response.user);
 
-                    await customerService.create(id, email, userInfo);
+                    await credentialsService.createUser(id, email, userInfo);
 
                     await refreshSession(id);
                   }
@@ -117,7 +118,7 @@ export class SupertokensService {
                         response.authCodeResponse,
                       );
 
-                      await customerService.create(id, email, userInfo);
+                      await credentialsService.createUser(id, email, userInfo);
                     }
 
                     await refreshSession(id);
@@ -138,8 +139,9 @@ export class SupertokensService {
               return {
                 ...originalImplementation,
                 createNewSession: async function (input) {
-                  const credentials =
-                    await customerService.getCustomerCredentials(input.userId);
+                  const credentials = await credentialsService.get(
+                    input.userId,
+                  );
 
                   input.accessTokenPayload = {
                     ...input.accessTokenPayload,

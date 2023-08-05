@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CustomerService } from 'src/customer/customer.service';
 import Session from 'supertokens-node/recipe/session';
+import { CredentialsService } from '../credentials/credentials.service';
 
 @Injectable()
 export class SessionService {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(private readonly credentialsService: CredentialsService) {}
 
   public async refreshSession(supertokenId: string) {
     const sessionHandles = await Session.getAllSessionHandlesForUser(
@@ -15,9 +15,7 @@ export class SessionService {
       return;
     }
 
-    const credentials = await this.customerService.getCustomerCredentials(
-      supertokenId,
-    );
+    const credentials = await this.credentialsService.get(supertokenId);
 
     await Promise.all(
       sessionHandles.map(async (sessionHandle) => {

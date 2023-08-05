@@ -9,14 +9,16 @@ import { AuthMiddleware } from './auth.middleware';
 import { ConfigInjectionToken, AuthModuleConfig } from './config.interface';
 import { SupertokensService } from './supertokens/supertokens.service';
 import { HttpModule } from '@nestjs/axios';
-import { CustomerModule } from 'src/customer/customer.module';
 import { SessionService } from './session/session.service';
+import { CredentialsService } from './credentials/credentials.service';
+import { AuthController } from './auth.controller';
+import { CommonModule } from '@app/common';
 
 @Module({
-  imports: [CustomerModule],
-  providers: [SessionService],
-  exports: [SessionService],
-  controllers: [],
+  imports: [CommonModule],
+  providers: [SessionService, CredentialsService],
+  exports: [SessionService, CredentialsService],
+  controllers: [AuthController],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -42,7 +44,7 @@ export class AuthModule implements NestModule {
         SessionService,
       ],
       exports: [],
-      imports: [HttpModule, CustomerModule],
+      imports: [HttpModule],
       module: AuthModule,
     };
   }

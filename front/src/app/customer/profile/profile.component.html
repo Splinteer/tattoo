@@ -1,0 +1,166 @@
+<form
+  class="grouped-form"
+  [formGroup]="form"
+  #ngForm="ngForm"
+  (ngSubmit)="onSubmit()"
+  *ngIf="form"
+  [@backInDown]
+>
+  <div role="group" aria-labelledby="group-picture">
+    <div class="group-description">
+      <label id="group-picture" translate>CUSTOMER.PROFILE.picture_title</label>
+      <small translate>CUSTOMER.PROFILE.picture_description</small>
+    </div>
+
+    <div class="input-group logo">
+      <div
+        class="logo-preview"
+        *ngIf="picturePreview$ | async as picturePreview"
+      >
+        <img [src]="picturePreview" />
+        <button
+          type="button"
+          (click)="form.get('profile_picture')?.setValue([])"
+          *ngIf="!customer"
+        >
+          <i class="fa-regular fa-times-circle"></i>
+        </button>
+      </div>
+
+      <app-file-dropzone
+        formControlName="profile_picture"
+        accept="image/png, image/jpeg"
+      ></app-file-dropzone>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-profile">
+    <div class="group-description">
+      <label id="group-profile" translate>CUSTOMER.PROFILE.profile_title</label>
+      <small translate>CUSTOMER.PROFILE.profile_description</small>
+    </div>
+
+    <div class="input-group">
+      <input
+        formControlName="firstname"
+        type="text"
+        id="firstname"
+        name="firstname"
+        [placeholder]="'CUSTOMER.PROFILE.firstname' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('firstname')?.touched) &&
+            form.get('firstname')?.errors
+        }"
+      />
+
+      <input
+        formControlName="lastname"
+        type="text"
+        id="lastname"
+        name="lastname"
+        [placeholder]="'CUSTOMER.PROFILE.lastname' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('lastname')?.touched) &&
+            form.get('lastname')?.errors
+        }"
+      />
+
+      <small class="text-muted" translate>Requis</small>
+
+      <input
+        formControlName="birthday"
+        type="date"
+        id="birthday"
+        name="birthday"
+        [placeholder]="'CUSTOMER.PROFILE.birthday' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('birthday')?.touched) &&
+            form.get('birthday')?.errors
+        }"
+      />
+
+      <input
+        formControlName="pronouns"
+        type="text"
+        id="pronouns"
+        name="pronouns"
+        [placeholder]="'CUSTOMER.PROFILE.pronouns' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('pronouns')?.touched) &&
+            form.get('pronouns')?.errors
+        }"
+      />
+
+      <input
+        formControlName="phone"
+        type="text"
+        id="phone"
+        name="phone"
+        [placeholder]="'CUSTOMER.PROFILE.phone' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('phone')?.touched) &&
+            form.get('phone')?.errors
+        }"
+      />
+
+      <textarea
+        id="personal_information"
+        class="break-lines"
+        formControlName="personal_information"
+        rows="6"
+        [placeholder]="
+          'CUSTOMER.PROFILE.personal_information_placeholder' | translate
+        "
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('personal_information')?.touched) &&
+            form.get('personal_information')?.errors
+        }"
+      ></textarea>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-social">
+    <div class="group-description">
+      <label id="group-social" translate>CUSTOMER.PROFILE.social_title</label>
+      <small translate>CUSTOMER.PROFILE.social_description</small>
+    </div>
+
+    <div class="input-group">
+      <app-icon-input
+        formControlName="instagram"
+        icon="instagram"
+        iconType="brands"
+        placeholder="Instagram"
+      ></app-icon-input>
+
+      <app-icon-input
+        formControlName="twitter"
+        icon="twitter"
+        iconType="brands"
+        placeholder="Twitter"
+      ></app-icon-input>
+
+      <div
+        class="error-group"
+        *ngIf="
+        form.get('instagram')?.errors?.['pattern'] || form.get('twitter')?.errors?.['pattern']
+        "
+        translate
+      >
+        CUSTOMER.PROFILE.wrong_social_format
+      </div>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button class="button" type="submit" translate>
+      CUSTOMER.PROFILE.update_button
+    </button>
+  </div>
+</form>

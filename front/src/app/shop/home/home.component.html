@@ -1,15 +1,6 @@
 <div *ngIf="credentials$ | async as credentials" [@backInDown]>
   <div class="header">
-    <img
-      class="logo"
-      [src]="
-        'http://storage.googleapis.com/tattoo-public/shops/' +
-        credentials.shop_id +
-        '/logo?v=' +
-        credentials.shop_image_version
-      "
-      alt=""
-    />
+    <app-avatar [customer]="credentials"></app-avatar>
     <div class="description">
       <div class="title">
         <h1>{{ credentials.shop_name }}</h1>

@@ -13,7 +13,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Credentials } from 'src/auth/session/session.decorator';
-import { Credentials as ICredentials } from 'src/customer/customer.service';
+import { Credentials as ICredentials } from 'src/auth/credentials/credentials.service';
 import { GalleryService } from './gallery.service';
 
 @Controller('gallery')
@@ -68,7 +68,6 @@ export class GalleryController {
 
     const updatedGallery = await this.galleryService.update(id, body);
     if (image) {
-      console.log(image);
       await this.galleryService.updateImage(
         updatedGallery.shop_id,
         updatedGallery.id,

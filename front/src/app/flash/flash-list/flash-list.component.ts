@@ -70,7 +70,6 @@ export class FlashListComponent
             )
         ).pipe(
           tap((flashs) => {
-            console.log('fetched');
             this.lastDate = flashs.at(-1)?.creation_date;
 
             setTimeout(() => {

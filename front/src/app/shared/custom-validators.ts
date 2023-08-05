@@ -3,7 +3,11 @@ import {
   ValidatorFn,
   AbstractControl,
   ValidationErrors,
+  Validators,
 } from '@angular/forms';
+
+export const noSpaceNoSpecialCharactersValidator =
+  Validators.pattern('^[a-zA-Z0-9_-]*$');
 
 // Custom validator to check if one control's value is greater than the other
 export function greaterThanValidator(

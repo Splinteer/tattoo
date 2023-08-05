@@ -13,7 +13,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Credentials } from 'src/auth/session/session.decorator';
-import { Credentials as ICredentials } from 'src/customer/customer.service';
+import { Credentials as ICredentials } from 'src/auth/credentials/credentials.service';
 import { FlashService } from './flash.service';
 
 @Controller('flash')
