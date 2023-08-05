@@ -60,8 +60,8 @@ dependencies:
     specifier: ~7.5.7
     version: 7.5.7
   supertokens-auth-react:
-    specifier: ^0.34.1
-    version: 0.34.1(react-dom@17.0.2)(react@17.0.2)(supertokens-web-js@0.5.0)
+    specifier: ^0.31.2
+    version: 0.31.5(react-dom@17.0.2)(react@17.0.2)(supertokens-web-js@0.5.0)
   supertokens-web-js:
     specifier: ^0.5.0
     version: 0.5.0
@@ -6819,13 +6819,13 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /supertokens-auth-react@0.34.1(react-dom@17.0.2)(react@17.0.2)(supertokens-web-js@0.5.0):
-    resolution: {integrity: sha512-56/wwn+lLKj6iLickxoG+PCu1nVnGP4wPNxseFX4Yug1C4rn3labfobVit1fcOiHWnLC7K/RpyaEcvGNNDGWnw==}
+  /supertokens-auth-react@0.31.5(react-dom@17.0.2)(react@17.0.2)(supertokens-web-js@0.5.0):
+    resolution: {integrity: sha512-zqdYTPIz/44wRssL/g1Hd3tnbNrmvC3Kkgy6DO///IktijY1kBBuJGvEE4U6ZdOKN4qccjFrw1F96/TVULyMvQ==}
     engines: {node: '>=16.0.0', npm: '>=8'}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
-      supertokens-web-js: ^0.7.0
+      supertokens-web-js: ^0.5.0
     dependencies:
       intl-tel-input: 17.0.21
       prop-types: 15.8.1
