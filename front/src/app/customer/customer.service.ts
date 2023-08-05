@@ -36,13 +36,10 @@ export class CustomerService {
 
   public getMine() {
     return this.http.get<Customer>(`/customer/`).pipe(
-      map((customer) => {
-        console.log(customer.birthday);
-        return {
-          ...customer,
-          birthday: customer.birthday && new Date(customer.birthday),
-        };
-      })
+      map((customer) => ({
+        ...customer,
+        birthday: customer.birthday && new Date(customer.birthday),
+      }))
     );
   }
 

@@ -46,7 +46,6 @@ export class ProfileComponent implements OnInit {
     this.customerService.getMine().subscribe((customer) => {
       if (customer) {
         this.customer = customer;
-        console.log(this.customer.birthday);
         this.ngOnInit();
       }
     });
@@ -118,7 +117,6 @@ export class ProfileComponent implements OnInit {
 
   public onSubmit() {
     if (this.form?.invalid) {
-      console.log('oh no', this.form.errors);
       return;
     }
 

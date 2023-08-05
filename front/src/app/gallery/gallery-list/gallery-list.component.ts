@@ -54,7 +54,6 @@ export class GalleryListComponent
           : this.galleryService.getMine(this.lastDate, isMobile ? 9 : 8)
         ).pipe(
           tap((gallery) => {
-            console.log('fetched');
             this.lastDate = gallery.at(-1)?.creation_date;
 
             setTimeout(() => {

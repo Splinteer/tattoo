@@ -68,7 +68,6 @@ export class GalleryController {
 
     const updatedGallery = await this.galleryService.update(id, body);
     if (image) {
-      console.log(image);
       await this.galleryService.updateImage(
         updatedGallery.shop_id,
         updatedGallery.id,
