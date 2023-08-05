@@ -20,6 +20,29 @@
       "profile": "Mon profil",
       "open_shop": "Ouvrir un shop",
       "signout": "Se déconnecter"
+    },
+    "PROFILE": {
+      "profile_title": "Profil",
+      "profile_description": "Complétez les informations de votre profil",
+
+      "firstname": "Prénom",
+      "lastname": "Nom de famille",
+      "birthday": "Date de naissance",
+      "pronouns": "Pronoms",
+      "phone": "Numéro de téléphone",
+      "personal_information": "Informations personnelles",
+      "personal_information_placeholder": "Détails supplémentaires pour vos tatoueurs avant chaque rendez-vous (allergies, etc.).",
+
+      "picture_title": "Photo de profil",
+      "picture_description": "Ajoutez une photo pour personnaliser votre profil",
+
+      "social_title": "Réseaux sociaux",
+      "social_description": "Connectez-vous avec vos réseaux sociaux",
+      "instagram": "Instagram",
+      "twitter": "Twitter",
+      "wrong_social_format": "Vos réseaux sociaux ne doivent pas contenir d'espaces ou de caractères spéciaux",
+
+      "update_button": "Mettre à jour mon profil"
     }
   },
 

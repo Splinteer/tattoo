@@ -23,6 +23,7 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
 import { ShopModule } from './shop/shop.module';
 import { MobileNavigationComponent } from './mobile-navigation/mobile-navigation.component';
 import { FlashModule } from './flash/flash.module';
+import { CustomerModule } from './customer/customer.module';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -59,6 +60,7 @@ registerLocaleData(localeFr);
     ShopModule,
     SharedModule,
     FlashModule,
+    CustomerModule,
   ],
   declarations: [
     AppComponent,
