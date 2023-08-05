@@ -12,7 +12,7 @@ import { CredentialsService } from './credentials.service';
   providers: [
     CredentialsService,
     {
-      provide: APP_INITIALIZER,
+      provide: [APP_INITIALIZER],
       useClass: SupertokensService,
       deps: [CredentialsService],
     },

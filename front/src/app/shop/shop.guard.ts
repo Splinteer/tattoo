@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { CanActivate, UrlTree } from '@angular/router';
+import { UrlTree } from '@angular/router';
 import { CredentialsService } from '@app/auth/credentials.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ShopGuard implements CanActivate {
+export class ShopGuard  {
   private readonly credentialsService = inject(CredentialsService);
 
   canActivate():
