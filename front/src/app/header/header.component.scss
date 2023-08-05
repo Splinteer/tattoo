@@ -39,12 +39,8 @@ header.desktop {
       gap: 15px;
       align-items: center;
 
-      li {
-        list-style-type: none;
-
-        a.active {
-          color: var(--primary-color);
-        }
+      li a.active {
+        color: var(--primary-color);
       }
     }
 

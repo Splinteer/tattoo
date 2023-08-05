@@ -19,6 +19,8 @@ export class ShopProfileComponent {
 
   private readonly shopService = inject(ShopService);
 
+  public activeTab: string = 'flashs';
+
   public readonly shop$: Observable<
     Shop & { socials: { icon: string; url: string }[] }
   > = this.route.params.pipe(

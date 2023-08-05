@@ -1,15 +1,17 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild, inject } from '@angular/core';
 import { Gallery, GalleryService } from '../gallery.service';
 import {
+  BehaviorSubject,
+  Observable,
   Subject,
   combineLatest,
+  debounceTime,
   scan,
   shareReplay,
   switchMap,
   takeWhile,
   tap,
 } from 'rxjs';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
 
 @Component({
@@ -17,53 +19,74 @@ import { ResponsiveComponent } from '@app/shared/responsive/responsive.component
   templateUrl: './gallery-list.component.html',
   styleUrls: ['./gallery-list.component.scss'],
 })
-export class GalleryListComponent extends ResponsiveComponent {
-  @ViewChild(CdkVirtualScrollViewport) viewPort!: CdkVirtualScrollViewport;
+export class GalleryListComponent
+  extends ResponsiveComponent
+  implements OnChanges
+{
+  @Input() shop?: string;
 
   private readonly galleryService = inject(GalleryService);
 
-  private fetchMore = new Subject<void>();
+  private fetchMore = new BehaviorSubject<boolean>(true);
 
   private allDataLoaded = false;
 
   private lastDate?: Date;
 
-  public readonly gallerys$ = combineLatest({
-    isMobile: this.isMobile$,
-    fetchMore: this.fetchMore,
-  }).pipe(
-    switchMap(({ isMobile }) =>
-      this.galleryService.getMine(this.lastDate, isMobile ? 9 : 8).pipe(
-        tap((gallerys) => {
-          this.lastDate = gallerys.at(-1)?.creation_date;
+  public gallery$?: Observable<Gallery[]>;
 
-          setTimeout(() => {
-            const end = this.viewPort.getRenderedRange().end;
-            const total = this.viewPort.getDataLength();
+  ngOnChanges(): void {
+    this.gallery$ = combineLatest({
+      isMobile: this.isMobile$,
+      fetchMore: this.fetchMore,
+      windowHeight: this.screenHeight$.pipe(
+        takeWhile(() => !this.allDataLoaded),
+        debounceTime(1000)
+      ),
+    }).pipe(
+      switchMap(({ isMobile }) =>
+        (this.shop
+          ? this.galleryService.getByShop(
+              this.shop,
+              this.lastDate,
+              isMobile ? 9 : 8
+            )
+          : this.galleryService.getMine(this.lastDate, isMobile ? 9 : 8)
+        ).pipe(
+          tap((gallery) => {
+            console.log('fetched');
+            this.lastDate = gallery.at(-1)?.creation_date;
 
-            console.log(end, total);
+            setTimeout(() => {
+              if (!this.allDataLoaded) {
+                if (!this.checkIfGridIsScrollable()) {
+                  this.fetchMore.next(true);
+                }
+              }
+            });
+          })
+        )
+      ),
+      scan((acc, newPage) => {
+        if (newPage.length === 0) {
+          this.allDataLoaded = true;
+          return acc;
+        }
 
-            if (end === total && !this.allDataLoaded) {
-              this.fetchMore.next();
-            }
-          });
-        })
-      )
-    ),
-    scan((acc, newPage) => {
-      if (newPage.length === 0) {
-        this.allDataLoaded = true;
-      }
+        return [...acc, ...newPage];
+      }),
+      takeWhile(() => !this.allDataLoaded),
+      shareReplay(1)
+    );
+  }
 
-      return [...acc, ...newPage];
-    }),
-    takeWhile(() => !this.allDataLoaded),
-    shareReplay(1)
-  );
+  checkIfGridIsScrollable(): boolean {
+    return document.documentElement.scrollHeight > window.innerHeight;
+  }
 
-  onScroll(index: number) {
-    if (!this.allDataLoaded && index >= this.viewPort.getDataLength() - 8) {
-      this.fetchMore.next();
+  onScroll() {
+    if (!this.allDataLoaded) {
+      this.fetchMore.next(true);
     }
   }
 
