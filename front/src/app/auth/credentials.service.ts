@@ -4,15 +4,18 @@ import Session from 'supertokens-auth-react/recipe/session';
 
 export interface Credentials {
   id: string;
+  supertokens_id: string;
   email: string;
   firstname?: string;
   lastname?: string;
-  profile_picture?: string;
+  got_profile_picture?: boolean;
+  profile_picture_version?: string;
 
   // Shop
   shop_id?: string;
   shop_name?: string;
   shop_url?: string;
+  shop_got_picture?: boolean;
   shop_image_version?: number;
 }
 

@@ -1,5 +1,6 @@
+import { Bucket } from '@google-cloud/storage';
 import { DbService } from './../../libs/common/src/db/db.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserInformations } from 'src/auth/supertokens/supertokens.service';
 
 export interface Customer {
@@ -11,7 +12,8 @@ export interface Customer {
   firstname?: string;
   lastname?: string;
   birthday?: Date;
-  profile_picture?: string;
+  got_profile_picture: boolean;
+  profile_picture_version?: string;
   pronouns?: string;
   phone?: string;
   instagram?: string;
@@ -19,61 +21,74 @@ export interface Customer {
   personal_information?: string;
 }
 
-export interface Credentials {
-  id: string;
-  supertokens_id: string;
-  email: string;
+export interface CustomerUpdateBody {
   firstname?: string;
   lastname?: string;
-  profile_picture?: string;
-
-  // Shop
-  shop_id?: string;
-  shop_name?: string;
-  shop_url?: string;
-  shop_image_version?: number;
+  birthday?: Date;
+  pronouns?: string;
+  phone?: string;
+  personal_information?: string;
+  instagram?: string;
+  twitter?: string;
 }
 
 @Injectable()
 export class CustomerService {
-  constructor(private readonly database: DbService) {}
+  constructor(
+    @Inject('public') private readonly publicBucket: Bucket,
+    private readonly database: DbService,
+  ) {}
 
-  async create(
-    supertokensId: string,
-    email: string,
-    infos: UserInformations,
-  ): Promise<Customer> {
-    return this.database.insertOne('customer', {
-      id: DbService.getUUID(),
-      supertokens_id: supertokensId,
-      email: email,
-      firstname: infos.firstname,
-      lastname: infos.lastname,
-      birthday: infos.birthday,
-    }) as Promise<Customer>;
-  }
-
-  async getCustomerCredentials(supertokensId: string): Promise<Credentials> {
-    const select = [
-      'customer.id',
-      'customer.supertokens_id',
-      'customer.email',
-      'customer.firstname',
-      'customer.lastname',
-      'customer.profile_picture',
-      'shop.id as shop_id',
-      'shop.name as shop_name',
-      'shop.url as shop_url',
-      'shop.profile_picture_version as shop_image_version',
-    ];
-
-    const { rows } = await this.database.query(
-      `SELECT ${select.join(',')} FROM customer
-        LEFT JOIN shop ON shop.owner_id = customer.id
-        WHERE supertokens_id = $1`,
+  async get(supertokensId: string): Promise<Customer> {
+    const { rows } = await this.database.query<Customer>(
+      `SELECT * FROM customer WHERE supertokens_id = $1`,
       [supertokensId],
     );
 
-    return rows[0] as Credentials;
+    return rows[0];
+  }
+
+  public async updatePicture(
+    userId: string,
+    profile_picture: Express.Multer.File,
+  ): Promise<void> {
+    const file = this.publicBucket.file(`profile_picture/${userId}`);
+    await file.save(profile_picture.buffer);
+    await file.makePublic();
+
+    await this.database.query(
+      'UPDATE customer SET got_profile_picture=TRUE, profile_picture_version = profile_picture_version + 1 WHERE id=$1',
+      [userId],
+    );
+  }
+
+  public async update(userId: string, data: CustomerUpdateBody) {
+    const { rows } = await this.database.query<Customer>(
+      `UPDATE customer
+        SET
+            firstname = $2,
+            lastname = $3,
+            birthday = $4,
+            pronouns = $5,
+            phone = $6,
+            personal_information = $7,
+            instagram = $8,
+            twitter = $9
+        WHERE id = $1
+        RETURNING *;`,
+      [
+        userId,
+        data.firstname?.trim() ?? null,
+        data.lastname?.trim() ?? null,
+        data.birthday ?? null,
+        data.pronouns?.trim() ?? null,
+        data.phone?.trim() ?? null,
+        data.personal_information?.trim() ?? null,
+        data.instagram?.trim() ?? null,
+        data.twitter?.trim() ?? null,
+      ],
+    );
+
+    return rows[0];
   }
 }

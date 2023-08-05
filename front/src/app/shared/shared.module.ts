@@ -6,11 +6,23 @@ import { ResponsiveComponent } from './responsive/responsive.component';
 import { ResponsiveService } from './responsive/responsive.service';
 import { GoBackDirective } from './go-back.directive';
 import { TimeAgoPipe } from './timeAgo.pipe';
+import { AvatarComponent } from './avatar/avatar.component';
 
 @NgModule({
-  declarations: [ResponsiveComponent, GoBackDirective, TimeAgoPipe],
+  declarations: [
+    ResponsiveComponent,
+    GoBackDirective,
+    TimeAgoPipe,
+    AvatarComponent,
+  ],
   imports: [CommonModule, SharedUiModule],
-  exports: [SharedUiModule, TranslateModule, GoBackDirective, TimeAgoPipe],
+  exports: [
+    SharedUiModule,
+    TranslateModule,
+    GoBackDirective,
+    TimeAgoPipe,
+    AvatarComponent,
+  ],
   providers: [ResponsiveService],
 })
 export class SharedModule {}

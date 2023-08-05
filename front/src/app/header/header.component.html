@@ -58,10 +58,7 @@
   <div class="profile">
     <ng-container *ngIf="credentials$ | async as credentials; else notLogged">
       <button class="profile" [cdkMenuTriggerFor]="profileMenu">
-        <img
-          src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-          alt=""
-        />
+        <app-avatar [customer]="credentials"></app-avatar>
       </button>
       <ng-template #profileMenu>
         <div class="profile-menu" cdkMenu>
