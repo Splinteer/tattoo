@@ -62,3 +62,30 @@ export function smallerThanValidator(
     return { smallerThan: controlName };
   };
 }
+
+export function inputConditionalRequiredValidator(
+  conditionerControlPath: (string | number)[],
+  targetControlPath: (string | number)[],
+  comparator: any | ((targetControlValue: any) => boolean)
+): ValidatorFn {
+  return (form: AbstractControl): ValidationErrors | null => {
+    const conditionerControl = form.get(conditionerControlPath);
+    const targetControl = form.get(targetControlPath);
+
+    const conditionerValue = conditionerControl?.value;
+
+    const isRequired =
+      typeof comparator === 'function'
+        ? comparator(conditionerValue)
+        : conditionerValue === comparator;
+
+    targetControl?.setErrors({
+      ...targetControl.errors,
+      'input-condition': isRequired
+        ? conditionerControlPath.join('.')
+        : undefined,
+    });
+
+    return null;
+  };
+}

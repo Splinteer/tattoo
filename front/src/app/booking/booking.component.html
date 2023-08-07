@@ -1,42 +1,40 @@
-<ng-container *ngIf="shop$ | async as shop">
-  <app-form-stepper #stepper>
-    <ng-template #headers>
-      <div class="form-header">
-        <app-avatar [customer]="shop"></app-avatar>
+<app-form-stepper #stepper>
+  <ng-template #headers *ngIf="shop$ | async as shop">
+    <div class="form-header">
+      <app-avatar [customer]="shop"></app-avatar>
 
-        <div>
-          <h2>{{ shop.name }}</h2>
-          <span class="text-muted">Lyon, {{ shop.country }}</span>
-        </div>
-
-        <a [routerLink]="'/shop/' + shop.url" target="_blank">
-          <i class="fa-regular fa-info-circle"></i>
-        </a>
+      <div>
+        <h2>{{ shop.name }}</h2>
+        <span class="text-muted">Lyon, {{ shop.country }}</span>
       </div>
-    </ng-template>
 
+      <a [routerLink]="'/shop/' + shop.url" target="_blank">
+        <i class="fa-regular fa-info-circle"></i>
+      </a>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="steps$ | async as steps">
     <ng-container *ngFor="let step of steps">
       <cdk-step
         [aria-label]="step.title"
-        [completed]="form.get(step.formGroup)?.valid"
+        [completed]="step.completed()"
         [stepControl]="step.stepControl"
       >
-        <ng-container
-          *ngComponentOutlet="step.component; inputs: { form }"
-        ></ng-container>
+        <ng-container *ngComponentOutlet="step.component"></ng-container>
       </cdk-step>
     </ng-container>
+  </ng-container>
 
-    <ng-template #submit>
-      <button class="button" (click)="onSubmit()">
-        {{
-          stepper.selectedIndex === 0
-            ? "Prendre rendez-vous"
-            : stepper.selectedIndex === stepper.steps.length - 1
-            ? "Confirmer la demande de rendez-vous"
-            : "Continuer la demande de rendez-vous"
-        }}
-      </button>
-    </ng-template>
-  </app-form-stepper>
-</ng-container>
+  <ng-template #submit>
+    <button class="button" (click)="onSubmit()">
+      {{
+        stepper.selectedIndex === 0
+          ? "Prendre rendez-vous"
+          : stepper.selectedIndex === stepper.steps.length - 1
+          ? "Confirmer la demande de rendez-vous"
+          : "Continuer la demande de rendez-vous"
+      }}
+    </button>
+  </ng-template>
+</app-form-stepper>

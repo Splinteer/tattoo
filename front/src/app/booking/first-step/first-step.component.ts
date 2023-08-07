@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { BookingComponent } from '../booking.component';
+import { Component, Input, inject } from '@angular/core';
+import { BookingService } from '../booking.service';
 
 @Component({
   selector: 'app-first-step',
@@ -7,5 +7,7 @@ import { BookingComponent } from '../booking.component';
   styleUrls: ['./first-step.component.scss'],
 })
 export class FirstStepComponent {
-  @Input({ required: true }) form!: typeof BookingComponent.prototype.form;
+  private readonly bookingService = inject(BookingService);
+
+  public readonly form$ = this.bookingService.form$;
 }

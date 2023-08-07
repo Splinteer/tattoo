@@ -1,77 +1,83 @@
-<form [formGroup]="form" #ngForm="ngForm" *ngIf="form">
-  <ng-container formGroupName="first-step">
-    <div class="input-group">
-      <h3>Type de projet</h3>
+<ng-container *ngIf="form$ | async as form">
+  <form [formGroup]="form" #ngForm="ngForm">
+    <ng-container formGroupName="first-step">
+      <div class="input-group">
+        <h3>Type de projet</h3>
 
-      <app-icon-select
-        formControlName="types"
-        [multi]="true"
-        [items]="[
-          { value: 'flashs', icon: 'fa-solid fa-sparkles', text: 'Flashs' },
-          { value: 'custom', icon: 'fa-solid fa-plus', text: 'Nouveau projet' },
-          {
-            value: 'adjustment',
-            icon: 'fa-solid fa-circle-dashed',
-            text: 'Retouche'
-          }
-        ]"
-      ></app-icon-select>
+        <app-icon-select
+          formControlName="types"
+          [multi]="true"
+          [items]="[
+            { value: 'flashs', icon: 'fa-solid fa-sparkles', text: 'Flashs' },
+            {
+              value: 'custom',
+              icon: 'fa-solid fa-plus',
+              text: 'Nouveau projet'
+            },
+            {
+              value: 'adjustment',
+              icon: 'fa-solid fa-circle-dashed',
+              text: 'Retouche'
+            }
+          ]"
+        ></app-icon-select>
 
-      <div class="text-muted text-center">
-        Vous pouvez sélectionner plusieurs options
-      </div>
-    </div>
-
-    <div class="input-group">
-      <app-toggle
-        formControlName="is_first_tattoo"
-        text="Premier tatouage"
-        [ngClass]="{
-          'is-invalid':
-            (ngForm.submitted || form.get('is_first_tattoo')?.touched) &&
-            form.get('is_first_tattoo')?.errors
-        }"
-      ></app-toggle>
-
-      <app-toggle
-        formControlName="is_cover_up"
-        text="Recouvrement (cover)"
-        [ngClass]="{
-          'is-invalid':
-            (ngForm.submitted || form.get('is_cover_up')?.touched) &&
-            form.get('is_cover_up')?.errors
-        }"
-      ></app-toggle>
-
-      <app-toggle
-        formControlName="is_post_operation_or_over_scar"
-        text="Tatouage sur cicatrice ou post opératoire"
-        [ngClass]="{
-          'is-invalid':
-            (ngForm.submitted ||
-              form.get('is_post_operation_or_over_scar')?.touched) &&
-            form.get('is_post_operation_or_over_scar')?.errors
-        }"
-      ></app-toggle>
-    </div>
-
-    <div class="input-group conditions-group">
-      <h3>Conditions de rendez-vous</h3>
-      <div class="conditions">
-        <span class="break-lines">
-          {{ form.get("first-step")?.get("shop_conditions")?.value }}
-        </span>
+        <div class="text-muted text-center">
+          Vous pouvez sélectionner plusieurs options
+        </div>
       </div>
 
-      <app-toggle
-        formControlName="conditions"
-        text="J'accepte les conditions de rendez-vous"
-        [ngClass]="{
-          'is-invalid':
-            (ngForm.submitted || form.get('conditions')?.touched) &&
-            form.get('conditions')?.errors
-        }"
-      ></app-toggle>
-    </div>
-  </ng-container>
-</form>
+      <div class="input-group">
+        <app-toggle
+          formControlName="is_first_tattoo"
+          text="Premier tatouage"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted || form.get('is_first_tattoo')?.touched) &&
+              form.get('is_first_tattoo')?.errors
+          }"
+        ></app-toggle>
+
+        <app-toggle
+          formControlName="is_cover_up"
+          text="Recouvrement (cover)"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted || form.get('is_cover_up')?.touched) &&
+              form.get('is_cover_up')?.errors
+          }"
+        ></app-toggle>
+
+        <app-toggle
+          formControlName="is_post_operation_or_over_scar"
+          text="Tatouage sur cicatrice ou post opératoire"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted ||
+                form.get('is_post_operation_or_over_scar')?.touched) &&
+              form.get('is_post_operation_or_over_scar')?.errors
+          }"
+        ></app-toggle>
+      </div>
+
+      <div class="input-group conditions-group">
+        <h3>Conditions de rendez-vous</h3>
+        <div class="conditions">
+          <span class="break-lines">
+            {{ form.get("first-step")?.get("shop_conditions")?.value }}
+          </span>
+        </div>
+
+        <app-toggle
+          formControlName="conditions"
+          text="J'accepte les conditions de rendez-vous"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted || form.get('conditions')?.touched) &&
+              form.get('conditions')?.errors
+          }"
+        ></app-toggle>
+      </div>
+    </ng-container>
+  </form>
+</ng-container>
