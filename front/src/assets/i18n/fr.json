@@ -53,6 +53,7 @@
       "adjustment": "Retouche"
     },
     "first-step": {
+      "title": "Premier pas",
       "types": "Type de projet",
       "types_helper": "Vous pouvez sélectionner plusieurs options",
       "is_first_tattoo": "Premier tatouage",
@@ -62,10 +63,25 @@
       "conditions": "J'accepte les conditions de rendez-vous"
     },
     "details": {
+      "title": "Détails",
       "name": "Nom du projet",
       "additional_information": "Description du projet",
       "illustrations": "Illustrations du projet",
       "illustrations_helper": "Inspiration, dessing, tatouage à retoucher ou recouvrir..."
+    },
+    "location": {
+      "title": "Emplacement",
+      "illustrations": "Photos de la zone",
+      "zone": "Nom de la zone",
+      "height_cm": "Longeur",
+      "width_cm": "Largeur",
+      "dimension_placeholder": "cm"
+    },
+    "flashs": {
+      "title": "Flashs"
+    },
+    "customer": {
+      "title": "Information personnelles"
     }
   },
 

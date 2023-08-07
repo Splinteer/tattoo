@@ -17,7 +17,7 @@
   <ng-container *ngIf="steps$ | async as steps">
     <ng-container *ngFor="let step of steps">
       <cdk-step
-        [aria-label]="step.title"
+        [aria-label]="step.title | translate"
         [completed]="step.completed()"
         [stepControl]="step.stepControl"
       >

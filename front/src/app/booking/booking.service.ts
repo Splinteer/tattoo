@@ -17,6 +17,8 @@ import { DetailsComponent } from './details/details.component';
 import { FirstStepComponent } from './first-step/first-step.component';
 import { Flash } from '@app/flash/flash.service';
 import { inputConditionalRequiredValidator } from '@app/shared/custom-validators';
+import { Location } from '@angular/common';
+import { LocationComponent } from './location/location.component';
 
 @Injectable({
   providedIn: 'root',
@@ -127,31 +129,31 @@ export class BookingService {
       const steps = [
         {
           formGroup: 'first-step',
-          title: 'Premier pas',
+          title: 'BOOKING.first-step.title',
           component: FirstStepComponent,
           stepControl: form.get('first-step')!.get('is_first_tattoo')!, // dumb to avoid template complexity
         },
         {
           formGroup: 'details',
-          title: 'Détails',
+          title: 'BOOKING.details.title',
           component: DetailsComponent,
           stepControl: form.get('first-step')!,
         },
         {
           formGroup: 'location',
-          title: 'Emplacement',
-          component: FirstStepComponent,
+          title: 'BOOKING.location.title',
+          component: LocationComponent,
           stepControl: form.get('details')!,
         },
         {
           formGroup: 'flashs',
-          title: 'Flashs',
+          title: 'BOOKING.flashs.title',
           component: FirstStepComponent,
           stepControl: form.get('location')!,
         },
         {
           formGroup: 'customer',
-          title: 'Information personnelles',
+          title: 'BOOKING.customer.title',
           component: FirstStepComponent,
           stepControl: form.get('customer')!,
         },

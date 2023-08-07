@@ -9,9 +9,10 @@ import { FirstStepComponent } from './first-step/first-step.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DetailsComponent } from './details/details.component';
 import { BookingService } from './booking.service';
+import { LocationComponent } from './location/location.component';
 
 @NgModule({
-  declarations: [BookingComponent, FirstStepComponent, DetailsComponent],
+  declarations: [BookingComponent, FirstStepComponent, DetailsComponent, LocationComponent],
   imports: [
     CommonModule,
     BookingRoutingModule,

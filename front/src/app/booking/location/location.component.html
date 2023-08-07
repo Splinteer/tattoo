@@ -1,0 +1,90 @@
+<ng-container *ngIf="form$ | async as form">
+  <form [formGroup]="form" #ngForm="ngForm">
+    <ng-container formGroupName="location">
+      <div class="input-group">
+        <h3 translate>BOOKING.location.illustrations</h3>
+        <app-file-dropzone
+          formControlName="illustrations"
+          accept="image/png, image/jpeg"
+          [multiple]="true"
+          [isInvalid]="
+            (ngForm.submitted || form.get('image')?.touched) &&
+            form.get('image')?.errors
+          "
+        ></app-file-dropzone>
+
+        <div
+          class="images-container"
+          *ngIf="imagesPreview$ | async as imagesPreview"
+        >
+          <div
+            class="image-container"
+            *ngFor="let image of imagesPreview; let imageIndex = index"
+          >
+            <img [src]="image" />
+            <button
+              type="button"
+              class="button button-outline"
+              (click)="removeImage(form, imageIndex)"
+            >
+              <i class="fa-regular fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <h3 translate>BOOKING.location.zone</h3>
+        <input
+          formControlName="zone"
+          type="text"
+          id="zone"
+          name="zone"
+          [placeholder]="'BOOKING.location.zone' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (ngForm.submitted || form.get(['location', 'zone'])?.touched) &&
+              form.get(['location', 'zone'])?.errors
+          }"
+        />
+      </div>
+
+      <div class="input-group split">
+        <div class="input-group">
+          <h3 translate>BOOKING.location.height_cm</h3>
+
+          <input
+            formControlName="height_cm"
+            type="text"
+            id="height_cm"
+            name="height_cm"
+            [placeholder]="'BOOKING.location.dimension_placeholder' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (ngForm.submitted ||
+                  form.get(['location', 'height_cm'])?.touched) &&
+                form.get(['location', 'height_cm'])?.errors
+            }"
+          />
+        </div>
+        <div class="input-group">
+          <h3 translate>BOOKING.location.width_cm</h3>
+
+          <input
+            formControlName="width_cm"
+            type="text"
+            id="width_cm"
+            name="width_cm"
+            [placeholder]="'BOOKING.location.dimension_placeholder' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (ngForm.submitted ||
+                  form.get(['location', 'width_cm'])?.touched) &&
+                form.get(['location', 'width_cm'])?.errors
+            }"
+          />
+        </div>
+      </div>
+    </ng-container>
+  </form>
+</ng-container>
