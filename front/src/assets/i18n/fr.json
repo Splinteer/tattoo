@@ -71,8 +71,11 @@
     "PROFILE": {
       "appointments": "{count} {count, plural, one{rendez-vous} other{rendez-vous}}",
       "available_flashs": "Flashs disponibles",
+      "available_flashs_short": "Disponibles",
+      "unavailable_flashs_short": "Réservés",
       "unavailable_flashs": "Flashs réservés",
-      "gallery": "Galerie"
+      "gallery": "Galerie",
+      "gallery_short": "Galerie"
     }
   },
 

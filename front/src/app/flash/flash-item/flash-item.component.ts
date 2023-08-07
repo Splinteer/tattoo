@@ -19,6 +19,8 @@ export class FlashItemComponent {
 
   @Input() clickable = true;
 
+  @Input() hideAvailability = false;
+
   private readonly dialog = inject(Dialog);
 
   public openModal() {
