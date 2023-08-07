@@ -1,0 +1,30 @@
+<ng-container *ngIf="shop$ | async as shop">
+  <app-form-stepper #stepper>
+    <ng-template #headers>
+      <div class="form-header">
+        <app-avatar [customer]="shop"></app-avatar>
+
+        <div>
+          <h2>L2utattoo</h2>
+          <span class="text-muted">Lyon, France</span>
+        </div>
+
+        <i class="fa-regular fa-info-circle"></i>
+      </div>
+    </ng-template>
+
+    <ng-container *ngFor="let step of steps">
+      <cdk-step
+        [aria-label]="step.title"
+        [completed]="form.get(step.formGroup)?.valid"
+        [stepControl]="step.stepControl"
+      >
+        <app-first-step [form]="form"></app-first-step>
+      </cdk-step>
+    </ng-container>
+
+    <ng-template #submit>
+      <button (click)="onSubmit()">submit</button>
+    </ng-template>
+  </app-form-stepper>
+</ng-container>

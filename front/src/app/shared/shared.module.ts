@@ -7,6 +7,9 @@ import { ResponsiveService } from './responsive/responsive.service';
 import { GoBackDirective } from './go-back.directive';
 import { TimeAgoPipe } from './timeAgo.pipe';
 import { AvatarComponent } from './avatar/avatar.component';
+import { FormStepperComponent } from './form-stepper/form-stepper.component';
+import { ToggleComponent } from './toggle/toggle.component';
+import { IconSelectComponent } from './icon-select/icon-select.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +17,9 @@ import { AvatarComponent } from './avatar/avatar.component';
     GoBackDirective,
     TimeAgoPipe,
     AvatarComponent,
+    FormStepperComponent,
+    ToggleComponent,
+    IconSelectComponent,
   ],
   imports: [CommonModule, SharedUiModule],
   exports: [
@@ -22,6 +28,9 @@ import { AvatarComponent } from './avatar/avatar.component';
     GoBackDirective,
     TimeAgoPipe,
     AvatarComponent,
+    FormStepperComponent,
+    ToggleComponent,
+    IconSelectComponent,
   ],
   providers: [ResponsiveService],
 })

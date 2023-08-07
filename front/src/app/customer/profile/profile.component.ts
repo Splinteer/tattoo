@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -27,6 +28,8 @@ export class ProfileComponent implements OnInit {
   private readonly router = inject(Router);
 
   private readonly credentialsService = inject(CredentialsService);
+
+  private readonly cdr = inject(ChangeDetectorRef);
 
   public readonly credentials$ = this.credentialsService.credentials$;
 
@@ -82,6 +85,8 @@ export class ProfileComponent implements OnInit {
         noSpaceNoSpecialCharactersValidator,
       ]),
     });
+
+    this.cdr.detectChanges();
 
     this.picturePreview$ = this.form!.get('profile_picture')?.valueChanges.pipe(
       startWith(
