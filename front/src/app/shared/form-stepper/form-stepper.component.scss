@@ -6,9 +6,10 @@
 
 nav {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: var(--space-300);
+  gap: var(--space-200);
   padding: var(--space-400);
 
   button {
@@ -18,12 +19,7 @@ nav {
       cursor: default;
     }
 
-    &:has(.valid) {
-      color: var(--success-color);
-    }
-
     .valid {
-      color: var(--success-color);
       font-size: 0.8rem;
     }
 

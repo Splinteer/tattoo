@@ -123,6 +123,7 @@ export class BookingService {
       component: any;
       stepControl: any;
       completed: () => boolean;
+      show: () => boolean;
     }[]
   > = this.form$.pipe(
     map((form) => {
@@ -131,7 +132,7 @@ export class BookingService {
           formGroup: 'first-step',
           title: 'BOOKING.first-step.title',
           component: FirstStepComponent,
-          stepControl: form.get('first-step')!.get('is_first_tattoo')!, // dumb to avoid template complexity
+          stepControl: form.get(['first-step', 'is_first_tattoo'])!, // dumb to avoid template complexity
         },
         {
           formGroup: 'details',
@@ -150,6 +151,8 @@ export class BookingService {
           title: 'BOOKING.flashs.title',
           component: FirstStepComponent,
           stepControl: form.get('location')!,
+          show: () =>
+            form.get(['first-step', 'types'])?.value.includes('flashs'),
         },
         {
           formGroup: 'customer',

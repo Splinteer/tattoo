@@ -20,6 +20,7 @@
         [aria-label]="step.title | translate"
         [completed]="step.completed()"
         [stepControl]="step.stepControl"
+        *ngIf="step.show === undefined || step.show()"
       >
         <ng-container *ngComponentOutlet="step.component"></ng-container>
       </cdk-step>
