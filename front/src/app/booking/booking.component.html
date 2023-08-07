@@ -5,11 +5,13 @@
         <app-avatar [customer]="shop"></app-avatar>
 
         <div>
-          <h2>L2utattoo</h2>
-          <span class="text-muted">Lyon, France</span>
+          <h2>{{ shop.name }}</h2>
+          <span class="text-muted">Lyon, {{ shop.country }}</span>
         </div>
 
-        <i class="fa-regular fa-info-circle"></i>
+        <a [routerLink]="'/shop/' + shop.url" target="_blank">
+          <i class="fa-regular fa-info-circle"></i>
+        </a>
       </div>
     </ng-template>
 
@@ -24,7 +26,15 @@
     </ng-container>
 
     <ng-template #submit>
-      <button (click)="onSubmit()">submit</button>
+      <button class="button" (click)="onSubmit()">
+        {{
+          stepper.selectedIndex === 0
+            ? "Prendre rendez-vous"
+            : stepper.selectedIndex === stepper.steps.length - 1
+            ? "Confirmer la demande de rendez-vous"
+            : "Continuer la demande de rendez-vous"
+        }}
+      </button>
     </ng-template>
   </app-form-stepper>
 </ng-container>

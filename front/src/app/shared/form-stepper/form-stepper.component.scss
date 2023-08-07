@@ -19,7 +19,7 @@ nav {
     }
 
     &.valid {
-      color: green; // TODO
+      color: var(--success-color);
     }
 
     &.active {
