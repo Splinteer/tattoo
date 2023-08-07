@@ -46,7 +46,7 @@ export class BookingService {
       return new FormGroup(
         {
           'first-step': new FormGroup({
-            types: new FormControl<string[]>(['flashs'], [Validators.required]),
+            types: new FormControl<string[]>([], [Validators.required]),
             is_first_tattoo: new FormControl<boolean>(false),
             is_cover_up: new FormControl<boolean>(false),
             is_post_operation_or_over_scar: new FormControl<boolean>(false),
@@ -75,7 +75,7 @@ export class BookingService {
               Validators.required,
             ]),
           }),
-          '': new FormGroup({
+          customer: new FormGroup({
             firstname: new FormControl<string>(customer?.firstname || '', {
               validators: [Validators.required],
               nonNullable: true,
@@ -132,28 +132,28 @@ export class BookingService {
           stepControl: form.get('first-step')!.get('is_first_tattoo')!, // dumb to avoid template complexity
         },
         {
-          formGroup: 'first-second',
+          formGroup: 'details',
           title: 'Détails',
           component: DetailsComponent,
           stepControl: form.get('first-step')!,
         },
         {
-          formGroup: 'first-second',
+          formGroup: 'location',
           title: 'Emplacement',
           component: FirstStepComponent,
-          stepControl: form.get('first-step')!,
+          stepControl: form.get('details')!,
         },
         {
-          formGroup: 'first-second',
+          formGroup: 'flashs',
           title: 'Flashs',
           component: FirstStepComponent,
-          stepControl: form.get('first-step')!,
+          stepControl: form.get('location')!,
         },
         {
-          formGroup: 'first-second',
+          formGroup: 'customer',
           title: 'Information personnelles',
           component: FirstStepComponent,
-          stepControl: form.get('first-step')!,
+          stepControl: form.get('customer')!,
         },
       ];
 

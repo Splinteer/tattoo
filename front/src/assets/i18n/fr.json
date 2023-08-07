@@ -46,6 +46,29 @@
     }
   },
 
+  "BOOKING": {
+    "types": {
+      "flashs": "Flashs",
+      "custom": "Nouveau projet",
+      "adjustment": "Retouche"
+    },
+    "first-step": {
+      "types": "Type de projet",
+      "types_helper": "Vous pouvez sélectionner plusieurs options",
+      "is_first_tattoo": "Premier tatouage",
+      "is_cover_up": "Recouvrement (cover)",
+      "is_post_operation_or_over_scar": "Tatouage sur cicatrice ou post-opératoire",
+      "shop_conditions": "Conditions de rendez-vous",
+      "conditions": "J'accepte les conditions de rendez-vous"
+    },
+    "details": {
+      "name": "Nom du projet",
+      "additional_information": "Description du projet",
+      "illustrations": "Illustrations du projet",
+      "illustrations_helper": "Inspiration, dessing, tatouage à retoucher ou recouvrir..."
+    }
+  },
+
   "SHOP": {
     "CREATE": {
       "shop_title": "Boutique",
@@ -157,6 +180,7 @@
       "cancel": "Annuler"
     }
   },
+
   "PIPE": {
     "TIMEAGO": {
       "just_now": "A l'instant",

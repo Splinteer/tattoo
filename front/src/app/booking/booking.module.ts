@@ -7,6 +7,7 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { SharedModule } from '@app/shared/shared.module';
 import { FirstStepComponent } from './first-step/first-step.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DetailsComponent } from './details/details.component';
 import { BookingService } from './booking.service';
 
 @NgModule({
@@ -18,5 +19,6 @@ import { BookingService } from './booking.service';
     SharedModule,
     ReactiveFormsModule,
   ],
+  providers: [BookingService],
 })
 export class BookingModule {}
