@@ -96,8 +96,13 @@
   gap: var(--space-900);
   margin-top: var(--space-400);
 
+  .text.short {
+    display: none;
+  }
+
   button {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: var(--space-200);
@@ -149,6 +154,10 @@
 
         .text {
           display: none;
+        }
+
+        .short {
+          display: block;
         }
       }
     }

@@ -4,6 +4,7 @@
   (click)="clickable && openModal()"
 >
   <div
+    *ngIf="!hideAvailability"
     class="availability"
     [ngClass]="flash.available ? 'available' : 'not_available'"
   >
