@@ -21,7 +21,7 @@ button {
   transition: all 0.3s ease-in-out;
 
   &.checked {
-    background-color: #76ee58;
+    background-color: var(--success-color);
 
     span {
       left: calc($width - $padding - $span-width);

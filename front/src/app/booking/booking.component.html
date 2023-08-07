@@ -21,7 +21,9 @@
         [completed]="form.get(step.formGroup)?.valid"
         [stepControl]="step.stepControl"
       >
-        <app-first-step [form]="form"></app-first-step>
+        <ng-container
+          *ngComponentOutlet="step.component; inputs: { form }"
+        ></ng-container>
       </cdk-step>
     </ng-container>
 

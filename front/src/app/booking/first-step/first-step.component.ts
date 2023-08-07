@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { BookingComponent } from '../booking.component';
 
 @Component({

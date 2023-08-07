@@ -40,8 +40,8 @@ export class IconSelectComponent<T> implements ControlValueAccessor {
   public value?: ControlValue<T>;
 
   public toggle(toggledItem: (typeof IconSelectComponent.prototype.items)[0]) {
+    toggledItem.active = !!!toggledItem.active;
     if (this.multi) {
-      toggledItem.active = !!!toggledItem.active;
     } else {
       this.items.forEach((item) => {
         item.active =
@@ -54,7 +54,7 @@ export class IconSelectComponent<T> implements ControlValueAccessor {
       .map((item) => item.value);
 
     this.markAsTouched();
-    this.writeValue(this.multi ? value : value.at(0));
+    this.writeValue(this.multi ? value : value.at(0), true);
     this.onChange(this.value);
   }
 
@@ -68,8 +68,16 @@ export class IconSelectComponent<T> implements ControlValueAccessor {
 
   private touched = false;
 
-  public writeValue(value: ControlValue<T>): void {
+  public writeValue(value: ControlValue<T>, ignoreRefresh?: true): void {
     this.value = value;
+
+    if (!ignoreRefresh) {
+      this.items.forEach((item) => {
+        item.active =
+          item.value === this.value ||
+          (Array.isArray(this.value) && this.value.includes(item.value));
+      });
+    }
   }
 
   public registerOnChange(

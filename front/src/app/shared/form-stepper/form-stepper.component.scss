@@ -18,8 +18,13 @@ nav {
       cursor: default;
     }
 
-    &.valid {
+    &:has(.valid) {
       color: var(--success-color);
+    }
+
+    .valid {
+      color: var(--success-color);
+      font-size: 0.8rem;
     }
 
     &.active {

@@ -4,12 +4,12 @@
   >
     <button
       type="button"
-      [class.valid]="step.completed"
       [class.active]="selectedIndex === stepIndex"
       [disabled]="!(!step.stepControl || step.stepControl.valid)"
       (click)="onClick(stepIndex, step.stepControl)"
     >
       {{ step.ariaLabel }}
+      <i class="fa-regular fa-check-circle valid" *ngIf="step.completed"></i>
     </button>
     <i class="fa-solid fa-chevron-right" *ngIf="!isLast"></i>
   </ng-container>
