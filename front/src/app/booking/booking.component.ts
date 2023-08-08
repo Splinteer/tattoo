@@ -15,7 +15,7 @@ import {
 import { FirstStepComponent } from './first-step/first-step.component';
 import { DetailsComponent } from './details/details.component';
 import { CustomerService } from '@app/customer/customer.service';
-import { BookingService } from './booking.service';
+import { BookingService, BookingStep } from './booking.service';
 
 @Component({
   selector: 'app-booking',
@@ -53,11 +53,9 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  onSubmit(form: FormGroup) {
-    console.log(
-      'oklm',
-      !this.stepper?.steps.get(this.stepper.selectedIndex + 1)
-    );
+  onSubmit(form: FormGroup, steps: BookingStep[]) {
+    steps[this.stepper!.selectedIndex].submitted = true;
+
     if (!this.stepper?.steps.get(this.stepper.selectedIndex + 1)) {
       if (form.invalid) {
         console.log('invalid');

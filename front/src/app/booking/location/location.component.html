@@ -1,5 +1,5 @@
 <ng-container *ngIf="form$ | async as form">
-  <form [formGroup]="form" #ngForm="ngForm">
+  <form [formGroup]="form">
     <ng-container formGroupName="location">
       <div class="input-group">
         <h3 translate>BOOKING.location.illustrations</h3>
@@ -8,7 +8,7 @@
           accept="image/png, image/jpeg"
           [multiple]="true"
           [isInvalid]="
-            (ngForm.submitted || form.get('image')?.touched) &&
+            (step.submitted || form.get('image')?.touched) &&
             form.get('image')?.errors
           "
         ></app-file-dropzone>
@@ -43,7 +43,7 @@
           [placeholder]="'BOOKING.location.zone' | translate"
           [ngClass]="{
             'is-invalid':
-              (ngForm.submitted || form.get(['location', 'zone'])?.touched) &&
+              (step.submitted || form.get(['location', 'zone'])?.touched) &&
               form.get(['location', 'zone'])?.errors
           }"
         />
@@ -61,7 +61,7 @@
             [placeholder]="'BOOKING.location.dimension_placeholder' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted ||
+                (step.submitted ||
                   form.get(['location', 'height_cm'])?.touched) &&
                 form.get(['location', 'height_cm'])?.errors
             }"
@@ -78,7 +78,7 @@
             [placeholder]="'BOOKING.location.dimension_placeholder' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted ||
+                (step.submitted ||
                   form.get(['location', 'width_cm'])?.touched) &&
                 form.get(['location', 'width_cm'])?.errors
             }"

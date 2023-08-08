@@ -13,7 +13,13 @@ import { LocationComponent } from './location/location.component';
 import { CustomerComponent } from './customer/customer.component';
 
 @NgModule({
-  declarations: [BookingComponent, FirstStepComponent, DetailsComponent, LocationComponent, CustomerComponent],
+  declarations: [
+    BookingComponent,
+    FirstStepComponent,
+    DetailsComponent,
+    LocationComponent,
+    CustomerComponent,
+  ],
   imports: [
     CommonModule,
     BookingRoutingModule,

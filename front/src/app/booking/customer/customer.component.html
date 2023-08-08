@@ -1,5 +1,5 @@
 <ng-container *ngIf="form$ | async as form">
-  <form [formGroup]="form" #ngForm="ngForm">
+  <form [formGroup]="form">
     <ng-container formGroupName="customer">
       <div class="input-group split">
         <div class="input-group">
@@ -13,7 +13,7 @@
             [placeholder]="'CUSTOMER.PROFILE.lastname' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted ||
+                (step.submitted ||
                   form.get(['customer', 'lastname'])?.touched) &&
                 form.get(['customer', 'lastname'])?.errors
             }"
@@ -31,7 +31,7 @@
             [placeholder]="'CUSTOMER.PROFILE.firstname' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted ||
+                (step.submitted ||
                   form.get(['customer', 'firstname'])?.touched) &&
                 form.get(['customer', 'firstname'])?.errors
             }"
@@ -51,7 +51,7 @@
             [placeholder]="'CUSTOMER.PROFILE.pronouns' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted ||
+                (step.submitted ||
                   form.get(['customer', 'pronouns'])?.touched) &&
                 form.get(['customer', 'pronouns'])?.errors
             }"
@@ -69,7 +69,7 @@
             [placeholder]="'CUSTOMER.PROFILE.birthday' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted ||
+                (step.submitted ||
                   form.get(['customer', 'birthday'])?.touched) &&
                 form.get(['customer', 'birthday'])?.errors
             }"
@@ -88,8 +88,7 @@
           [placeholder]="'CUSTOMER.PROFILE.address' | translate"
           [ngClass]="{
             'is-invalid':
-              (ngForm.submitted ||
-                form.get(['customer', 'address'])?.touched) &&
+              (step.submitted || form.get(['customer', 'address'])?.touched) &&
               form.get(['customer', 'address'])?.errors
           }"
         />
@@ -101,8 +100,7 @@
           [placeholder]="'CUSTOMER.PROFILE.address2' | translate"
           [ngClass]="{
             'is-invalid':
-              (ngForm.submitted ||
-                form.get(['customer', 'address2'])?.touched) &&
+              (step.submitted || form.get(['customer', 'address2'])?.touched) &&
               form.get(['customer', 'address2'])?.errors
           }"
         />
@@ -120,7 +118,7 @@
             [placeholder]="'CUSTOMER.PROFILE.city' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted || form.get(['customer', 'city'])?.touched) &&
+                (step.submitted || form.get(['customer', 'city'])?.touched) &&
                 form.get(['customer', 'city'])?.errors
             }"
           />
@@ -137,7 +135,7 @@
             [placeholder]="'CUSTOMER.PROFILE.zipcode' | translate"
             [ngClass]="{
               'is-invalid':
-                (ngForm.submitted ||
+                (step.submitted ||
                   form.get(['customer', 'zipcode'])?.touched) &&
                 form.get(['customer', 'zipcode'])?.errors
             }"

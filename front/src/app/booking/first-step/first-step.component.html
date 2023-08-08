@@ -1,5 +1,5 @@
 <ng-container *ngIf="form$ | async as form">
-  <form [formGroup]="form" #ngForm="ngForm">
+  <form [formGroup]="form">
     <ng-container formGroupName="first-step">
       <div class="input-group">
         <h3 translate>BOOKING.first-step.types</h3>
@@ -21,7 +21,7 @@
             }
           ]"
           [invalid]="
-            (ngForm.submitted || form.get(['first-step', 'types'])?.touched) &&
+            (step.submitted || form.get(['first-step', 'types'])?.touched) &&
             !!form.get(['first-step', 'types'])?.errors
           "
         ></app-icon-select>
@@ -36,7 +36,7 @@
           formControlName="is_first_tattoo"
           [text]="'BOOKING.first-step.is_first_tattoo' | translate"
           [invalid]="
-            (ngForm.submitted ||
+            (step.submitted ||
               form.get(['first-step', 'is_first_tattoo'])?.touched) &&
             !!form.get(['first-step', 'is_first_tattoo'])?.errors
           "
@@ -46,7 +46,7 @@
           formControlName="is_cover_up"
           [text]="'BOOKING.first-step.is_cover_up' | translate"
           [invalid]="
-            (ngForm.submitted ||
+            (step.submitted ||
               form.get(['first-step', 'is_cover_up'])?.touched) &&
             !!form.get(['first-step', 'is_cover_up'])?.errors
           "
@@ -58,7 +58,7 @@
             'BOOKING.first-step.is_post_operation_or_over_scar' | translate
           "
           [invalid]="
-            (ngForm.submitted ||
+            (step.submitted ||
               form.get(['first-step', 'is_post_operation_or_over_scar'])
                 ?.touched) &&
             !!form.get(['first-step', 'is_post_operation_or_over_scar'])?.errors
@@ -78,7 +78,7 @@
           formControlName="conditions"
           [text]="'BOOKING.first-step.conditions' | translate"
           [invalid]="
-            (ngForm.submitted ||
+            (step.submitted ||
               form.get(['first-step', 'conditions'])?.touched) &&
             !!form.get(['first-step', 'conditions'])?.errors
           "
