@@ -19,6 +19,7 @@ import { Flash } from '@app/flash/flash.service';
 import { inputConditionalRequiredValidator } from '@app/shared/custom-validators';
 import { Location } from '@angular/common';
 import { LocationComponent } from './location/location.component';
+import { CustomerComponent } from './customer/customer.component';
 
 @Injectable({
   providedIn: 'root',
@@ -94,10 +95,24 @@ export class BookingService {
               }
             ),
             pronouns: new FormControl<string>(customer?.pronouns || ''),
-            phone: new FormControl<string>(customer?.phone || ''),
             personal_information: new FormControl<string>(
               customer?.personal_information || ''
             ),
+
+            address: new FormControl<string>(customer?.address || '', [
+              Validators.required,
+            ]),
+            address2: new FormControl<string>(customer?.address2 || ''),
+            city: new FormControl<string>(customer?.city || '', [
+              Validators.required,
+            ]),
+            zipcode: new FormControl<string>(customer?.zipcode || '', [
+              Validators.required,
+            ]),
+            phone: new FormControl<string>(customer?.phone || ''),
+
+            twitter: new FormControl<string>(customer?.twitter || ''),
+            instagram: new FormControl<string>(customer?.instagram || ''),
           }),
         },
         {
@@ -128,36 +143,36 @@ export class BookingService {
   > = this.form$.pipe(
     map((form) => {
       const steps = [
-        {
-          formGroup: 'first-step',
-          title: 'BOOKING.first-step.title',
-          component: FirstStepComponent,
-          stepControl: form.get(['first-step', 'is_first_tattoo'])!, // dumb to avoid template complexity
-        },
-        {
-          formGroup: 'details',
-          title: 'BOOKING.details.title',
-          component: DetailsComponent,
-          stepControl: form.get('first-step')!,
-        },
-        {
-          formGroup: 'location',
-          title: 'BOOKING.location.title',
-          component: LocationComponent,
-          stepControl: form.get('details')!,
-        },
-        {
-          formGroup: 'flashs',
-          title: 'BOOKING.flashs.title',
-          component: FirstStepComponent,
-          stepControl: form.get('location')!,
-          show: () =>
-            form.get(['first-step', 'types'])?.value.includes('flashs'),
-        },
+        // {
+        //   formGroup: 'first-step',
+        //   title: 'BOOKING.first-step.title',
+        //   component: FirstStepComponent,
+        //   stepControl: form.get(['first-step', 'is_first_tattoo'])!, // dumb to avoid template complexity
+        // },
+        // {
+        //   formGroup: 'details',
+        //   title: 'BOOKING.details.title',
+        //   component: DetailsComponent,
+        //   stepControl: form.get('first-step')!,
+        // },
+        // {
+        //   formGroup: 'location',
+        //   title: 'BOOKING.location.title',
+        //   component: LocationComponent,
+        //   stepControl: form.get('details')!,
+        // },
+        // {
+        //   formGroup: 'flashs',
+        //   title: 'BOOKING.flashs.title',
+        //   component: FirstStepComponent,
+        //   stepControl: form.get('location')!,
+        //   show: () =>
+        //     form.get(['first-step', 'types'])?.value.includes('flashs'),
+        // },
         {
           formGroup: 'customer',
           title: 'BOOKING.customer.title',
-          component: FirstStepComponent,
+          component: CustomerComponent,
           stepControl: form.get('customer')!,
         },
       ];

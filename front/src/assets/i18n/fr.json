@@ -26,12 +26,19 @@
       "profile_description": "Complétez les informations de votre profil",
 
       "firstname": "Prénom",
-      "lastname": "Nom de famille",
+      "lastname": "Nom",
       "birthday": "Date de naissance",
       "pronouns": "Pronoms",
       "phone": "Numéro de téléphone",
       "personal_information": "Informations personnelles",
       "personal_information_placeholder": "Détails supplémentaires pour vos tatoueurs avant chaque rendez-vous (allergies, etc.).",
+
+      "address_title": "Adresse de facturation",
+      "address_description": "Ces données servent uniquement à la facturation de vos tatoueurs.<br>Aucune utilisation commerciale ne sera faite de ces données.",
+      "address": "Adresse",
+      "address2": "Adresse (ligne 2)",
+      "city": "Ville",
+      "zipcode": "Code postal",
 
       "picture_title": "Photo de profil",
       "picture_description": "Ajoutez une photo pour personnaliser votre profil",

@@ -20,6 +20,10 @@ export interface Customer {
   instagram?: string;
   twitter?: string;
   personal_information?: string;
+  address?: string;
+  address2?: string;
+  city?: string;
+  zipcode?: string;
 }
 
 @Injectable({

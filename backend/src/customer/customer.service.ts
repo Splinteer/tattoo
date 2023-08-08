@@ -19,6 +19,10 @@ export interface Customer {
   instagram?: string;
   twitter?: string;
   personal_information?: string;
+  address?: string;
+  address2?: string;
+  city?: string;
+  zipcode?: string;
 }
 
 export interface CustomerUpdateBody {
@@ -30,6 +34,10 @@ export interface CustomerUpdateBody {
   personal_information?: string;
   instagram?: string;
   twitter?: string;
+  address?: string;
+  address2?: string;
+  city?: string;
+  zipcode?: string;
 }
 
 @Injectable()
@@ -73,7 +81,11 @@ export class CustomerService {
             phone = $6,
             personal_information = $7,
             instagram = $8,
-            twitter = $9
+            twitter = $9,
+            address = $10,
+            address2 = $11,
+            city = $12,
+            zipcode = $13
         WHERE id = $1
         RETURNING *;`,
       [
@@ -86,6 +98,10 @@ export class CustomerService {
         data.personal_information?.trim() ?? null,
         data.instagram?.trim() ?? null,
         data.twitter?.trim() ?? null,
+        data.address?.trim() ?? null,
+        data.address2?.trim() ?? null,
+        data.city?.trim() ?? null,
+        data.zipcode?.trim() ?? null,
       ],
     );
 

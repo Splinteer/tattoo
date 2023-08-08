@@ -27,15 +27,17 @@
     </ng-container>
   </ng-container>
 
-  <ng-template #submit>
-    <button class="button" (click)="onSubmit()">
-      {{
-        stepper.selectedIndex === 0
-          ? "Prendre rendez-vous"
-          : stepper.selectedIndex === stepper.steps.length - 1
-          ? "Confirmer la demande de rendez-vous"
-          : "Continuer la demande de rendez-vous"
-      }}
-    </button>
+  <ng-template #submit *ngIf="form$ | async as form">
+    <form [formGroup]="form" #ngForm="ngForm" (ngSubmit)="onSubmit(form)">
+      <button type="submit" class="button">
+        {{
+          stepper.selectedIndex === 0
+            ? "Prendre rendez-vous"
+            : stepper.selectedIndex === stepper.steps.length - 1
+            ? "Confirmer la demande de rendez-vous"
+            : "Continuer la demande de rendez-vous"
+        }}
+      </button>
+    </form>
   </ng-template>
 </app-form-stepper>

@@ -10,6 +10,7 @@ import { AvatarComponent } from './avatar/avatar.component';
 import { FormStepperComponent } from './form-stepper/form-stepper.component';
 import { ToggleComponent } from './toggle/toggle.component';
 import { IconSelectComponent } from './icon-select/icon-select.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { IconSelectComponent } from './icon-select/icon-select.component';
     ToggleComponent,
     IconSelectComponent,
   ],
-  imports: [CommonModule, SharedUiModule],
+  imports: [CommonModule, SharedUiModule, FormsModule],
   exports: [
     SharedUiModule,
     TranslateModule,

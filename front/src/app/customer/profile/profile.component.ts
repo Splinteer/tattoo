@@ -77,6 +77,12 @@ export class ProfileComponent implements OnInit {
         this.customer?.personal_information || ''
       ),
       profile_picture: new FormControl<File[]>([], { nonNullable: true }),
+
+      address: new FormControl<string>(this.customer?.address || ''),
+      address2: new FormControl<string>(this.customer?.address2 || ''),
+      city: new FormControl<string>(this.customer?.city || ''),
+      zipcode: new FormControl<string>(this.customer?.zipcode || ''),
+
       instagram: new FormControl<string | null>(
         this.customer?.instagram || null,
         [noSpaceNoSpecialCharactersValidator]

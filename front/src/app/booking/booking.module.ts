@@ -10,9 +10,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DetailsComponent } from './details/details.component';
 import { BookingService } from './booking.service';
 import { LocationComponent } from './location/location.component';
+import { CustomerComponent } from './customer/customer.component';
 
 @NgModule({
-  declarations: [BookingComponent, FirstStepComponent, DetailsComponent, LocationComponent],
+  declarations: [BookingComponent, FirstStepComponent, DetailsComponent, LocationComponent, CustomerComponent],
   imports: [
     CommonModule,
     BookingRoutingModule,

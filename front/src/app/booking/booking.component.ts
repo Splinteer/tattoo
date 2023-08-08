@@ -3,7 +3,15 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormStepperComponent } from '@app/shared/form-stepper/form-stepper.component';
 import { Shop, ShopService } from '@app/shop/shop.service';
-import { Observable, combineLatest, map, switchMap, tap, take } from 'rxjs';
+import {
+  Observable,
+  combineLatest,
+  map,
+  switchMap,
+  tap,
+  take,
+  lastValueFrom,
+} from 'rxjs';
 import { FirstStepComponent } from './first-step/first-step.component';
 import { DetailsComponent } from './details/details.component';
 import { CustomerService } from '@app/customer/customer.service';
@@ -45,9 +53,21 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit(form: FormGroup) {
+    console.log(
+      'oklm',
+      !this.stepper?.steps.get(this.stepper.selectedIndex + 1)
+    );
+    if (!this.stepper?.steps.get(this.stepper.selectedIndex + 1)) {
+      if (form.invalid) {
+        console.log('invalid');
+      }
+      console.log('valid');
+
+      return;
+    }
+
     if (
-      !this.stepper?.steps.get(this.stepper.selectedIndex + 1) ||
       this.stepper.steps.get(this.stepper.selectedIndex + 1)?.stepControl.valid
     ) {
       this.stepper?.next();
