@@ -17,6 +17,7 @@ type ControlValue = boolean | undefined;
     <label
       class="cursor-pointer"
       [class.bold]="bold"
+      [class.invalid]="invalid"
       (click)="toggleValue()"
       *ngIf="text"
       >{{ text }}</label
@@ -34,7 +35,9 @@ type ControlValue = boolean | undefined;
 export class ToggleComponent implements ControlValueAccessor {
   @Input() text?: string;
 
-  @Input() bold = false;
+  @Input() bold?: boolean = false;
+
+  @Input() invalid?: boolean = false;
 
   public toggleValue(): void {
     this.writeValue(!this.value);

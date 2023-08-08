@@ -13,6 +13,7 @@ type ControlValue<T> = T | T[] | undefined;
       (click)="toggle(item)"
       [class.active]="item.active"
       [class.disabled]="disabled"
+      [class.invalid]="invalid"
     >
       <i [ngClass]="item.icon"></i>
       {{ item.text }}
@@ -35,7 +36,9 @@ export class IconSelectComponent<T> implements ControlValueAccessor {
     active?: boolean;
   }[];
 
-  @Input() multi = false;
+  @Input() multi?: boolean = false;
+
+  @Input() invalid?: boolean = false;
 
   public value?: ControlValue<T>;
 

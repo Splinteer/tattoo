@@ -20,6 +20,10 @@
               text: 'BOOKING.types.adjustment' | translate,
             }
           ]"
+          [invalid]="
+            (ngForm.submitted || form.get(['first-step', 'types'])?.touched) &&
+            !!form.get(['first-step', 'types'])?.errors
+          "
         ></app-icon-select>
 
         <div class="text-muted text-center" translate>
@@ -31,23 +35,21 @@
         <app-toggle
           formControlName="is_first_tattoo"
           [text]="'BOOKING.first-step.is_first_tattoo' | translate"
-          [ngClass]="{
-            'is-invalid':
-              (ngForm.submitted ||
-                form.get(['first-step', 'is_first_tattoo'])?.touched) &&
-              form.get(['first-step', 'is_first_tattoo'])?.errors
-          }"
+          [invalid]="
+            (ngForm.submitted ||
+              form.get(['first-step', 'is_first_tattoo'])?.touched) &&
+            !!form.get(['first-step', 'is_first_tattoo'])?.errors
+          "
         ></app-toggle>
 
         <app-toggle
           formControlName="is_cover_up"
           [text]="'BOOKING.first-step.is_cover_up' | translate"
-          [ngClass]="{
-            'is-invalid':
-              (ngForm.submitted ||
-                form.get(['first-step', 'is_cover_up'])?.touched) &&
-              form.get(['first-step', 'is_cover_up'])?.errors
-          }"
+          [invalid]="
+            (ngForm.submitted ||
+              form.get(['first-step', 'is_cover_up'])?.touched) &&
+            !!form.get(['first-step', 'is_cover_up'])?.errors
+          "
         ></app-toggle>
 
         <app-toggle
@@ -55,13 +57,12 @@
           [text]="
             'BOOKING.first-step.is_post_operation_or_over_scar' | translate
           "
-          [ngClass]="{
-            'is-invalid':
-              (ngForm.submitted ||
-                form.get(['first-step', 'is_post_operation_or_over_scar'])
-                  ?.touched) &&
-              form.get(['first-step', 'is_post_operation_or_over_scar'])?.errors
-          }"
+          [invalid]="
+            (ngForm.submitted ||
+              form.get(['first-step', 'is_post_operation_or_over_scar'])
+                ?.touched) &&
+            !!form.get(['first-step', 'is_post_operation_or_over_scar'])?.errors
+          "
         ></app-toggle>
       </div>
 
@@ -76,12 +77,11 @@
         <app-toggle
           formControlName="conditions"
           [text]="'BOOKING.first-step.conditions' | translate"
-          [ngClass]="{
-            'is-invalid':
-              (ngForm.submitted ||
-                form.get(['first-step', 'conditions'])?.touched) &&
-              form.get(['first-step', 'conditions'])?.errors
-          }"
+          [invalid]="
+            (ngForm.submitted ||
+              form.get(['first-step', 'conditions'])?.touched) &&
+            !!form.get(['first-step', 'conditions'])?.errors
+          "
         ></app-toggle>
       </div>
     </ng-container>

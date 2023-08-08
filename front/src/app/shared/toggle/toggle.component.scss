@@ -49,3 +49,7 @@ button {
 label.bold {
   font-weight: bold;
 }
+
+label.invalid {
+  color: var(--error-color);
+}

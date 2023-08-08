@@ -28,4 +28,8 @@
     color: var(--primary-color);
     border-color: var(--primary-color);
   }
+
+  &.invalid {
+    border-color: var(--error-color);
+  }
 }
