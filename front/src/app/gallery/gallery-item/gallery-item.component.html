@@ -4,12 +4,7 @@
   (click)="clickable && openModal()"
 >
   <img
-    [src]="
-      'http://storage.googleapis.com/tattoo-public/' +
-      gallery.image_url +
-      '?v=' +
-      gallery.image_version
-    "
+    [src]="publicBucket + gallery.image_url + '?v=' + gallery.image_version"
     [alt]="gallery.name"
   />
 </div>

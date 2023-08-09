@@ -3,7 +3,8 @@
     <img
       class="logo"
       [src]="
-        'http://storage.googleapis.com/tattoo-public/shops/' +
+        publicBucket +
+        'shops/' +
         shop.id +
         '/logo?v=' +
         shop.profile_picture_version

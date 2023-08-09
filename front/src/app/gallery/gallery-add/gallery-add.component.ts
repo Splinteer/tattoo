@@ -11,6 +11,7 @@ import { Gallery, GalleryService } from '../gallery.service';
 import { backInDown } from '@app/shared/animation';
 import { greaterThanValidator } from '@app/shared/custom-validators';
 import { Observable, startWith, switchMap, of, forkJoin } from 'rxjs';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-gallery-add',
@@ -50,7 +51,7 @@ export class GalleryAddComponent implements OnInit {
       startWith(
         this.gallery
           ? [
-              'http://storage.googleapis.com/tattoo-public/' +
+              environment.public_bucket +
                 this.gallery.image_url +
                 '?v=' +
                 this.gallery.image_version,
