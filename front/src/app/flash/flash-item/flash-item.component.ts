@@ -7,7 +7,7 @@ import {
 import { Flash } from '../flash.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { FlashDialogComponent } from '../flash-dialog/flash-dialog.component';
-
+import { environment } from '@env/environment';
 @Component({
   selector: 'app-flash-item',
   templateUrl: './flash-item.component.html',
@@ -20,6 +20,8 @@ export class FlashItemComponent {
   @Input() clickable = true;
 
   @Input() hideAvailability = false;
+
+  public readonly publicBucket = environment.public_bucket;
 
   private readonly dialog = inject(Dialog);
 

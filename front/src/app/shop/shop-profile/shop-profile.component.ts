@@ -7,6 +7,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { ShopWithRating, ShopService } from '../shop.service';
 import { Observable, map, switchMap } from 'rxjs';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-shop-profile',
@@ -18,6 +19,8 @@ export class ShopProfileComponent {
   private readonly route = inject(ActivatedRoute);
 
   private readonly shopService = inject(ShopService);
+
+  public readonly publicBucket = environment.public_bucket;
 
   public activeTab: string = 'flashs';
 

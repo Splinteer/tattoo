@@ -14,6 +14,7 @@ import {
   greaterThanValidator,
   smallerThanValidator,
 } from '@app/shared/custom-validators';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-shop-flash-add',
@@ -67,7 +68,7 @@ export class ShopFlashAddComponent implements OnInit {
       startWith(
         this.flash
           ? [
-              'http://storage.googleapis.com/tattoo-public/' +
+              environment.public_bucket +
                 this.flash.image_url +
                 '?v=' +
                 this.flash.image_version,

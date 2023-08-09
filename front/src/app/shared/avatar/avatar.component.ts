@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Credentials } from '@app/auth/credentials.service';
 import { Customer } from '@app/customer/customer.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-avatar',
@@ -47,13 +48,15 @@ export class AvatarComponent implements OnChanges {
         : this.customer.shop_image_version;
 
       this.src =
-        'http://storage.googleapis.com/tattoo-public/shops/' +
-        shopId +
+        environment.public_bucket +
+        'shops/' +
+        this.customer.shop_id +
         '/logo?v=' +
         imageVersion;
     } else if (this.customer.got_profile_picture) {
       this.src =
-        'http://storage.googleapis.com/tattoo-public/profile_picture/' +
+        environment.public_bucket +
+        'profile_picture/' +
         this.customer.id +
         '?v=' +
         this.customer.profile_picture_version;

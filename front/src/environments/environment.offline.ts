@@ -1,11 +1,11 @@
 // This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
+// `ng build` replaces `ment.ts` with `ment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
   production: false,
   serverUrl: 'http://localhost:3000',
-  public_bucket: 'http://storage.googleapis.com/tattoo-public/',
+  public_bucket: '/assets/offline/public_bucket/',
 };
 
 /*

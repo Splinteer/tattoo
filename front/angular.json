@@ -56,6 +56,23 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "offline": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.offline.ts"
+                }
+              ],
+
+              "assets": ["src/favicon.ico", "src/assets"]
             }
           },
           "defaultConfiguration": "production"
@@ -68,6 +85,9 @@
             },
             "development": {
               "browserTarget": "front:build:development"
+            },
+            "offline": {
+              "browserTarget": "front:build:offline"
             }
           },
           "defaultConfiguration": "development"

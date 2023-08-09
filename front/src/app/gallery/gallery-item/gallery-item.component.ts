@@ -7,6 +7,7 @@ import {
 import { Gallery } from '../gallery.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { GalleryDialogComponent } from '../gallery-dialog/gallery-dialog.component';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-gallery-item',
@@ -18,6 +19,8 @@ export class GalleryItemComponent {
   @Input() gallery!: Gallery;
 
   @Input() clickable = true;
+
+  public readonly publicBucket = environment.public_bucket;
 
   private readonly dialog = inject(Dialog);
 

@@ -11,6 +11,7 @@ import { Shop, ShopService } from '../shop.service';
 import { Router } from '@angular/router';
 import { backInDown } from '@shared/animation';
 import { CredentialsService } from '@app/auth/credentials.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-creation',
@@ -59,7 +60,8 @@ export class CreationComponent implements OnInit {
       this.logoPreview$ = this.form!.get('logo')?.valueChanges.pipe(
         startWith(
           credentials && this.shop?.got_profile_picture
-            ? 'http://storage.googleapis.com/tattoo-public/shops/' +
+            ? environment.public_bucket +
+                'shops/' +
                 credentials.shop_id +
                 '/logo?v=' +
                 credentials.shop_image_version

@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { backInDown } from '@shared/animation';
 import { CredentialsService } from '@app/auth/credentials.service';
 import { noSpaceNoSpecialCharactersValidator } from '@app/shared/custom-validators';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-profile',
@@ -97,7 +98,8 @@ export class ProfileComponent implements OnInit {
     this.picturePreview$ = this.form!.get('profile_picture')?.valueChanges.pipe(
       startWith(
         this.customer?.got_profile_picture
-          ? 'http://storage.googleapis.com/tattoo-public/profile_picture/' +
+          ? environment.public_bucket +
+              'profile_picture/' +
               this.customer.id +
               '?v=' +
               this.customer.profile_picture_version
