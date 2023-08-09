@@ -50,7 +50,7 @@ export class AvatarComponent implements OnChanges {
       this.src =
         environment.public_bucket +
         'shops/' +
-        this.customer.shop_id +
+        shopId +
         '/logo?v=' +
         imageVersion;
     } else if (this.customer.got_profile_picture) {
