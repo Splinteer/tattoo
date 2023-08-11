@@ -1,0 +1,39 @@
+<section
+  #selection
+  class="grid selection"
+  infiniteScroll
+  (scrolled)="onScroll()"
+  [infiniteScrollContainer]="selection"
+>
+  <button
+    *ngFor="let flash of flashs$ | async; trackBy: trackByIdx"
+    (click)="toggle(flash)"
+    [class.selected]="flash.selected"
+  >
+    <app-flash-item
+      [clickable]="false"
+      [hideAvailability]="true"
+      [flash]="flash"
+    >
+    </app-flash-item>
+  </button>
+</section>
+
+<section *ngIf="value?.length">
+  <h3>Sélectionnés:</h3>
+
+  <div class="grid">
+    <button
+      class="selected"
+      *ngFor="let flash of value"
+      (click)="toggle(flash)"
+    >
+      <app-flash-item
+        [clickable]="false"
+        [hideAvailability]="true"
+        [flash]="flash"
+      >
+      </app-flash-item>
+    </button>
+  </div>
+</section>

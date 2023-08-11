@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FlashListComponent } from './flash-list/flash-list.component';
+import { FlashSelectionComponent } from './flash-selection/flash-selection.component';
 
 @NgModule({
   imports: [
@@ -29,8 +30,9 @@ import { FlashListComponent } from './flash-list/flash-list.component';
     FlashDialogComponent,
     FlashEditComponent,
     FlashListComponent,
+    FlashSelectionComponent,
   ],
   providers: [FlashService],
-  exports: [FlashItemComponent, FlashListComponent],
+  exports: [FlashItemComponent, FlashListComponent, FlashSelectionComponent],
 })
 export class FlashModule {}

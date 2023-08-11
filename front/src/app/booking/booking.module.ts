@@ -11,6 +11,8 @@ import { DetailsComponent } from './details/details.component';
 import { BookingService } from './booking.service';
 import { LocationComponent } from './location/location.component';
 import { CustomerComponent } from './customer/customer.component';
+import { FlashSelectionComponent } from './flash-selection/flash-selection.component';
+import { FlashModule } from '@app/flash/flash.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { CustomerComponent } from './customer/customer.component';
     DetailsComponent,
     LocationComponent,
     CustomerComponent,
+    FlashSelectionComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +29,7 @@ import { CustomerComponent } from './customer/customer.component';
     CdkStepperModule,
     SharedModule,
     ReactiveFormsModule,
+    FlashModule,
   ],
   providers: [BookingService],
 })

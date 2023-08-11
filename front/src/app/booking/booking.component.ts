@@ -43,7 +43,7 @@ export class BookingComponent implements OnInit {
         this.bookingService.shopUrlSubject.next(params.get('shopUrl'))
       );
     this.form$.subscribe((form) => {
-      return form.get('first-step')?.valueChanges.subscribe((value) => {
+      return form.valueChanges.subscribe((value) => {
         // setTimeout(() => {
         //   console.log(form.get('flashs')?.hasError('input-condition'));
         // }, 500);

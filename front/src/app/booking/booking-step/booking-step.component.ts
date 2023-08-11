@@ -9,9 +9,11 @@ import { FormGroup } from '@angular/forms';
 export abstract class BookingStepComponent {
   @Input({ required: true }) step!: BookingStep;
 
-  private readonly bookingService = inject(BookingService);
+  protected readonly bookingService = inject(BookingService);
 
   public readonly form$ = this.bookingService.form$;
+
+  public readonly shop$ = this.bookingService.shop$;
 
   protected getImagePreview(controlPath: string[]) {
     return this.form$.pipe(

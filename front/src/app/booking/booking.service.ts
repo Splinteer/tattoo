@@ -20,6 +20,7 @@ import { inputConditionalRequiredValidator } from '@app/shared/custom-validators
 import { Location } from '@angular/common';
 import { LocationComponent } from './location/location.component';
 import { CustomerComponent } from './customer/customer.component';
+import { FlashSelectionComponent } from './flash-selection/flash-selection.component';
 
 export interface BookingStep {
   formGroup: string;
@@ -165,7 +166,7 @@ export class BookingService {
         {
           formGroup: 'flashs',
           title: 'BOOKING.flashs.title',
-          component: FirstStepComponent,
+          component: FlashSelectionComponent,
           stepControl: form.get('location')!,
           show: () =>
             form.get(['first-step', 'types'])?.value.includes('flashs'),
