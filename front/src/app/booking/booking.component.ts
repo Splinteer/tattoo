@@ -1,20 +1,8 @@
 import { Component, ViewChild, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormStepperComponent } from '@app/shared/form-stepper/form-stepper.component';
-import { Shop, ShopService } from '@app/shop/shop.service';
-import {
-  Observable,
-  combineLatest,
-  map,
-  switchMap,
-  tap,
-  take,
-  lastValueFrom,
-} from 'rxjs';
-import { FirstStepComponent } from './first-step/first-step.component';
-import { DetailsComponent } from './details/details.component';
-import { CustomerService } from '@app/customer/customer.service';
+import { take } from 'rxjs';
 import { BookingService, BookingStep } from './booking.service';
 
 @Component({
@@ -44,6 +32,7 @@ export class BookingComponent implements OnInit {
       );
     this.form$.subscribe((form) => {
       return form.valueChanges.subscribe((value) => {
+        console.log(form.get('flashs')?.valid);
         // setTimeout(() => {
         //   console.log(form.get('flashs')?.hasError('input-condition'));
         // }, 500);

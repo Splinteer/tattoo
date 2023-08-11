@@ -79,12 +79,14 @@ export function inputConditionalRequiredValidator(
         ? comparator(conditionerValue)
         : conditionerValue === comparator;
 
-    targetControl?.setErrors({
-      ...targetControl.errors,
-      'input-condition': isRequired
-        ? conditionerControlPath.join('.')
-        : undefined,
-    });
+    const errors = targetControl?.errors || {};
+    if (isRequired) {
+      errors['input-condition'] = conditionerControlPath.join('.');
+    } else {
+      delete errors['input-condition'];
+    }
+
+    targetControl?.setErrors(Object.keys(errors).length ? errors : null);
 
     return null;
   };
