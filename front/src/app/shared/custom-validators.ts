@@ -80,10 +80,10 @@ export function inputConditionalRequiredValidator(
         : conditionerValue === comparator;
 
     const errors = targetControl?.errors || {};
-    if (isRequired) {
-      errors['input-condition'] = conditionerControlPath.join('.');
+    if (isRequired && targetControl?.value.length === 0) {
+      errors['required'] = conditionerControlPath.join('.');
     } else {
-      delete errors['input-condition'];
+      delete errors['required'];
     }
 
     targetControl?.setErrors(Object.keys(errors).length ? errors : null);
