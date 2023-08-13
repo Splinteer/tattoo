@@ -1,0 +1,38 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: var(--space-300);
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  color: var(--gray-700);
+}
+
+.calendar {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+  border: 1px solid var(--gray-200);
+  padding: var(--space-100);
+
+  .content {
+    min-height: 50px;
+  }
+}
+
+.month {
+  text-transform: capitalize;
+}
+
+.day-number,
+.weekday {
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gray-700);
+}

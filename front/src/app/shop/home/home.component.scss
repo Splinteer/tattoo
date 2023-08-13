@@ -1,5 +1,6 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   padding: var(--page-content-padding);
 }
@@ -10,6 +11,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-400);
+  width: 100%;
 
   app-avatar {
     width: 50px;

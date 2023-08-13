@@ -41,6 +41,9 @@ dependencies:
   '@ngx-translate/http-loader':
     specifier: ^8.0.0
     version: 8.0.0(@angular/common@16.2.0-rc.0)(@angular/core@16.2.0-rc.0)(@ngx-translate/core@15.0.0)(rxjs@7.5.7)
+  luxon:
+    specifier: ^3.4.0
+    version: 3.4.0
   ngx-infinite-scroll:
     specifier: ^16.0.0
     version: 16.0.0(@angular/common@16.2.0-rc.0)(@angular/core@16.2.0-rc.0)
@@ -85,6 +88,9 @@ devDependencies:
   '@types/jasmine':
     specifier: ~4.0.0
     version: 4.0.3
+  '@types/luxon':
+    specifier: ^3.3.1
+    version: 3.3.1
   '@types/react':
     specifier: ^18.0.28
     version: 18.0.28
@@ -2555,6 +2561,10 @@ packages:
 
   /@types/json-schema@7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/luxon@3.3.1:
+    resolution: {integrity: sha512-XOS5nBcgEeP2PpcqJHjCWhUCAzGfXIU8ILOSLpx2FhxqMW9KdxgCGXNOEKGVBfveKtIpztHzKK5vSRVLyW/NqA==}
     dev: true
 
   /@types/mime@3.0.1:
@@ -5282,6 +5292,11 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
     dev: true
+
+  /luxon@3.4.0:
+    resolution: {integrity: sha512-7eDo4Pt7aGhoCheGFIuq4Xa2fJm4ZpmldpGhjTYBNUYNCN6TIEP6v7chwwwt3KRp7YR+rghbfvjyo3V5y9hgBw==}
+    engines: {node: '>=12'}
+    dev: false
 
   /magic-string@0.30.1:
     resolution: {integrity: sha512-mbVKXPmS0z0G4XqFDCTllmDQ6coZzn94aMlb0o/A4HEHJCKcanlDZwYJgwnkmgD3jyWhUgj9VsPrfd972yPffA==}

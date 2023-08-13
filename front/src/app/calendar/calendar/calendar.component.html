@@ -1,0 +1,24 @@
+<nav>
+  <button (click)="previousMonth()" title="Previous">
+    <i class="fa-regular fa-chevron-left"></i>
+  </button>
+
+  <div class="month">{{ currentMonth.toJSDate() | date : "MMMM	yyyy" }}</div>
+
+  <button (click)="nextMonth()" title="Next">
+    <i class="fa-regular fa-chevron-right"></i>
+  </button>
+</nav>
+
+<div class="calendar">
+  <div *ngFor="let day of days; let dayIndex = index" class="day">
+    <div class="weekday" *ngIf="dayIndex < 7">
+      {{ day.toJSDate() | date : "EE" }}
+    </div>
+    <div class="day-number">
+      {{ day.toFormat("d") }}
+    </div>
+
+    <div class="content"></div>
+  </div>
+</div>
