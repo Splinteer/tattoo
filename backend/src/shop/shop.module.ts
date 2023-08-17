@@ -3,9 +3,10 @@ import { ShopController } from './shop.controller';
 import { ShopService } from './shop.service';
 import { CommonModule } from '@app/common';
 import { AuthModule } from 'src/auth/auth.module';
+import { AvailabilityModule } from './availability/availability.module';
 
 @Module({
-  imports: [CommonModule, AuthModule],
+  imports: [CommonModule, AuthModule, AvailabilityModule],
   controllers: [ShopController],
   providers: [ShopService],
 })

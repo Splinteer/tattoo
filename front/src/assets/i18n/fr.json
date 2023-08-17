@@ -5,6 +5,15 @@
       "title": "Confirmez",
       "cancel": "Annuler",
       "confirm": "Je confirme"
+    },
+    "DAY": {
+      "Monday": "Lundi",
+      "Tuesday": "Mardi",
+      "Wednesday": "Mercredi",
+      "Thursday": "Jeudi",
+      "Friday": "Vendredi",
+      "Saturday": "Samedi",
+      "Sunday": "Dimanche"
     }
   },
 
@@ -13,6 +22,21 @@
     "gallery": "Galerie",
     "search": "Ville, nom d'un artiste...",
     "signin": "Se connecter"
+  },
+
+  "AVAILABILITY": {
+    "from_day": "Du",
+    "to_day": "Au",
+    "from_hour": "De",
+    "to_hour": "À",
+
+    "DEFAULT": {
+      "title": "Horaire par défaut",
+      "add_day_range": "Ajouter plage journée",
+      "add_hour_range": "Ajouter plage horaire",
+      "no_generated_availability_for_manual_days": "Aucune disponibilité ne sera générée pour les jours ayant déjà des disponibilités manuelles",
+      "availability_generation_info": "Les disponibilités sont générées 2 mois à l'avance chaque premier du mois."
+    }
   },
 
   "CUSTOMER": {

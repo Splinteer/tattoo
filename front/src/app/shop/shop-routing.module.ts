@@ -14,7 +14,8 @@ const routes: Routes = [
   {
     path: '',
     canActivate: [ShopGuard],
-    component: HomeComponent,
+    loadComponent: () =>
+      import('./home/home.component').then((m) => m.HomeComponent),
   },
   {
     path: 'create',

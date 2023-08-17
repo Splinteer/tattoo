@@ -1,4 +1,4 @@
-<ng-container *ngIf="credentials$ | async as credentials" [@backInDown]>
+<div class="container" *ngIf="credentials$ | async as credentials">
   <div class="header">
     <app-avatar [customer]="credentials"></app-avatar>
     <div class="description">
@@ -14,5 +14,6 @@
     </a>
   </div>
 
+  <app-default-availability></app-default-availability>
   <app-calendar></app-calendar>
-</ng-container>
+</div>

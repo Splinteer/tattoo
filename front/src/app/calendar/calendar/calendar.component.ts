@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DateTime } from 'luxon';
 
@@ -5,6 +6,8 @@ import { DateTime } from 'luxon';
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
+  standalone: true,
+  imports: [CommonModule],
 })
 export class CalendarComponent implements OnInit {
   currentMonth: DateTime = DateTime.local().startOf('month');

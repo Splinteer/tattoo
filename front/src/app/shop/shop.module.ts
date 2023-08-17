@@ -14,7 +14,6 @@ import { FlashModule } from '@app/flash/flash.module';
 import { GalleryModule } from '@app/gallery/gallery.module';
 import { ShopProfileComponent } from './shop-profile/shop-profile.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { CalendarModule } from '@app/calendar/calendar.module';
 
 @NgModule({
   imports: [
@@ -25,11 +24,10 @@ import { CalendarModule } from '@app/calendar/calendar.module';
     FlashModule,
     GalleryModule,
     ScrollingModule,
-    CalendarModule,
+    HomeComponent,
   ],
   declarations: [
     CreationComponent,
-    HomeComponent,
     ShopEditComponent,
     ShopGalleryComponent,
     ShopGalleryAddComponent,
