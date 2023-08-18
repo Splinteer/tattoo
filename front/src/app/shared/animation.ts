@@ -23,11 +23,13 @@ export function FadeIn(
   ]);
 }
 
-export function slideDown(timingIn: number): AnimationTriggerMetadata {
+export function slideDown(
+  timing: string | number = 300
+): AnimationTriggerMetadata {
   return trigger('slideDown', [
     state('void', style({ height: 0, overflow: 'hidden' })),
     state('*', style({ height: '*', overflow: 'hidden' })),
-    transition('void <=> *', animate(timingIn + 'ms ease-in-out')),
+    transition('void <=> *', animate(timing)),
   ]);
 }
 

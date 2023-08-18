@@ -1,0 +1,71 @@
+<form class="grouped-form" [@backInDown] [formGroup]="form()">
+  <div role="group" aria-labelledby="group-picture">
+    <div class="group-description">
+      <label id="group-picture" translate>Gestion automatique</label>
+
+      <small translate>
+        AVAILABILITY.DEFAULT.availability_generation_info
+      </small>
+    </div>
+
+    <div class="input-group">
+      <app-toggle
+        formControlName="auto_generate_availability"
+        [text]="'Activer la gestion automatique' | translate"
+      ></app-toggle>
+    </div>
+  </div>
+
+  <div
+    role="group"
+    aria-labelledby="group-picture"
+    *ngIf="form().get('auto_generate_availability')?.value"
+    [@slideDown]
+  >
+    <div class="group-description">
+      <label id="group-picture" translate>Intervalle</label>
+
+      <small translate>
+        AVAILABILITY.DEFAULT.availability_generation_info
+      </small>
+    </div>
+
+    <div class="input-group inline">
+      <label>Tous les</label>
+      <select formControlName="repeat_availability_every">
+        <option [value]="1">1</option>
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+        <option [value]="5">5</option>
+        <option [value]="6">6</option>
+      </select>
+      <select formControlName="repeat_availability_time_unit">
+        <option value="month">mois</option>
+        <option value="week">semaine</option>
+      </select>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-picture">
+    <div class="group-description">
+      <label id="group-picture" translate
+        >Durée minimum d'une disponibilité</label
+      >
+
+      <small translate>
+        AVAILABILITY.DEFAULT.availability_generation_info
+      </small>
+    </div>
+
+    <div class="input-group inline">
+      <select formControlName="min_appointment_time">
+        <option [value]="30">30 minutes</option>
+        <option [value]="60">1 heure</option>
+        <option [value]="120">2 heures</option>
+        <option [value]="180">3 heures</option>
+        <option [value]="240">4 heures</option>
+      </select>
+    </div>
+  </div>
+</form>

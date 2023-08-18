@@ -113,7 +113,6 @@ export class DefaultAvailabilityComponent {
     .getDefaultAvailability()
     .pipe(
       map((dayGroupedAvailabilities) => {
-        console.log(dayGroupedAvailabilities);
         let defaultAvailabilities: FormArray;
         if (dayGroupedAvailabilities.length) {
           defaultAvailabilities = new FormArray(

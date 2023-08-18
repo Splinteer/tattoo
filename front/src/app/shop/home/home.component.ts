@@ -6,6 +6,7 @@ import { backInDown } from '@shared/animation';
 import { CalendarComponent } from '@app/calendar/calendar/calendar.component';
 import { DefaultAvailabilityComponent } from '@app/calendar/default-availability/default-availability.component';
 import { SharedModule } from '@app/shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,7 @@ import { SharedModule } from '@app/shared/shared.module';
     DefaultAvailabilityComponent,
     CalendarComponent,
     SharedModule,
+    RouterModule,
   ],
 })
 export class HomeComponent {

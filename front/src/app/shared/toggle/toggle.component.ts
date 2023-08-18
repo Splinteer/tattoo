@@ -6,22 +6,24 @@ type ControlValue = boolean | undefined;
 @Component({
   selector: 'app-toggle',
   template: `
-    <button
-      type="button"
-      [class.checked]="!!value"
-      [class.disabled]="disabled"
-      (click)="toggleValue()"
-    >
-      <span></span>
-    </button>
-    <label
-      class="cursor-pointer"
-      [class.bold]="bold"
-      [class.invalid]="invalid"
-      (click)="toggleValue()"
-      *ngIf="text"
-      >{{ text }}</label
-    >
+    <div [class.right-toggle]="position === 'right'">
+      <button
+        type="button"
+        [class.checked]="!!value"
+        [class.disabled]="disabled"
+        (click)="toggleValue()"
+      >
+        <span></span>
+      </button>
+      <label
+        class="cursor-pointer"
+        [class.bold]="bold"
+        [class.invalid]="invalid"
+        (click)="toggleValue()"
+        *ngIf="text"
+        >{{ text }}</label
+      >
+    </div>
   `,
   styleUrls: ['./toggle.component.scss'],
   providers: [
@@ -38,6 +40,8 @@ export class ToggleComponent implements ControlValueAccessor {
   @Input() bold?: boolean = false;
 
   @Input() invalid?: boolean = false;
+
+  @Input() position?: 'left' | 'right' = 'left';
 
   public toggleValue(): void {
     this.writeValue(!this.value);

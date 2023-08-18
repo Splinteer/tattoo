@@ -12,6 +12,12 @@ export interface ShopCreationBody {
   facebook: string | null;
   website: string | null;
 }
+
+export enum AutomaticAvailabilityTimeUnit {
+  week = 'week',
+  month = 'month',
+}
+
 export interface Shop {
   id: string;
   owner_id: string;
@@ -26,6 +32,10 @@ export interface Shop {
   twitter: string | null;
   facebook: string | null;
   website: string | null;
+  auto_generate_availability: boolean;
+  repeat_availability_every: number;
+  repeat_availability_time_unit: AutomaticAvailabilityTimeUnit;
+  min_appointment_time: number;
 }
 
 @Injectable()

@@ -27,6 +27,14 @@ const routes: Routes = [
     component: ShopEditComponent,
   },
   {
+    path: 'disponiblite',
+    canActivate: [ShopGuard],
+    loadComponent: () =>
+      import('./availability/availability.component').then(
+        (m) => m.AvailabilityComponent
+      ),
+  },
+  {
     path: 'gallery',
     canActivate: [ShopGuard],
     component: ShopGalleryComponent,

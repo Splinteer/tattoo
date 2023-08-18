@@ -39,6 +39,8 @@ CREATE TABLE
         facebook varchar(255),
         website varchar(255),
         auto_generate_availability boolean NOT NULL DEFAULT false,
+        repeat_availability_every integer,
+        repeat_availability_time_unit varchar(10),
         min_appointment_time integer NOT NULL DEFAULT 60,
         CONSTRAINT fk_owner_id FOREIGN KEY (owner_id) REFERENCES public.customer (id)
     );

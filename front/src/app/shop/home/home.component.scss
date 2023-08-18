@@ -48,6 +48,10 @@
     }
   }
 
+  nav {
+    flex-grow: 1;
+  }
+
   .settings {
     color: var(--gray-700);
 

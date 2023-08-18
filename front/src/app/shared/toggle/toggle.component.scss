@@ -4,11 +4,15 @@ $padding: 3px;
 $span-padding: 4px;
 $span-width: calc($height - $span-padding);
 
-:host {
+div {
   display: flex;
-  width: auto;
+  width: fit-content;
   align-items: center;
   gap: var(--space-200);
+
+  &.right-toggle {
+    flex-direction: row-reverse;
+  }
 }
 
 button {

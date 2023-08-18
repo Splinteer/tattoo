@@ -84,12 +84,13 @@
       <div class="range">
         <button
           type="button"
-          class="button"
+          class="button button-outline add-range"
           (click)="addHourRange(dayAvailability)"
           translate
         >
           <i class="fa-regular fa-clock"></i>
-          AVAILABILITY.DEFAULT.add_hour_range
+          <!-- AVAILABILITY.DEFAULT.add_hour_range -->
+          Ajouter
         </button>
         <div class="remove-button"></div>
       </div>
@@ -97,21 +98,12 @@
   </div>
   <button
     type="button"
-    class="button mi-auto"
+    class="button button-outline add-range"
     (click)="addNewAvailability(form)"
     translate
   >
     <i class="fa-regular fa-calendar"></i>
-    AVAILABILITY.DEFAULT.add_day_range
+    <!-- AVAILABILITY.DEFAULT.add_day_range -->
+    Ajouter
   </button>
-
-  <div class="text-center">
-    <p class="text-muted" translate>
-      AVAILABILITY.DEFAULT.availability_generation_info
-    </p>
-
-    <p class="text-muted" translate>
-      AVAILABILITY.DEFAULT.no_generated_availability_for_manual_days
-    </p>
-  </div>
 </form>
