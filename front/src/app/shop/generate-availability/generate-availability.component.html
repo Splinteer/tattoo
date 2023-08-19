@@ -1,0 +1,85 @@
+<form
+  class="grouped-form"
+  [formGroup]="form"
+  #ngForm="ngForm"
+  (ngSubmit)="submit()"
+>
+  <div role="group" aria-labelledby="group-generate-availabilities">
+    <div class="group-description">
+      <label id="group-generate-availabilities" translate
+        >AVAILABILITY.GENERATE.generate_availabilities_title</label
+      >
+
+      <small translate>
+        AVAILABILITY.SETTINGS.no_generated_availability_for_existing_days
+      </small>
+    </div>
+
+    <ng-template #success>
+      <div class="input-group">
+        C'est bon du {{ form.get("start_day")?.value }} au
+        {{ form.get("end_day")?.value }}
+      </div>
+    </ng-template>
+
+    <div class="input-group" *ngIf="!submitted(); else success">
+      <div class="input-group inline">
+        <label translate>AVAILABILITY.from_day</label>
+        <input
+          formControlName="start_day"
+          type="date"
+          id="start_day"
+          name="start_day"
+          [min]="today.toISODate()"
+          [placeholder]="'CUSTOMER.PROFILE.start_day' | translate"
+          [class.is-invalid]="
+            (ngForm.submitted || form.get('start_day')?.touched) &&
+            form.get('start_day')?.errors
+          "
+        />
+
+        <label class="lowercase" translate>AVAILABILITY.to_day</label>
+        <input
+          formControlName="end_day"
+          type="date"
+          id="end_day"
+          name="end_day"
+          [min]="form.get('start_day')?.value"
+          [placeholder]="'CUSTOMER.PROFILE.end_day' | translate"
+          [class.is-invalid]="
+          (ngForm.submitted ||
+          form.get('end_day')?.touched) &&
+            form.get('end_day')?.errors?.['dateRange']
+          "
+        />
+      </div>
+
+      <div
+        class="error-group"
+        *ngIf="
+          (ngForm.submitted || form.get('start_day')?.touched) &&
+          form.get('start_day')?.errors
+        "
+        translate
+      >
+        AVAILABILITY.GENERATE.start_day_error
+      </div>
+
+      <div
+        class="error-group"
+        *ngIf="
+            (ngForm.submitted ||
+            form.get('end_day')?.touched) &&
+              form.get('end_day')?.errors?.['dateRange']
+        "
+        translate
+      >
+        AVAILABILITY.GENERATE.end_day_error
+      </div>
+
+      <button class="button fit" type="submit" translate>
+        AVAILABILITY.GENERATE.generate
+      </button>
+    </div>
+  </div>
+</form>

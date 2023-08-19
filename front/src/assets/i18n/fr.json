@@ -1,5 +1,6 @@
 {
   "COMMON": {
+    "add": "Ajouter",
     "edit": "Modifier",
     "CONFIRM": {
       "title": "Confirmez",
@@ -14,6 +15,14 @@
       "Friday": "Vendredi",
       "Saturday": "Samedi",
       "Sunday": "Dimanche"
+    },
+    "TIME": {
+      "hour": "{count, plural, one {heure} other {heures}}",
+      "minute": "{count, plural, one {minute} other {minutes}}"
+    },
+    "DAY_RANGE": {
+      "month": "mois",
+      "week": "{count, plural, one {semaine} other {semaines}}"
     }
   },
 
@@ -31,11 +40,26 @@
     "to_hour": "À",
 
     "DEFAULT": {
-      "title": "Horaire par défaut",
-      "add_day_range": "Ajouter plage journée",
-      "add_hour_range": "Ajouter plage horaire",
-      "no_generated_availability_for_manual_days": "Aucune disponibilité ne sera générée pour les jours ayant déjà des disponibilités manuelles",
-      "availability_generation_info": "Les disponibilités sont générées 2 mois à l'avance chaque premier du mois."
+      "availability_generation_title": "Disponibilités par défaut",
+      "availability_generation_info": "Ces horaires servent de modèle pour la gestion automatique et manuelle des disponibilités."
+    },
+
+    "SETTINGS": {
+      "auto_generate_availability_title": "Gestion Automatique des Disponibilités",
+      "auto_generate_availability": "Générer automatiquement les disponibilités",
+      "repeat_interval_title": "Intervalle de Répétition",
+      "min_appointment_time_title": "Temps minimum de rendez-vous",
+
+      "no_generated_availability_for_existing_days": "Aucune disponibilité ne sera générée pour les jours ayant déjà des disponibilités manuelles",
+      "repeat_availability_every": {
+        "each": "{gender, select, female{Toutes} other{Tous}} les"
+      }
+    },
+    "GENERATE": {
+      "generate_availabilities_title": "Générer des disponibilités",
+      "start_day_error": "La date de départ doit être supérieur ou égale à aujourd'hui",
+      "end_day_error": "La date de fin est invalide ou inférieur à la date de début",
+      "generate": "Générer"
     }
   },
 

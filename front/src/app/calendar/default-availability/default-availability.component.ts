@@ -6,8 +6,6 @@ import {
   FormBuilder,
   FormArray,
   AbstractControl,
-  ValidationErrors,
-  ValidatorFn,
   FormControl,
   Validators,
   ReactiveFormsModule,
@@ -16,9 +14,7 @@ import {
   Observable,
   catchError,
   combineLatest,
-  debounce,
   debounceTime,
-  distinctUntilChanged,
   filter,
   map,
   of,
@@ -26,77 +22,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import {
-  AvailabilityService,
-  DayAvailability,
-  HourRange,
-  Weekday,
-} from '../availability.service';
+import { AvailabilityService, Weekday } from '../availability.service';
 import { TranslateModule } from '@ngx-translate/core';
-
-// Check if two day ranges overlap
-function doDaysOverlap(
-  startDay1: number,
-  endDay1: number,
-  startDay2: number,
-  endDay2: number
-): boolean {
-  return startDay1 <= endDay2 && startDay2 <= endDay1;
-}
-
-// Check if two hour ranges overlap
-function doHoursOverlap(
-  startTime1: string,
-  endTime1: string,
-  startTime2: string,
-  endTime2: string
-): boolean {
-  return startTime1 < endTime2 && startTime2 < endTime1;
-}
-
-export function availabilityValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const availabilitiesArray = control as FormArray;
-    const availabilities = availabilitiesArray.controls as FormGroup[];
-
-    return null; // TODO
-
-    for (let i = 0; i < availabilities.length; i++) {
-      const curr = availabilities[i].value as DayAvailability;
-
-      for (let j = i + 1; j < availabilities.length; j++) {
-        const next = availabilities[j].value as DayAvailability;
-
-        console.log(
-          doDaysOverlap(curr.startDay, curr.endDay, next.startDay, next.endDay)
-        );
-
-        if (
-          doDaysOverlap(curr.startDay, curr.endDay, next.startDay, next.endDay)
-        ) {
-          const currHours = curr.hourRanges as HourRange[];
-          const nextHours = next.hourRanges as HourRange[];
-
-          for (const currHour of currHours) {
-            for (const nextHour of nextHours) {
-              if (
-                doHoursOverlap(
-                  currHour.startTime,
-                  currHour.endTime,
-                  nextHour.startTime,
-                  nextHour.endTime
-                )
-              ) {
-                return { availabilityOverlap: true }; // There's an overlap
-              }
-            }
-          }
-        }
-      }
-    }
-    return null; // No overlaps found
-  };
-}
 
 @Component({
   selector: 'app-default-availability',

@@ -86,6 +86,15 @@ export class ShopService {
     return rows[0];
   }
 
+  public async getById(id: string) {
+    const { rows } = await this.db.query<Shop>(
+      'SELECT * FROM shop WHERE id=$1',
+      [id],
+    );
+
+    return rows[0];
+  }
+
   public async getByUrl(url: string) {
     const { rows } = await this.db.query<Shop>(
       'SELECT * FROM shop WHERE url=$1',

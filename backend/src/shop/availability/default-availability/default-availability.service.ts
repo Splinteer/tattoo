@@ -24,8 +24,8 @@ export interface DayAvailability {
 
 export interface DefaultAvailability {
   shop_id: string;
-  start_day: string;
-  end_day: string;
+  start_day: number;
+  end_day: number;
   start_time: string;
   end_time: string;
 }
@@ -42,6 +42,17 @@ export interface DayGroupedDefaultAvailability {
 @Injectable()
 export class DefaultAvailabilityService {
   constructor(private readonly db: DbService) {}
+
+  public async getRaw(shopId: string) {
+    const query = `
+    SELECT shop_id, start_day, end_day, start_time, end_time
+    FROM default_availability
+    WHERE shop_id = $1
+`;
+    const { rows } = await this.db.query<DefaultAvailability>(query, [shopId]);
+
+    return rows;
+  }
 
   public async get(shopId: string): Promise<DayGroupedDefaultAvailability[]> {
     const { rows } = await this.db.query<DayGroupedDefaultAvailability>(
@@ -91,7 +102,6 @@ export class DefaultAvailabilityService {
     shopId: string,
     availabilities: DayAvailability[],
   ): DefaultAvailability[] {
-    console.log(availabilities);
     return availabilities.reduce((acc, dayAvailability) => {
       const dayValues = dayAvailability.hourRanges.map((hourRange) => [
         shopId,
@@ -129,8 +139,6 @@ export class DefaultAvailabilityService {
       INSERT INTO default_availability (shop_id, start_day, end_day, start_time, end_time)
       VALUES ${rows.join(', ')}
       `;
-    console.log(rows);
-    console.log(insertQuery, defaultAvailabilities.flat());
 
     await this.db.query(insertQuery, defaultAvailabilities.flat());
   }

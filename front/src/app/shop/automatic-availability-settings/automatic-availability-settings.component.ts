@@ -7,19 +7,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { backInDown, slideDown } from '@app/shared/animation';
+import { slideDown } from '@app/shared/animation';
 import { AutomaticAvailabilityTimeUnit } from '../shop.service';
 import { AvailabilityService } from '@app/calendar/availability.service';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-automatic-availability-settings',
   standalone: true,
-  imports: [CommonModule, SharedModule, ReactiveFormsModule],
+  imports: [CommonModule, SharedModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './automatic-availability-settings.component.html',
   styleUrls: ['./automatic-availability-settings.component.scss'],
-  animations: [slideDown(), backInDown()],
+  animations: [slideDown()],
 })
 export class AutomaticAvailabilitySettingsComponent {
   private readonly availabilityService = inject(AvailabilityService);

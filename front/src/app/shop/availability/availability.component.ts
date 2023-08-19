@@ -4,15 +4,17 @@ import { DefaultAvailabilityComponent } from '@app/calendar/default-availability
 import { backInDown } from '@app/shared/animation';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutomaticAvailabilitySettingsComponent } from '../automatic-availability-settings/automatic-availability-settings.component';
+import { GenerateAvailabilityComponent } from '../generate-availability/generate-availability.component';
 
 @Component({
   selector: 'app-availability',
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
     AutomaticAvailabilitySettingsComponent,
     DefaultAvailabilityComponent,
-    TranslateModule,
+    GenerateAvailabilityComponent,
   ],
   templateUrl: './availability.component.html',
   styleUrls: ['./availability.component.scss'],

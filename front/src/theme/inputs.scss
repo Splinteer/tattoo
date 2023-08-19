@@ -70,6 +70,10 @@ form.grouped-form {
   width: min(100%, 1500px);
   margin-inline: auto;
 
+  &.no-border-bottom div[role="group"]:last-of-type {
+    border-bottom: 0;
+  }
+
   div[role="group"] {
     display: flex;
     align-items: flex-start;

@@ -30,8 +30,8 @@ export interface DayAvailability {
 
 export interface DefaultAvailability {
   shopId: string;
-  startDay: string;
-  endDay: string;
+  startDay: number;
+  endDay: number;
   startTime: string;
   endTime: string;
 }
@@ -81,5 +81,9 @@ export class AvailabilityService {
 
   public updateDefaultAvailability(data: DayAvailability[]) {
     return this.http.post<void>('/default-availability', data);
+  }
+
+  public generateAvailability(data: { start_day: string; end_day: string }) {
+    return this.http.post<void>('/availability/generate', data);
   }
 }

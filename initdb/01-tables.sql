@@ -39,8 +39,8 @@ CREATE TABLE
         facebook varchar(255),
         website varchar(255),
         auto_generate_availability boolean NOT NULL DEFAULT false,
-        repeat_availability_every integer,
-        repeat_availability_time_unit varchar(10),
+        repeat_availability_every integer NOT NULL DEFAULT 1,
+        repeat_availability_time_unit varchar(10) NOT NULL DEFAULT 'month',
         min_appointment_time integer NOT NULL DEFAULT 60,
         CONSTRAINT fk_owner_id FOREIGN KEY (owner_id) REFERENCES public.customer (id)
     );
@@ -184,9 +184,8 @@ CREATE TABLE
     IF NOT EXISTS public.availability (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
-        date date NOT NULL,
-        start_time time NOT NULL,
-        end_time time NOT NULL,
+        start_date_time timestamp NOT NULL,
+        end_date_time timestamp NOT NULL,
         automatic boolean NOT NULL DEFAULT TRUE,
         CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );

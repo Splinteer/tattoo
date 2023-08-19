@@ -1,64 +1,27 @@
-<app-automatic-availability-settings
-  class="no-border-bottom"
-></app-automatic-availability-settings>
-<form class="grouped-form" [@backInDown]>
-  <div role="group" aria-labelledby="group-picture">
-    <div class="group-description">
-      <label id="group-picture" translate>Disponibilités par défaut</label>
+<div [@backInDown]>
+  <app-automatic-availability-settings
+    class="no-border-bottom"
+  ></app-automatic-availability-settings>
 
-      <small translate>
-        AVAILABILITY.DEFAULT.availability_generation_info
-      </small>
+  <form class="grouped-form no-border-bottom">
+    <div role="group" aria-labelledby="group-default-availabilities">
+      <div class="group-description">
+        <label id="group-default-availabilities" translate
+          >AVAILABILITY.DEFAULT.availability_generation_title</label
+        >
 
-      <small translate>
-        AVAILABILITY.DEFAULT.no_generated_availability_for_manual_days
-      </small>
-    </div>
-
-    <div class="input-group">
-      <app-default-availability
-        class="no-border-bottom"
-      ></app-default-availability>
-    </div>
-  </div>
-</form>
-
-<form class="grouped-form" [@backInDown]>
-  <div role="group" aria-labelledby="group-picture">
-    <div class="group-description">
-      <label id="group-picture" translate>Générer des disponibilités</label>
-
-      <small translate>
-        AVAILABILITY.DEFAULT.availability_generation_info
-      </small>
-    </div>
-
-    <div class="input-group">
-      <div class="input-group inline">
-        Du
-
-        <input
-          formControlName="birthday"
-          type="date"
-          id="birthday"
-          name="birthday"
-          [placeholder]="'CUSTOMER.PROFILE.birthday' | translate"
-        />
-        au
-
-        <input
-          formControlName="birthday"
-          type="date"
-          id="birthday"
-          name="birthday"
-          [placeholder]="'CUSTOMER.PROFILE.birthday' | translate"
-        />
+        <small translate>
+          AVAILABILITY.DEFAULT.availability_generation_info
+        </small>
       </div>
 
-      <button class="button fit">
-        <i class="fa-regular fa-rotate-right"></i>
-        Générer
-      </button>
+      <div class="input-group">
+        <app-default-availability
+          class="no-border-bottom"
+        ></app-default-availability>
+      </div>
     </div>
-  </div>
-</form>
+  </form>
+
+  <app-generate-availability></app-generate-availability>
+</div>
