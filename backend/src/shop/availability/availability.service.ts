@@ -355,4 +355,24 @@ export class AvailabilityService {
       return duration >= min_appointment_time;
     });
   }
+
+  public async getShopsByUpdateIntervals(
+    monthlyIntervalsToGenerate: number[],
+    weeklyIntervalsToGenerate: number[],
+  ) {
+    const query = `
+      SELECT id, min_appointment_time, repeat_availability_every, repeat_availability_time_unit
+        FROM shop
+        WHERE (repeat_availability_time_unit = 'month' AND repeat_availability_every = ANY($1))
+        OR (repeat_availability_time_unit = 'week' AND repeat_availability_every = ANY($2))`;
+
+    const { rows } = await this.db.query<{
+      id: string;
+      min_appointment_time: number;
+      repeat_availability_every: AutomaticAvailabilityTimeUnit;
+      repeat_availability_time_unit: number;
+    }>(query, [monthlyIntervalsToGenerate, weeklyIntervalsToGenerate]);
+
+    return rows;
+  }
 }
