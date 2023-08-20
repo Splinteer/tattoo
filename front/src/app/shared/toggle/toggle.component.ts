@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -5,6 +6,8 @@ type ControlValue = boolean | undefined;
 
 @Component({
   selector: 'app-toggle',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div [class.right-toggle]="position === 'right'">
       <button

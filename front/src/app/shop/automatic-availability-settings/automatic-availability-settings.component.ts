@@ -13,11 +13,17 @@ import { AvailabilityService } from '@app/calendar/availability.service';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
+import { ToggleComponent } from '@app/shared/toggle/toggle.component';
 
 @Component({
   selector: 'app-automatic-availability-settings',
   standalone: true,
-  imports: [CommonModule, SharedModule, ReactiveFormsModule, TranslateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    ToggleComponent,
+  ],
   templateUrl: './automatic-availability-settings.component.html',
   styleUrls: ['./automatic-availability-settings.component.scss'],
   animations: [slideDown()],

@@ -40,7 +40,12 @@ export class AvailabilityController {
   ) {
     const shop = await this.shopService.getById(credentials.shop_id);
 
-    await this.generateAvailabilityForShop(shop, body.start_day, body.end_day);
+    await this.generateAvailabilityForShop(
+      shop,
+      body.start_day,
+      body.end_day,
+      false,
+    );
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)

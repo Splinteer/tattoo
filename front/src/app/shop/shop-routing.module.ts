@@ -15,53 +15,62 @@ const routes: Routes = [
     path: '',
     canActivate: [ShopGuard],
     loadComponent: () =>
-      import('./home/home.component').then((m) => m.HomeComponent),
+      import('./shop-shell/shop-shell.component').then(
+        (m) => m.ShopShellComponent
+      ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./home/home.component').then((m) => m.HomeComponent),
+      },
+      {
+        path: 'edit',
+        canActivate: [ShopGuard],
+        component: ShopEditComponent,
+      },
+      {
+        path: 'disponiblite',
+        canActivate: [ShopGuard],
+        loadComponent: () =>
+          import('./availability/availability.component').then(
+            (m) => m.AvailabilityComponent
+          ),
+      },
+      {
+        path: 'gallery',
+        canActivate: [ShopGuard],
+        component: ShopGalleryComponent,
+      },
+      {
+        path: 'gallery/flash/add',
+        canActivate: [ShopGuard],
+        component: ShopFlashAddComponent,
+      },
+
+      {
+        path: 'gallery/flash/all',
+        canActivate: [ShopGuard],
+        component: FlashListComponent,
+      },
+
+      {
+        path: 'gallery/flash/:id',
+        canActivate: [ShopGuard],
+        component: FlashEditComponent,
+      },
+
+      {
+        path: 'gallery',
+        canActivate: [ShopGuard],
+        loadChildren: () =>
+          import('../gallery/gallery.module').then((m) => m.GalleryModule),
+      },
+    ],
   },
   {
     path: 'create',
     component: CreationComponent,
-  },
-  {
-    path: 'edit',
-    canActivate: [ShopGuard],
-    component: ShopEditComponent,
-  },
-  {
-    path: 'disponiblite',
-    canActivate: [ShopGuard],
-    loadComponent: () =>
-      import('./availability/availability.component').then(
-        (m) => m.AvailabilityComponent
-      ),
-  },
-  {
-    path: 'gallery',
-    canActivate: [ShopGuard],
-    component: ShopGalleryComponent,
-  },
-  {
-    path: 'gallery/flash/add',
-    canActivate: [ShopGuard],
-    component: ShopFlashAddComponent,
-  },
-
-  {
-    path: 'gallery/flash/all',
-    canActivate: [ShopGuard],
-    component: FlashListComponent,
-  },
-
-  {
-    path: 'gallery/flash/:id',
-    canActivate: [ShopGuard],
-    component: FlashEditComponent,
-  },
-
-  {
-    path: 'gallery',
-    canActivate: [ShopGuard],
-    loadChildren: () =>
-      import('../gallery/gallery.module').then((m) => m.GalleryModule),
   },
   {
     path: ':shopUrl',
