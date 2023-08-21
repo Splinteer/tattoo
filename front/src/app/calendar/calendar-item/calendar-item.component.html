@@ -1,0 +1,6 @@
+<div class="container" [ngClass]="event.event_type">
+  <div translate>{{ "CALENDAR.EVENT_TYPE." + event.event_type }}</div>
+  <div>
+    {{ event.start_time | shortTime }} - {{ event.end_time | shortTime }}
+  </div>
+</div>

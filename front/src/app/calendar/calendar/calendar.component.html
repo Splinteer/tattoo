@@ -10,15 +10,19 @@
   </button>
 </nav>
 
-<div class="calendar">
-  <div *ngFor="let day of days; let dayIndex = index" class="day">
-    <div class="weekday" *ngIf="dayIndex < 7">
-      {{ day.toJSDate() | date : "EE" }}
-    </div>
-    <div class="day-number">
-      {{ day.toFormat("d") }}
-    </div>
-
-    <div class="content"></div>
+<div class="calendar weekdays">
+  <div class="week" *ngFor="let day of days.slice(0, 7); let dayIndex = index">
+    {{ day.toJSDate() | date : "EE" }}
   </div>
+</div>
+<div class="calendar">
+  <app-calendar-day
+    *ngFor="let day of days; let dayIndex = index"
+    class="day"
+    [day]="day"
+    [today]="today"
+    [class.not-active-month]="currentMonth.month !== day.month"
+    [class.past]="day < today"
+  >
+  </app-calendar-day>
 </div>

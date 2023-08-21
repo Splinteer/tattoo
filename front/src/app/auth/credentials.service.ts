@@ -19,6 +19,14 @@ export interface Credentials {
   shop_image_version?: number;
 }
 
+export type CredentialsWithShop = Credentials & {
+  shop_id: string;
+  shop_name: string;
+  shop_url: string;
+  shop_got_picture: boolean;
+  shop_image_version: number;
+};
+
 @Injectable({
   providedIn: 'root',
 })

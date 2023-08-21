@@ -1,21 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { DateTime } from 'luxon';
+import { CalendarService } from '../calendar.service';
+import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CalendarDayComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit {
+  @Input({ required: true }) shopId!: string;
+
   currentMonth: DateTime = DateTime.local().startOf('month');
+
+  today = DateTime.local().startOf('day');
+
   days: DateTime[] = [];
 
-  constructor() {}
+  private readonly calendarService = inject(CalendarService);
 
   ngOnInit(): void {
+    this.calendarService.selectShop(this.shopId);
+    this.calendarService.updateDateRange(
+      this.currentMonth,
+      this.currentMonth.endOf('month')
+    );
+
     this.generateDays();
   }
 

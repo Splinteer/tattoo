@@ -18,8 +18,8 @@
   --primary-color-fade: #444;
   --primary-color-dark: var(--tropical-indigo-dark);
 
-  --text-color-dark: #000000;
-  --text-color-light: #ffffff;
+  --text-color-dark: var(--black);
+  --text-color-light: var(--white);
   --font-size: clamp(0.8rem, 2.8vw, 0.95rem);
   --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
   --text-xs: clamp(0.7rem, 0.8rem, 0.8rem);

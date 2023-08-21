@@ -33,6 +33,14 @@
     "signin": "Se connecter"
   },
 
+  "CALENDAR": {
+    "EVENT_TYPE": {
+      "Appointment": "Rendez-vous",
+      "Availability": "Disponible",
+      "Unavailability": "Indisponible"
+    }
+  },
+
   "AVAILABILITY": {
     "from_day": "Du",
     "to_day": "Au",
