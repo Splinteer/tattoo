@@ -54,23 +54,3 @@
     gap: var(--space-300);
   }
 }
-
-form {
-  div[role="group"] {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-200);
-  }
-
-  .input-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--space-200);
-    margin-inline: auto;
-  }
-
-  .button-group {
-    justify-content: flex-end;
-  }
-}

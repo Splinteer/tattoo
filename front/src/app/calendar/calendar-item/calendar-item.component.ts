@@ -25,4 +25,10 @@ export class CalendarItemComponent {
   @Input() isAllDay = false;
 
   public isOpen = false;
+
+  showEdit(event: Event) {
+    event.stopPropagation();
+
+    this.isOpen = true;
+  }
 }

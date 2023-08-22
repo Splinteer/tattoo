@@ -39,7 +39,8 @@
       "Appointment": "Rendez-vous",
       "Availability": "Disponible",
       "Unavailability": "Indisponible"
-    }
+    },
+    "add_event": "Ajouter un évènement"
   },
 
   "AVAILABILITY": {
@@ -48,6 +49,7 @@
     "to_day": "Au",
     "from_hour": "De",
     "to_hour": "À",
+    "all_day": "Journée",
 
     "DEFAULT": {
       "availability_generation_title": "Disponibilités par défaut",

@@ -31,10 +31,6 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.calendarService.selectShop(this.shopUrl);
-    this.calendarService.updateDateRange(
-      this.currentMonth,
-      this.currentMonth.endOf('month')
-    );
 
     this.generateDays();
   }
@@ -44,6 +40,11 @@ export class CalendarComponent implements OnInit {
 
     let startDay = this.currentMonth.startOf('week');
     let endDay = this.currentMonth.endOf('month').endOf('week');
+
+    this.calendarService.updateDateRange(
+      this.currentMonth.startOf('week'),
+      this.currentMonth.endOf('month').endOf('week')
+    );
 
     for (let day = startDay; day <= endDay; day = day.plus({ days: 1 })) {
       this.days.push(day);

@@ -1,0 +1,82 @@
+<form
+  class="grouped-form no-border-bottom"
+  [formGroup]="form"
+  #ngForm="ngForm"
+  #editTemplate
+  *ngIf="form"
+  (ngSubmit)="submit()"
+>
+  <div role="group" aria-labelledby="group-date">
+    <div class="input-group" *ngIf="!event">
+      <select formControlName="type">
+        <option value="Availability" translate>
+          CALENDAR.EVENT_TYPE.Availability
+        </option>
+        <option value="Unavailability" translate>
+          CALENDAR.EVENT_TYPE.Unavailability
+        </option>
+      </select>
+    </div>
+    <div class="input-group inline">
+      <label translate>AVAILABILITY.the_day</label>
+      <input
+        formControlName="date"
+        type="date"
+        id="date"
+        name="date"
+        [min]="today.toISODate()"
+        [placeholder]="'AVAILABILITY.the_day' | translate | lowercase"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('date')?.touched) &&
+            form.get('date')?.errors
+        }"
+      />
+    </div>
+    <div class="input-group inline" *ngIf="!form.get('allDay')?.getRawValue()">
+      <label translate>AVAILABILITY.from_hour</label>
+      <input
+        type="time"
+        formControlName="startTime"
+        [class.is-invalid]="
+          (ngForm.submitted || form.get('startTime')?.touched) &&
+          form.get('startTime')?.errors
+        "
+      />
+      <label class="lowercase" translate>AVAILABILITY.to_hour</label>
+      <input
+        type="time"
+        formControlName="endTime"
+        [class.is-invalid]="
+          (ngForm.submitted || form.get('startTime')?.touched) &&
+          form.get('startTime')?.errors
+        "
+      />
+    </div>
+
+    <div class="input-group inline">
+      <app-toggle
+        formControlName="allDay"
+        [text]="'Toute la journée' | translate"
+        [invalid]="
+          (ngForm.submitted || form.get('allDay')?.touched) &&
+          !!form.get('allDay')?.errors
+        "
+      ></app-toggle>
+    </div>
+
+    <div class="input-group inline button-group">
+      <button
+        type="button"
+        (click)="reset()"
+        class="button button-outline"
+        translate
+      >
+        COMMON.cancel
+      </button>
+      <button type="submit" class="button" translate>
+        {{ event ? "COMMON.update" : "COMMON.add" }}
+      </button>
+    </div>
+  </div>
+</form>

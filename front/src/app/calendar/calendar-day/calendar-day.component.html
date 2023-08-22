@@ -1,4 +1,9 @@
-<div class="container" (click)="addEvent()">
+<div
+  class="container"
+  (click)="isOpen.set(true)"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+>
   <div class="day-header">
     <div class="week-number">
       <span *ngIf="day.weekday === 1">
@@ -25,3 +30,34 @@
     </ng-container>
   </div>
 </div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayPositions]="[
+    {
+      originX: 'end',
+      originY: 'center',
+      overlayX: 'start',
+      overlayY: 'top',
+      offsetX: 5,
+    }
+  ]"
+  (overlayOutsideClick)="closeModal($event)"
+>
+  <div class="modal">
+    <div class="header">
+      <button (click)="isOpen.set(false)">
+        <i class="fa-regular fa-times"></i>
+      </button>
+    </div>
+    <h1 translate>CALENDAR.add_event</h1>
+    <app-calendar-form-event
+      [day]="day"
+      (close)="isOpen.set(false)"
+    ></app-calendar-form-event>
+  </div>
+</ng-template>

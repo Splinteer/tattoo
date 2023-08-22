@@ -1,0 +1,6 @@
+form {
+  div[role="group"] {
+    flex-direction: column;
+    gap: var(--space-300);
+  }
+}

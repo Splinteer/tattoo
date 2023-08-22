@@ -1,5 +1,4 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
 import { DateTime } from 'luxon';
 
@@ -17,6 +16,10 @@ export type CalendarEventGroupedByDay = {
   [day: string]: CalendarEvent[];
 };
 
+type LoadedEvents = {
+  [shopUrl: string]: CalendarEventGroupedByDay;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,9 +27,7 @@ export class CalendarService {
   private readonly http = inject(HttpService);
 
   // Signal Definitions
-  public readonly loadedEventsSignal = signal<{
-    [shopUrl: string]: CalendarEventGroupedByDay;
-  }>({});
+  public readonly loadedEventsSignal = signal<LoadedEvents>({});
 
   private readonly selectedShopUrlSignal = signal<string | null>(null);
 
@@ -36,22 +37,22 @@ export class CalendarService {
 
   public readonly visibleEventsSignal = computed<CalendarEventGroupedByDay>(
     () => {
-      const selectedShopId = this.selectedShopUrlSignal();
+      const selectedShopUrl = this.selectedShopUrlSignal();
       const selectedDateRange = this.selectedDateRangeSignal();
-      if (!selectedShopId || !selectedDateRange) {
+      if (!selectedShopUrl || !selectedDateRange) {
         return {};
       }
 
       const [startDate, endDate] = selectedDateRange;
-      if (!this.areEventsLoadedForRange(selectedShopId, startDate, endDate)) {
+      if (!this.areEventsLoadedForRange(selectedShopUrl, startDate, endDate)) {
         this.fetchEvents(
-          selectedShopId,
+          selectedShopUrl,
           startDate.toFormat('yyyy-MM-dd'),
           endDate.toFormat('yyyy-MM-dd')
         );
       }
 
-      const allEventsForShop = this.loadedEventsSignal()[selectedShopId] || {};
+      const allEventsForShop = this.loadedEventsSignal()[selectedShopUrl] || {};
 
       return Object.keys(allEventsForShop).reduce(
         (result: CalendarEventGroupedByDay, currentDay) => {
@@ -100,36 +101,66 @@ export class CalendarService {
     return !notFound;
   }
 
-  public update(event: CalendarEvent) {
+  public add(partialEvent: {
+    start_time: string;
+    end_time: string;
+    event_type: EventType;
+    shop_url?: string;
+  }) {
+    const shopUrl = partialEvent.shop_url ?? this.selectedShopUrlSignal();
+    if (!shopUrl) {
+      throw new Error('No shop selected');
+    }
+
+    const event: CalendarEvent = {
+      ...partialEvent,
+      shop_url: shopUrl,
+      id: Date.now().toString(),
+    };
+
+    this.loadedEventsSignal.update((events) => this.addToObject(events, event));
+  }
+
+  public update(event: CalendarEvent, previousStartTime?: string) {
     this.loadedEventsSignal.update((events) => {
-      const dayEvents =
-        events[event.shop_url][
-          DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd')
-        ];
+      const result = this.removeFromObject(events, {
+        ...event,
+        start_time: previousStartTime ?? event.start_time,
+      });
 
-      const indexToUpdate = dayEvents.findIndex(
-        (value) => value.id === event.id
-      );
-      dayEvents[indexToUpdate] = event;
-
-      return events;
+      return this.addToObject(result, event);
     });
   }
 
   public remove(event: CalendarEvent) {
-    this.loadedEventsSignal.update((events) => {
-      const dayEvents =
-        events[event.shop_url][
-          DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd')
-        ];
+    this.loadedEventsSignal.update((events) =>
+      this.removeFromObject(events, event)
+    );
+  }
 
-      const indexToRemove = dayEvents.findIndex(
-        (value) => value.id === event.id
-      );
-      dayEvents.splice(indexToRemove, 1);
+  private addToObject(events: LoadedEvents, event: CalendarEvent) {
+    const date = DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd');
+    if (!(event.shop_url in events)) {
+      events[event.shop_url] = { [date]: [] };
+    } else if (!(event.shop_url in events)) {
+      events[event.shop_url][date] = [];
+    }
 
-      return events;
-    });
+    events[event.shop_url][date].push(event);
+
+    return events;
+  }
+
+  private removeFromObject(events: LoadedEvents, event: CalendarEvent) {
+    const dayEvents =
+      events[event.shop_url][
+        DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd')
+      ];
+
+    const indexToRemove = dayEvents.findIndex((value) => value.id === event.id);
+    dayEvents.splice(indexToRemove, 1);
+
+    return events;
   }
 
   // Fetching Logic

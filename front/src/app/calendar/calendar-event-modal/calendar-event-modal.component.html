@@ -1,10 +1,12 @@
 <div class="header">
-  <button (click)="edit = true">
-    <i class="fa-regular fa-pencil"></i>
-  </button>
-  <button (click)="remove()">
-    <i class="fa-regular fa-trash"></i>
-  </button>
+  <ng-container *ngIf="DateTime.local() <= DateTime.fromISO(event.start_time)">
+    <button (click)="edit = true">
+      <i class="fa-regular fa-pencil"></i>
+    </button>
+    <button (click)="remove()">
+      <i class="fa-regular fa-trash"></i>
+    </button>
+  </ng-container>
   <button (click)="close.emit()">
     <i class="fa-regular fa-times"></i>
   </button>
@@ -25,73 +27,9 @@
   </div>
 </div>
 
-<form
-  class="grouped-form"
-  [formGroup]="form"
-  #ngForm="ngForm"
-  #editTemplate
-  *ngIf="edit && form"
-  (ngSubmit)="submit()"
+<app-calendar-form-event
+  *ngIf="edit"
+  [event]="event"
   [@slideDown]
->
-  <div role="group" aria-labelledby="group-date">
-    <div class="input-group">
-      <label translate>AVAILABILITY.the_day</label>
-      <input
-        formControlName="date"
-        type="date"
-        id="date"
-        name="date"
-        [placeholder]="'AVAILABILITY.the_day' | translate | lowercase"
-        [ngClass]="{
-          'is-invalid':
-            (ngForm.submitted || form.get('date')?.touched) &&
-            form.get('date')?.errors
-        }"
-      />
-    </div>
-    <div class="input-group" *ngIf="!form.get('allDay')?.getRawValue()">
-      <label translate>AVAILABILITY.from_hour</label>
-      <input
-        type="time"
-        formControlName="startTime"
-        [class.is-invalid]="
-          (ngForm.submitted || form.get('startTime')?.touched) &&
-          form.get('startTime')?.errors
-        "
-      />
-      <label class="lowercase" translate>AVAILABILITY.to_hour</label>
-      <input
-        type="time"
-        formControlName="endTime"
-        [class.is-invalid]="
-          (ngForm.submitted || form.get('startTime')?.touched) &&
-          form.get('startTime')?.errors
-        "
-      />
-    </div>
-
-    <div class="input-group">
-      <app-toggle
-        formControlName="allDay"
-        [text]="'Toute la journée' | translate"
-        [invalid]="
-          (ngForm.submitted || form.get('allDay')?.touched) &&
-          !!form.get('allDay')?.errors
-        "
-      ></app-toggle>
-    </div>
-
-    <div class="input-group button-group">
-      <button
-        type="button"
-        (click)="reset()"
-        class="button button-outline"
-        translate
-      >
-        COMMON.cancel
-      </button>
-      <button type="submit" class="button" translate>COMMON.update</button>
-    </div>
-  </div>
-</form>
+  (close)="edit = false"
+></app-calendar-form-event>

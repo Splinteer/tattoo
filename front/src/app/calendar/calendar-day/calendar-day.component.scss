@@ -59,3 +59,23 @@
     flex-grow: 1;
   }
 }
+
+.modal {
+  padding: var(--space-400);
+
+  .header {
+    display: flex;
+    gap: var(--space-400);
+    justify-content: flex-end;
+
+    button {
+      color: var(--gray-800);
+    }
+  }
+
+  h1 {
+    margin-bottom: var(--space-200);
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+}

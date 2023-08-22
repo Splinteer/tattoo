@@ -1,9 +1,14 @@
 :host {
   --alice-blue: rgba(218, 235, 255, 0.7);
+  --alice-blue-hover: rgba(208, 235, 255, 1);
   --papaya-whip: rgba(255, 242, 217, 0.7);
+  --papaya-whip-hover: rgba(245, 242, 217, 1);
   --nyanza: rgba(225, 255, 218, 0.7);
+  --nyanza-hover: rgba(215, 255, 218, 1);
   --misty-rose: rgba(255, 217, 217, 0.7);
+  --misty-rose-hover: rgba(245, 217, 217, 1);
   --pale-purple: rgba(240, 217, 255, 0.7);
+  --pale-purple-hover: rgba(230, 217, 255, 1);
   overflow: hidden;
 }
 
@@ -15,12 +20,19 @@
   border-radius: 4px;
   width: 100%;
   height: 100%;
+  transition: background 0.2s ease-in;
 
   &.Availability {
     background: var(--alice-blue);
+    &:hover {
+      background: var(--alice-blue-hover);
+    }
   }
   &.Unavailability {
     background: var(--misty-rose);
+    &:hover {
+      background: var(--misty-rose-hover);
+    }
   }
 }
 

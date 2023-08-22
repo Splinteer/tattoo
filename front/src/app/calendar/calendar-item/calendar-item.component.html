@@ -1,5 +1,5 @@
 <button
-  (click)="isOpen = !isOpen"
+  (click)="showEdit($event)"
   type="button"
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
@@ -8,7 +8,7 @@
   [ngClass]="event.event_type"
 >
   <div translate>{{ "CALENDAR.EVENT_TYPE." + event.event_type }}</div>
-  <div *ngIf="isAllDay; else range">Journée</div>
+  <div *ngIf="isAllDay; else range" translate>AVAILABILITY.all_day</div>
   <ng-template #range>
     {{ event.start_time | shortTime }} - {{ event.end_time | shortTime }}
   </ng-template>
@@ -18,6 +18,8 @@
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="trigger"
   [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayPush]="true"
   [cdkConnectedOverlayPositions]="[
     {
       originX: 'end',
