@@ -1,5 +1,7 @@
 <div class="header">
-  <ng-container *ngIf="DateTime.local() <= DateTime.fromISO(event.start_time)">
+  <ng-container
+    *ngIf="DateTime.local() <= DateTime.fromISO(event.start_time).endOf('day')"
+  >
     <button (click)="edit = true">
       <i class="fa-regular fa-pencil"></i>
     </button>
