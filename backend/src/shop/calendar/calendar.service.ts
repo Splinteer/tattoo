@@ -5,6 +5,7 @@ type EventType = 'Appointment' | 'Availability' | 'Unavailability';
 
 type Event = {
   id: string;
+  shop_url: string;
   start_time: Date;
   end_time: Date;
   event_type: EventType;
@@ -19,7 +20,7 @@ export class CalendarService {
   constructor(private readonly db: DbService) {}
 
   async getEvents(
-    shopId: string,
+    shopUrl: string,
     startDate: string | Date,
     endDate: string | Date,
   ) {
@@ -32,6 +33,7 @@ export class CalendarService {
       Appointments AS (
           SELECT
               a.id,
+              url as shop_url,
               start_date::date AS day,
               start_date AS start_time,
               COALESCE(end_date, start_date) AS end_time,
@@ -39,36 +41,38 @@ export class CalendarService {
           FROM
               public.appointment a
           INNER JOIN project p ON p.id=a.project_id
-          WHERE p.shop_id = $1
-            AND start_date BETWEEN $2 AND $3
+          INNER JOIN shop s ON p.shop_id=s.id AND s.url = $1
+          WHERE start_date BETWEEN $2 AND $3
       ),
 
       -- Fetching Availabilities
       Availabilities AS (
           SELECT
-              id,
+              a.id,
+              url as shop_url,
               start_date_time::date AS day,
               start_date_time AS start_time,
               end_date_time AS end_time,
               'Availability' AS event_type
           FROM
-              public.availability
-          WHERE shop_id = $1
-            AND start_date_time BETWEEN $2 AND $3
+              public.availability a
+          INNER JOIN shop s ON s.id=a.shop_id AND s.url = $1
+          WHERE start_date_time BETWEEN $2 AND $3
       ),
 
       -- Fetching Unavailabilities
       Unavailabilities AS (
           SELECT
-              id,
+              u.id,
+              url as shop_url,
               start_date_time::date AS day,
               start_date_time AS start_time,
               end_date_time AS end_time,
               'Unavailability' AS event_type
           FROM
-              public.unavailability
-          WHERE shop_id = $1
-            AND start_date_time BETWEEN $2 AND $3
+              public.unavailability u
+          INNER JOIN shop s ON s.id=u.shop_id AND s.url = $1
+          WHERE start_date_time BETWEEN $2 AND $3
       ),
 
       -- Combine all events
@@ -88,6 +92,7 @@ export class CalendarService {
                   ARRAY_AGG(
                       json_build_object(
                           'id', e.id,
+                          'shop_url', e.shop_url,
                           'start_time', e.start_time,
                           'end_time', e.end_time,
                           'event_type', e.event_type
@@ -108,7 +113,7 @@ export class CalendarService {
 
     const { rows } = await this.db.query<{ events: CalendarEventGroupedByDay }>(
       query,
-      [shopId, startDate, endDate],
+      [shopUrl, startDate, endDate],
     );
 
     return rows[0].events;
