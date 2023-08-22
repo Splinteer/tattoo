@@ -22,6 +22,7 @@ import { ToggleGroupItemComponent } from '../ui/toggleGroup/toggle-group-item/to
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ToggleGroupComponent
   implements ControlValueAccessor, AfterContentInit

@@ -6,22 +6,18 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import { DateTime } from 'luxon';
+import { DateTime, DateTimeUnit } from 'luxon';
 import { CalendarService } from '../calendar.service';
-import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 
 @Component({
-  selector: 'app-calendar',
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss'],
-  standalone: true,
-  imports: [CommonModule, CalendarDayComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '',
 })
-export class CalendarComponent implements OnInit {
+export abstract class CalendarComponent implements OnInit {
   @Input({ required: true }) shopUrl!: string;
 
-  currentMonth: DateTime = DateTime.local().startOf('month');
+  protected unit: DateTimeUnit = 'month';
+
+  current: DateTime = DateTime.local().startOf(this.unit);
 
   today = DateTime.local().startOf('day');
 
@@ -35,15 +31,17 @@ export class CalendarComponent implements OnInit {
     this.generateDays();
   }
 
-  generateDays(): void {
+  private generateDays(): void {
     this.days = [];
 
-    let startDay = this.currentMonth.startOf('week');
-    let endDay = this.currentMonth.endOf('month').endOf('week');
+    let startDay = this.getStartDate();
+    let endDay = this.getEndDate();
+
+    console.log(startDay.toISODate(), endDay.toISODate());
 
     this.calendarService.updateDateRange(
-      this.currentMonth.startOf('week'),
-      this.currentMonth.endOf('month').endOf('week')
+      this.current.startOf('week'),
+      this.current.endOf(this.unit).endOf('week')
     );
 
     for (let day = startDay; day <= endDay; day = day.plus({ days: 1 })) {
@@ -51,13 +49,21 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  previousMonth(): void {
-    this.currentMonth = this.currentMonth.minus({ months: 1 });
+  protected getStartDate(): DateTime {
+    return this.current.startOf('week');
+  }
+
+  protected getEndDate(): DateTime {
+    return this.current.endOf(this.unit).endOf('week');
+  }
+
+  previous(): void {
+    this.current = this.current.minus({ [this.unit]: 1 });
     this.generateDays();
   }
 
-  nextMonth(): void {
-    this.currentMonth = this.currentMonth.plus({ months: 1 });
+  next(): void {
+    this.current = this.current.plus({ [this.unit]: 1 });
     this.generateDays();
   }
 }

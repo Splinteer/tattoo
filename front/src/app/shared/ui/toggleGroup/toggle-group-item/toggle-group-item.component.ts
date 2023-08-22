@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
@@ -5,6 +6,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   template: ` <div (click)="select()" [class.selected]="selected">
     <ng-content></ng-content>
   </div>`,
+  standalone: true,
+  imports: [CommonModule],
 })
 export class ToggleGroupItemComponent {
   @Input() value: any;
