@@ -1,9 +1,13 @@
 import { DbService } from '@app/common/db/db.service';
 import { Injectable } from '@nestjs/common';
+import {
+  Availability,
+  LinkedDateRange,
+} from '../availability/availability.service';
 
-type EventType = 'Appointment' | 'Availability' | 'Unavailability';
+export type EventType = 'Appointment' | 'Availability' | 'Unavailability';
 
-type Event = {
+export type CalendarEvent = {
   id: string;
   shop_url: string;
   start_time: Date;
@@ -12,7 +16,7 @@ type Event = {
 };
 
 export type CalendarEventGroupedByDay = {
-  [day: string]: Event[];
+  [day: string]: CalendarEvent[];
 };
 
 @Injectable()
@@ -117,5 +121,59 @@ export class CalendarService {
     );
 
     return rows[0].events;
+  }
+
+  public async addAvailability(
+    shopId: string,
+    availability: Omit<CalendarEvent, 'id'>,
+  ): Promise<Availability & LinkedDateRange> {
+    const { rows } = await this.db.query<Availability & LinkedDateRange>(
+      'INSERT INTO availability (shop_id, start_date_time, end_date_time, automatic) VALUES ($1, $2, $3, FALSE) RETURNING *',
+      [shopId, availability.start_time, availability.end_time],
+    );
+
+    return rows[0];
+  }
+
+  public async updateAvailability(
+    availability: CalendarEvent,
+  ): Promise<Availability & LinkedDateRange> {
+    const { rows } = await this.db.query<Availability & LinkedDateRange>(
+      'UPDATE availability SET start_date_time=$2, end_date_time=$3, automatic=FALSE WHERE id = $1 RETURNING *',
+      [availability.id, availability.start_time, availability.end_time],
+    );
+
+    return rows[0];
+  }
+
+  public async deleteAvailability(id: string) {
+    await this.db.query('DELETE FROM availability WHERE id=$1', [id]);
+  }
+
+  public async addUnavailability(
+    shopId: string,
+    unavailability: Omit<CalendarEvent, 'id'>,
+  ): Promise<Availability & LinkedDateRange> {
+    const { rows } = await this.db.query<Availability & LinkedDateRange>(
+      'INSERT INTO unavailability (shop_id, start_date_time, end_date_time) VALUES ($1, $2, $3) RETURNING *',
+      [shopId, unavailability.start_time, unavailability.end_time],
+    );
+
+    return rows[0];
+  }
+
+  public async updateUnavailability(
+    unavailability: CalendarEvent,
+  ): Promise<LinkedDateRange> {
+    const { rows } = await this.db.query<LinkedDateRange>(
+      'UPDATE unavailability SET start_date_time=$2, end_date_time=$3 WHERE id = $1 RETURNING *',
+      [unavailability.id, unavailability.start_time, unavailability.end_time],
+    );
+
+    return rows[0];
+  }
+
+  public async deleteUnavailability(id: string) {
+    await this.db.query('DELETE FROM unavailability WHERE id=$1', [id]);
   }
 }

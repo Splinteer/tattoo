@@ -118,24 +118,36 @@ export class CalendarService {
       id: Date.now().toString(),
     };
 
-    this.loadedEventsSignal.update((events) => this.addToObject(events, event));
-  }
-
-  public update(event: CalendarEvent, previousStartTime?: string) {
-    this.loadedEventsSignal.update((events) => {
-      const result = this.removeFromObject(events, {
-        ...event,
-        start_time: previousStartTime ?? event.start_time,
-      });
-
-      return this.addToObject(result, event);
+    this.http.post(`/calendar/${event.event_type}/add`, event).subscribe(() => {
+      this.loadedEventsSignal.update((events) =>
+        this.addToObject(events, event)
+      );
     });
   }
 
+  public update(event: CalendarEvent, previousStartTime?: string) {
+    this.http
+      .post(`/calendar/${event.event_type}/update`, event)
+      .subscribe(() => {
+        this.loadedEventsSignal.update((events) => {
+          const result = this.removeFromObject(events, {
+            ...event,
+            start_time: previousStartTime ?? event.start_time,
+          });
+
+          return this.addToObject(result, event);
+        });
+      });
+  }
+
   public remove(event: CalendarEvent) {
-    this.loadedEventsSignal.update((events) =>
-      this.removeFromObject(events, event)
-    );
+    this.http
+      .delete(`/calendar/${event.event_type}/${event.id}`)
+      .subscribe(() => {
+        this.loadedEventsSignal.update((events) =>
+          this.removeFromObject(events, event)
+        );
+      });
   }
 
   private addToObject(events: LoadedEvents, event: CalendarEvent) {
