@@ -2,9 +2,10 @@
   "COMMON": {
     "add": "Ajouter",
     "edit": "Modifier",
+    "update": "Mettre à jour",
+    "cancel": "Annuler",
     "CONFIRM": {
       "title": "Confirmez",
-      "cancel": "Annuler",
       "confirm": "Je confirme"
     },
     "DAY": {
@@ -42,6 +43,7 @@
   },
 
   "AVAILABILITY": {
+    "the_day": "Le",
     "from_day": "Du",
     "to_day": "Au",
     "from_hour": "De",

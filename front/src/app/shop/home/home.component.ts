@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 
   template: `
     <ng-container *ngIf="credentials$ | async as credentials">
-      <app-calendar [shopId]="credentials.shop_id"></app-calendar>
+      <app-calendar [shopUrl]="credentials.shop_url"></app-calendar>
     </ng-container>
   `,
   styles: [

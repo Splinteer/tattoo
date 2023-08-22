@@ -19,7 +19,7 @@ import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit {
-  @Input({ required: true }) shopId!: string;
+  @Input({ required: true }) shopUrl!: string;
 
   currentMonth: DateTime = DateTime.local().startOf('month');
 
@@ -30,7 +30,7 @@ export class CalendarComponent implements OnInit {
   private readonly calendarService = inject(CalendarService);
 
   ngOnInit(): void {
-    this.calendarService.selectShop(this.shopId);
+    this.calendarService.selectShop(this.shopUrl);
     this.calendarService.updateDateRange(
       this.currentMonth,
       this.currentMonth.endOf('month')

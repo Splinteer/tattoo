@@ -1,6 +1,36 @@
-<div class="container" [ngClass]="event.event_type">
+<button
+  (click)="isOpen = !isOpen"
+  type="button"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  class="container"
+  [class.all-day]="isAllDay"
+  [ngClass]="event.event_type"
+>
   <div translate>{{ "CALENDAR.EVENT_TYPE." + event.event_type }}</div>
-  <div>
+  <div *ngIf="isAllDay; else range">Journée</div>
+  <ng-template #range>
     {{ event.start_time | shortTime }} - {{ event.end_time | shortTime }}
-  </div>
-</div>
+  </ng-template>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayPositions]="[
+    {
+      originX: 'end',
+      originY: 'top',
+      overlayX: 'start',
+      overlayY: 'top',
+      offsetX: 5,
+    }
+  ]"
+  (overlayOutsideClick)="isOpen = false"
+>
+  <app-calendar-event-modal
+    [event]="event"
+    (close)="isOpen = false"
+  ></app-calendar-event-modal>
+</ng-template>

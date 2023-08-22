@@ -48,3 +48,14 @@
 .week-number {
   color: var(--gray-700);
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  height: 100%;
+
+  .all-day {
+    flex-grow: 1;
+  }
+}

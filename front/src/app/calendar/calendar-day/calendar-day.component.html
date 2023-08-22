@@ -1,22 +1,27 @@
-<div class="day-header">
-  <div class="week-number">
-    <span *ngIf="day.weekday === 1">
-      {{ day.weekNumber }}
-    </span>
-  </div>
-  <div class="day-number-container">
-    <div class="day-number" [class.active]="day.hasSame(today, 'day')">
-      {{ day.toFormat("d") }}
+<div class="container" (click)="addEvent()">
+  <div class="day-header">
+    <div class="week-number">
+      <span *ngIf="day.weekday === 1">
+        {{ day.weekNumber }}
+      </span>
     </div>
-    <span *ngIf="day.day === 1">{{ day.toJSDate() | date : "LLL" }}</span>
+    <div class="day-number-container">
+      <div class="day-number" [class.active]="day.hasSame(today, 'day')">
+        {{ day.toFormat("d") }}
+      </div>
+      <span *ngIf="day.day === 1">{{ day.toJSDate() | date : "LLL" }}</span>
+    </div>
   </div>
-</div>
 
-<div class="content">
-  <ng-container *ngIf="events()[day.toFormat('yyyy-MM-dd')] as dailyEvents">
-    <app-calendar-item
-      *ngFor="let event of dailyEvents"
-      [event]="event"
-    ></app-calendar-item>
-  </ng-container>
+  <div class="content">
+    <ng-container *ngIf="events()[day.toFormat('yyyy-MM-dd')] as dailyEvents">
+      <app-calendar-item
+        [@slideDown]
+        *ngFor="let event of dailyEvents"
+        [event]="event"
+        [isAllDay]="isAllDay(event)"
+        [class.all-day]="isAllDay(event)"
+      ></app-calendar-item>
+    </ng-container>
+  </div>
 </div>

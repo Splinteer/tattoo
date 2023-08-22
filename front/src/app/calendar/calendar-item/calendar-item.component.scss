@@ -13,6 +13,8 @@
   justify-content: space-between;
   padding: var(--space-100);
   border-radius: 4px;
+  width: 100%;
+  height: 100%;
 
   &.Availability {
     background: var(--alice-blue);
@@ -20,4 +22,8 @@
   &.Unavailability {
     background: var(--misty-rose);
   }
+}
+
+.all-day {
+  flex-grow: 1;
 }

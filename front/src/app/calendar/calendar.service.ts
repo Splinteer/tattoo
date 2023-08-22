@@ -7,8 +7,9 @@ export type EventType = 'Appointment' | 'Availability' | 'Unavailability';
 
 export type CalendarEvent = {
   id: string;
-  start_time: Date;
-  end_time: Date;
+  shop_url: string;
+  start_time: string;
+  end_time: string;
   event_type: EventType;
 };
 
@@ -27,7 +28,7 @@ export class CalendarService {
     [shopUrl: string]: CalendarEventGroupedByDay;
   }>({});
 
-  private readonly selectedShopIdSignal = signal<string | null>(null);
+  private readonly selectedShopUrlSignal = signal<string | null>(null);
 
   private readonly selectedDateRangeSignal = signal<
     [DateTime, DateTime] | null
@@ -35,7 +36,7 @@ export class CalendarService {
 
   public readonly visibleEventsSignal = computed<CalendarEventGroupedByDay>(
     () => {
-      const selectedShopId = this.selectedShopIdSignal();
+      const selectedShopId = this.selectedShopUrlSignal();
       const selectedDateRange = this.selectedDateRangeSignal();
       if (!selectedShopId || !selectedDateRange) {
         return {};
@@ -67,7 +68,7 @@ export class CalendarService {
   );
 
   public selectShop(shopId: string) {
-    this.selectedShopIdSignal.set(shopId);
+    this.selectedShopUrlSignal.set(shopId);
   }
 
   public updateDateRange(startDate: DateTime, endDate: DateTime) {
@@ -97,6 +98,38 @@ export class CalendarService {
     }
 
     return !notFound;
+  }
+
+  public update(event: CalendarEvent) {
+    this.loadedEventsSignal.update((events) => {
+      const dayEvents =
+        events[event.shop_url][
+          DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd')
+        ];
+
+      const indexToUpdate = dayEvents.findIndex(
+        (value) => value.id === event.id
+      );
+      dayEvents[indexToUpdate] = event;
+
+      return events;
+    });
+  }
+
+  public remove(event: CalendarEvent) {
+    this.loadedEventsSignal.update((events) => {
+      const dayEvents =
+        events[event.shop_url][
+          DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd')
+        ];
+
+      const indexToRemove = dayEvents.findIndex(
+        (value) => value.id === event.id
+      );
+      dayEvents.splice(indexToRemove, 1);
+
+      return events;
+    });
   }
 
   // Fetching Logic
