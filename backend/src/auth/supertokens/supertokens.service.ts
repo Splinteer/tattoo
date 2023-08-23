@@ -63,6 +63,8 @@ export class SupertokensService {
                 'https://www.googleapis.com/auth/user.addresses.read',
                 'https://www.googleapis.com/auth/user.gender.read',
                 'https://www.googleapis.com/auth/user.phonenumbers.read',
+                'https://www.googleapis.com/auth/calendar',
+                'https://www.googleapis.com/auth/calendar.events',
               ],
             }),
             ThirdPartyEmailPassword.Facebook({
@@ -107,6 +109,9 @@ export class SupertokensService {
                   // First we call the original implementation of thirdPartySignInUpPOST.
                   const response =
                     await originalImplementation.thirdPartySignInUpPOST(input);
+
+                  // TODO save google access token might be useless? Needed for calendar ?
+                  console.log(response);
 
                   // Post sign up response, we check if it was successful
                   if (response.status === 'OK') {

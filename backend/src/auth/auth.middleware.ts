@@ -1,4 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request } from 'express';
 import { middleware } from 'supertokens-node/framework/express';
 
 @Injectable()

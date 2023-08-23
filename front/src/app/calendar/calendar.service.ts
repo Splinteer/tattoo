@@ -20,6 +20,20 @@ type LoadedEvents = {
   [shopUrl: string]: CalendarEventGroupedByDay;
 };
 
+export interface DateRange {
+  start_date_time: Date;
+  end_date_time: Date;
+}
+
+export interface LinkedDateRange extends DateRange {
+  id: string;
+  shop_id: string;
+}
+
+export interface Availability extends DateRange {
+  automatic: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -112,17 +126,21 @@ export class CalendarService {
       throw new Error('No shop selected');
     }
 
-    const event: CalendarEvent = {
+    const event: Omit<CalendarEvent, 'id'> = {
       ...partialEvent,
       shop_url: shopUrl,
-      id: Date.now().toString(),
     };
 
-    this.http.post(`/calendar/${event.event_type}/add`, event).subscribe(() => {
-      this.loadedEventsSignal.update((events) =>
-        this.addToObject(events, event)
-      );
-    });
+    this.http
+      .post<(Availability & LinkedDateRange) | LinkedDateRange>(
+        `/calendar/${event.event_type}/add`,
+        event
+      )
+      .subscribe((createdEvent) => {
+        this.loadedEventsSignal.update((events) =>
+          this.addToObject(events, { ...event, id: createdEvent.id })
+        );
+      });
   }
 
   public update(event: CalendarEvent, previousStartTime?: string) {
@@ -141,6 +159,7 @@ export class CalendarService {
   }
 
   public remove(event: CalendarEvent) {
+    console.log(event);
     this.http
       .delete(`/calendar/${event.event_type}/${event.id}`)
       .subscribe(() => {

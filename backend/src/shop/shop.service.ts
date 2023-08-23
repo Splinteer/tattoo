@@ -6,7 +6,6 @@ export interface ShopCreationBody {
   name: string;
   url: string;
   description: string;
-  logo: File[];
   instagram: string | null;
   twitter: string | null;
   facebook: string | null;

@@ -13,12 +13,15 @@ import {
   LinkedDateRange,
 } from '../availability/availability.service';
 import { ShopService } from '../shop.service';
+import { GoogleCalendarService } from './google-calendar/google-calendar.service';
+import { DateTime } from 'luxon';
 
 @Controller('calendar')
 export class CalendarController {
   constructor(
     private readonly calendarService: CalendarService,
     private readonly shopService: ShopService,
+    private readonly googleCalendar: GoogleCalendarService,
   ) {}
 
   @Get(':shopUrl')
@@ -37,12 +40,29 @@ export class CalendarController {
   ) {
     const shop = await this.shopService.getByUrl(body.shop_url);
 
+    let event: (Availability & LinkedDateRange) | LinkedDateRange;
     if (type === 'Availability') {
-      return this.calendarService.addAvailability(shop.id, body);
+      event = await this.calendarService.addAvailability(shop.id, body);
     }
     if (type === 'Unavailability') {
-      return this.calendarService.addUnavailability(shop.id, body);
+      event = await this.calendarService.addUnavailability(shop.id, body);
     }
+
+    const { start, end } = this.googleCalendar.getStartAndEnd(
+      event.start_date_time,
+      event.end_date_time,
+    );
+
+    this.googleCalendar
+      .createEventWithName(type, {
+        id: event.id.replaceAll('-', ''),
+        start,
+        end,
+        summary: type,
+      })
+      .subscribe();
+
+    return event;
   }
 
   @Post(':type/update')
@@ -50,21 +70,46 @@ export class CalendarController {
     @Param('type') type: EventType,
     @Body() body: CalendarEvent,
   ) {
+    let event: (Availability & LinkedDateRange) | LinkedDateRange;
     if (type === 'Availability') {
-      return this.calendarService.updateAvailability(body);
+      event = await this.calendarService.updateAvailability(body);
     }
     if (type === 'Unavailability') {
-      return this.calendarService.updateUnavailability(body);
+      event = await this.calendarService.updateUnavailability(body);
     }
+
+    const { start, end } = this.googleCalendar.getStartAndEnd(
+      event.start_date_time,
+      event.end_date_time,
+    );
+
+    const calendarId = this.googleCalendar.getCalendarId(type);
+
+    this.googleCalendar
+      .updateEvent(calendarId, event.id.replaceAll('-', ''), {
+        start,
+        end,
+        summary: type,
+      })
+      .subscribe();
+
+    return event;
   }
 
   @Delete(':type/:id')
   async deleteEvent(@Param('type') type: EventType, @Param('id') id: string) {
+    let event: (Availability & LinkedDateRange) | LinkedDateRange;
     if (type === 'Availability') {
-      return this.calendarService.deleteAvailability(id);
+      event = await this.calendarService.deleteAvailability(id);
     }
     if (type === 'Unavailability') {
-      return this.calendarService.deleteUnavailability(id);
+      event = await this.calendarService.deleteUnavailability(id);
     }
+
+    const calendarId = this.googleCalendar.getCalendarId(type);
+
+    this.googleCalendar
+      .deleteEvent(calendarId, event.id.replaceAll('-', ''))
+      .subscribe();
   }
 }

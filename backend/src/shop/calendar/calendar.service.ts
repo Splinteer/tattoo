@@ -147,7 +147,11 @@ export class CalendarService {
   }
 
   public async deleteAvailability(id: string) {
-    await this.db.query('DELETE FROM availability WHERE id=$1', [id]);
+    const { rows } = await this.db.query<Availability & LinkedDateRange>(
+      'DELETE FROM availability WHERE id=$1 RETURNING *',
+      [id],
+    );
+    return rows[0];
   }
 
   public async addUnavailability(
@@ -174,6 +178,10 @@ export class CalendarService {
   }
 
   public async deleteUnavailability(id: string) {
-    await this.db.query('DELETE FROM unavailability WHERE id=$1', [id]);
+    const { rows } = await this.db.query<LinkedDateRange>(
+      'DELETE FROM unavailability WHERE id=$1 RETURNING *',
+      [id],
+    );
+    return rows[0];
   }
 }
