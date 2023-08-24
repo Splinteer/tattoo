@@ -4,11 +4,15 @@
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
   class="container"
-  [class.all-day]="isAllDay"
   [ngClass]="event.event_type"
 >
   <div translate>{{ "CALENDAR.EVENT_TYPE." + event.event_type }}</div>
-  <div *ngIf="isAllDay; else range" translate>AVAILABILITY.all_day</div>
+  <div
+    *ngIf="hoursBetweenDates && hoursBetweenDates > 23; else range"
+    translate
+  >
+    AVAILABILITY.all_day
+  </div>
   <ng-template #range>
     {{ event.start_time | shortTime }} - {{ event.end_time | shortTime }}
   </ng-template>

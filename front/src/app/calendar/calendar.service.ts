@@ -159,7 +159,6 @@ export class CalendarService {
   }
 
   public remove(event: CalendarEvent) {
-    console.log(event);
     this.http
       .delete(`/calendar/${event.event_type}/${event.id}`)
       .subscribe(() => {

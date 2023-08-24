@@ -24,8 +24,6 @@
         [@slideDown]
         *ngFor="let event of dailyEvents"
         [event]="event"
-        [isAllDay]="isAllDay(event)"
-        [class.all-day]="isAllDay(event)"
       ></app-calendar-item>
     </ng-container>
   </div>
