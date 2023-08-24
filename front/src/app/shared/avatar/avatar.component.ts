@@ -18,16 +18,17 @@ import { environment } from '@env/environment';
   ],
 })
 export class AvatarComponent implements OnChanges {
-  @Input() customer!: {
+  @Input({ required: true }) customer!: {
     id: string;
 
     got_profile_picture?: boolean;
-    profile_picture_version?: string;
+    profile_picture_version?: number;
 
+    owner_id?: string; // to identify if it's a shop
     shop_id?: string;
     shop_got_picture?: boolean;
     shop_image_version?: number;
-  }; // update with angular 16
+  };
 
   @Input() ignoreShop?: boolean = false;
 
@@ -35,13 +36,23 @@ export class AvatarComponent implements OnChanges {
     'https://flowbite.com/docs/images/people/profile-picture-3.jpg';
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.customer.shop_got_picture && !this.ignoreShop) {
+    if (
+      this.customer.owner_id ||
+      (this.customer.shop_got_picture && !this.ignoreShop)
+    ) {
+      const shopId = this.customer.owner_id
+        ? this.customer.id
+        : this.customer.shop_id;
+      const imageVersion = this.customer.owner_id
+        ? this.customer.profile_picture_version
+        : this.customer.shop_image_version;
+
       this.src =
         environment.public_bucket +
         'shops/' +
-        this.customer.shop_id +
+        shopId +
         '/logo?v=' +
-        this.customer.shop_image_version;
+        imageVersion;
     } else if (this.customer.got_profile_picture) {
       this.src =
         environment.public_bucket +

@@ -67,8 +67,6 @@
         }"
       />
 
-      <small class="text-muted" translate>Requis</small>
-
       <input
         formControlName="birthday"
         type="date"
@@ -122,6 +120,69 @@
             form.get('personal_information')?.errors
         }"
       ></textarea>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-address">
+    <div class="group-description">
+      <label id="group-address" translate>CUSTOMER.PROFILE.address_title</label>
+      <small
+        [innerHTML]="'CUSTOMER.PROFILE.address_description' | translate"
+      ></small>
+    </div>
+
+    <div class="input-group">
+      <input
+        formControlName="address"
+        type="text"
+        id="address"
+        name="address"
+        [placeholder]="'CUSTOMER.PROFILE.address' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('address')?.touched) &&
+            form.get('address')?.errors
+        }"
+      />
+
+      <input
+        formControlName="address2"
+        type="text"
+        id="address2"
+        name="address2"
+        [placeholder]="'CUSTOMER.PROFILE.address2' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('address2')?.touched) &&
+            form.get('address2')?.errors
+        }"
+      />
+
+      <input
+        formControlName="city"
+        type="text"
+        id="city"
+        name="city"
+        [placeholder]="'CUSTOMER.PROFILE.city' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('city')?.touched) &&
+            form.get('city')?.errors
+        }"
+      />
+
+      <input
+        formControlName="zipcode"
+        type="text"
+        id="zipcode"
+        name="zipcode"
+        [placeholder]="'CUSTOMER.PROFILE.zipcode' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('zipcode')?.touched) &&
+            form.get('zipcode')?.errors
+        }"
+      />
     </div>
   </div>
 

@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -28,6 +29,8 @@ export class ProfileComponent implements OnInit {
   private readonly router = inject(Router);
 
   private readonly credentialsService = inject(CredentialsService);
+
+  private readonly cdr = inject(ChangeDetectorRef);
 
   public readonly credentials$ = this.credentialsService.credentials$;
 
@@ -75,6 +78,12 @@ export class ProfileComponent implements OnInit {
         this.customer?.personal_information || ''
       ),
       profile_picture: new FormControl<File[]>([], { nonNullable: true }),
+
+      address: new FormControl<string>(this.customer?.address || ''),
+      address2: new FormControl<string>(this.customer?.address2 || ''),
+      city: new FormControl<string>(this.customer?.city || ''),
+      zipcode: new FormControl<string>(this.customer?.zipcode || ''),
+
       instagram: new FormControl<string | null>(
         this.customer?.instagram || null,
         [noSpaceNoSpecialCharactersValidator]
@@ -83,6 +92,8 @@ export class ProfileComponent implements OnInit {
         noSpaceNoSpecialCharactersValidator,
       ]),
     });
+
+    this.cdr.detectChanges();
 
     this.picturePreview$ = this.form!.get('profile_picture')?.valueChanges.pipe(
       startWith(

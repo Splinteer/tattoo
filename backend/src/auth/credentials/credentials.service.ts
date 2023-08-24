@@ -10,7 +10,7 @@ export interface Credentials {
   firstname?: string;
   lastname?: string;
   got_profile_picture?: boolean;
-  profile_picture_version?: string;
+  profile_picture_version?: number;
 
   // Shop
   shop_id?: string;

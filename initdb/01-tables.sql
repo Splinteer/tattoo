@@ -16,7 +16,11 @@ CREATE TABLE
         phone varchar(255),
         instagram varchar(255),
         twitter varchar(255),
-        personal_information text
+        personal_information text,
+        address varchar(255),
+        address2 varchar(255),
+        city varchar(255),
+        zipcode varchar(255)
     );
 
 CREATE TABLE

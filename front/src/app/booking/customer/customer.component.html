@@ -1,0 +1,177 @@
+<ng-container *ngIf="form$ | async as form">
+  <form [formGroup]="form">
+    <ng-container formGroupName="customer">
+      <div class="input-group split">
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.lastname</h3>
+
+          <input
+            formControlName="lastname"
+            type="text"
+            id="lastname"
+            name="lastname"
+            [placeholder]="'CUSTOMER.PROFILE.lastname' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (step.submitted ||
+                  form.get(['customer', 'lastname'])?.touched) &&
+                form.get(['customer', 'lastname'])?.errors
+            }"
+          />
+        </div>
+
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.firstname</h3>
+
+          <input
+            formControlName="firstname"
+            type="text"
+            id="firstname"
+            name="firstname"
+            [placeholder]="'CUSTOMER.PROFILE.firstname' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (step.submitted ||
+                  form.get(['customer', 'firstname'])?.touched) &&
+                form.get(['customer', 'firstname'])?.errors
+            }"
+          />
+        </div>
+      </div>
+
+      <div class="input-group split">
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.pronouns</h3>
+
+          <input
+            formControlName="pronouns"
+            type="text"
+            id="pronouns"
+            name="pronouns"
+            [placeholder]="'CUSTOMER.PROFILE.pronouns' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (step.submitted ||
+                  form.get(['customer', 'pronouns'])?.touched) &&
+                form.get(['customer', 'pronouns'])?.errors
+            }"
+          />
+        </div>
+
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.birthday</h3>
+
+          <input
+            formControlName="birthday"
+            type="date"
+            id="birthday"
+            name="birthday"
+            [placeholder]="'CUSTOMER.PROFILE.birthday' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (step.submitted ||
+                  form.get(['customer', 'birthday'])?.touched) &&
+                form.get(['customer', 'birthday'])?.errors
+            }"
+          />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <h3 translate>CUSTOMER.PROFILE.address</h3>
+
+        <input
+          formControlName="address"
+          type="text"
+          id="address"
+          name="address"
+          [placeholder]="'CUSTOMER.PROFILE.address' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (step.submitted || form.get(['customer', 'address'])?.touched) &&
+              form.get(['customer', 'address'])?.errors
+          }"
+        />
+        <input
+          formControlName="address2"
+          type="text"
+          id="address2"
+          name="address2"
+          [placeholder]="'CUSTOMER.PROFILE.address2' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (step.submitted || form.get(['customer', 'address2'])?.touched) &&
+              form.get(['customer', 'address2'])?.errors
+          }"
+        />
+      </div>
+
+      <div class="input-group split">
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.city</h3>
+
+          <input
+            formControlName="city"
+            type="text"
+            id="city"
+            name="city"
+            [placeholder]="'CUSTOMER.PROFILE.city' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (step.submitted || form.get(['customer', 'city'])?.touched) &&
+                form.get(['customer', 'city'])?.errors
+            }"
+          />
+        </div>
+
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.zipcode</h3>
+
+          <input
+            formControlName="zipcode"
+            type="text"
+            id="zipcode"
+            name="zipcode"
+            [placeholder]="'CUSTOMER.PROFILE.zipcode' | translate"
+            [ngClass]="{
+              'is-invalid':
+                (step.submitted ||
+                  form.get(['customer', 'zipcode'])?.touched) &&
+                form.get(['customer', 'zipcode'])?.errors
+            }"
+          />
+        </div>
+      </div>
+
+      <div class="input-group split">
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.instagram</h3>
+
+          <app-icon-input
+            formControlName="instagram"
+            icon="instagram"
+            iconType="brands"
+            placeholder="Instagram"
+          ></app-icon-input>
+        </div>
+        <div class="input-group">
+          <h3 translate>CUSTOMER.PROFILE.twitter</h3>
+
+          <app-icon-input
+            formControlName="twitter"
+            icon="twitter"
+            iconType="brands"
+            placeholder="Twitter"
+          ></app-icon-input>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div
+          class="text-muted text-center"
+          [innerHTML]="'CUSTOMER.PROFILE.address_description' | translate"
+        ></div>
+      </div>
+    </ng-container>
+  </form>
+</ng-container>

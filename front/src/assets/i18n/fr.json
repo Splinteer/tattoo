@@ -26,12 +26,19 @@
       "profile_description": "Complétez les informations de votre profil",
 
       "firstname": "Prénom",
-      "lastname": "Nom de famille",
+      "lastname": "Nom",
       "birthday": "Date de naissance",
       "pronouns": "Pronoms",
       "phone": "Numéro de téléphone",
       "personal_information": "Informations personnelles",
       "personal_information_placeholder": "Détails supplémentaires pour vos tatoueurs avant chaque rendez-vous (allergies, etc.).",
+
+      "address_title": "Adresse de facturation",
+      "address_description": "Ces données servent uniquement à la facturation de vos tatoueurs.<br>Aucune utilisation commerciale ne sera faite de ces données.",
+      "address": "Adresse",
+      "address2": "Adresse (ligne 2)",
+      "city": "Ville",
+      "zipcode": "Code postal",
 
       "picture_title": "Photo de profil",
       "picture_description": "Ajoutez une photo pour personnaliser votre profil",
@@ -43,6 +50,45 @@
       "wrong_social_format": "Vos réseaux sociaux ne doivent pas contenir d'espaces ou de caractères spéciaux",
 
       "update_button": "Mettre à jour mon profil"
+    }
+  },
+
+  "BOOKING": {
+    "types": {
+      "flashs": "Flashs",
+      "custom": "Nouveau projet",
+      "adjustment": "Retouche"
+    },
+    "first-step": {
+      "title": "Premier pas",
+      "types": "Type de projet",
+      "types_helper": "Vous pouvez sélectionner plusieurs options",
+      "is_first_tattoo": "Premier tatouage",
+      "is_cover_up": "Recouvrement (cover)",
+      "is_post_operation_or_over_scar": "Tatouage sur cicatrice ou post-opératoire",
+      "shop_conditions": "Conditions de rendez-vous",
+      "conditions": "J'accepte les conditions de rendez-vous"
+    },
+    "details": {
+      "title": "Détails",
+      "name": "Nom du projet",
+      "additional_information": "Description du projet",
+      "illustrations": "Illustrations du projet",
+      "illustrations_helper": "Inspiration, dessing, tatouage à retoucher ou recouvrir..."
+    },
+    "location": {
+      "title": "Emplacement",
+      "illustrations": "Photos de la zone",
+      "zone": "Nom de la zone",
+      "height_cm": "Longeur",
+      "width_cm": "Largeur",
+      "dimension_placeholder": "cm"
+    },
+    "flashs": {
+      "title": "Flashs"
+    },
+    "customer": {
+      "title": "Information personnelles"
     }
   },
 
@@ -157,6 +203,7 @@
       "cancel": "Annuler"
     }
   },
+
   "PIPE": {
     "TIMEAGO": {
       "just_now": "A l'instant",

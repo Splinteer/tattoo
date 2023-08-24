@@ -1,0 +1,89 @@
+<ng-container *ngIf="form$ | async as form">
+  <form [formGroup]="form">
+    <ng-container formGroupName="first-step">
+      <div class="input-group">
+        <h3 translate>BOOKING.first-step.types</h3>
+
+        <app-icon-select
+          formControlName="types"
+          [multi]="true"
+          [items]="[
+            { value: 'flashs', icon: 'fa-solid fa-sparkles', text: 'BOOKING.types.flashs' | translate },
+            {
+              value: 'custom',
+              icon: 'fa-solid fa-plus',
+              text: 'BOOKING.types.custom' | translate,
+            },
+            {
+              value: 'adjustment',
+              icon: 'fa-solid fa-circle-dashed',
+              text: 'BOOKING.types.adjustment' | translate,
+            }
+          ]"
+          [invalid]="
+            (step.submitted || form.get(['first-step', 'types'])?.touched) &&
+            !!form.get(['first-step', 'types'])?.errors
+          "
+        ></app-icon-select>
+
+        <div class="text-muted text-center" translate>
+          BOOKING.first-step.types_helper
+        </div>
+      </div>
+
+      <div class="input-group">
+        <app-toggle
+          formControlName="is_first_tattoo"
+          [text]="'BOOKING.first-step.is_first_tattoo' | translate"
+          [invalid]="
+            (step.submitted ||
+              form.get(['first-step', 'is_first_tattoo'])?.touched) &&
+            !!form.get(['first-step', 'is_first_tattoo'])?.errors
+          "
+        ></app-toggle>
+
+        <app-toggle
+          formControlName="is_cover_up"
+          [text]="'BOOKING.first-step.is_cover_up' | translate"
+          [invalid]="
+            (step.submitted ||
+              form.get(['first-step', 'is_cover_up'])?.touched) &&
+            !!form.get(['first-step', 'is_cover_up'])?.errors
+          "
+        ></app-toggle>
+
+        <app-toggle
+          formControlName="is_post_operation_or_over_scar"
+          [text]="
+            'BOOKING.first-step.is_post_operation_or_over_scar' | translate
+          "
+          [invalid]="
+            (step.submitted ||
+              form.get(['first-step', 'is_post_operation_or_over_scar'])
+                ?.touched) &&
+            !!form.get(['first-step', 'is_post_operation_or_over_scar'])?.errors
+          "
+        ></app-toggle>
+      </div>
+
+      <div class="input-group conditions-group">
+        <h3 translate>BOOKING.first-step.shop_conditions</h3>
+        <div class="conditions">
+          <span class="break-lines">
+            {{ form.get("first-step")?.get("shop_conditions")?.value }}
+          </span>
+        </div>
+
+        <app-toggle
+          formControlName="conditions"
+          [text]="'BOOKING.first-step.conditions' | translate"
+          [invalid]="
+            (step.submitted ||
+              form.get(['first-step', 'conditions'])?.touched) &&
+            !!form.get(['first-step', 'conditions'])?.errors
+          "
+        ></app-toggle>
+      </div>
+    </ng-container>
+  </form>
+</ng-container>

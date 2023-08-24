@@ -1,0 +1,32 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: var(--space-500);
+  padding: var(--space-400);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--space-600);
+}
+
+.selection {
+  max-height: 400px;
+  overflow: auto;
+  background-color: var(--gray-200);
+}
+
+h3 {
+  margin: 0;
+}
+
+button {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+button.selected {
+  border: 1px solid var(--primary-color);
+
+  app-flash-item {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+}

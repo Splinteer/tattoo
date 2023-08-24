@@ -1,0 +1,74 @@
+<ng-container *ngIf="form$ | async as form">
+  <form [formGroup]="form">
+    <ng-container formGroupName="details">
+      <div class="input-group">
+        <h3 translate>BOOKING.details.name</h3>
+        <input
+          formControlName="name"
+          type="text"
+          id="name"
+          name="name"
+          [placeholder]="'BOOKING.details.name' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (step.submitted || form.get(['details', 'name'])?.touched) &&
+              form.get(['details', 'name'])?.errors
+          }"
+        />
+      </div>
+
+      <div class="input-group">
+        <h3 translate>BOOKING.details.additional_information</h3>
+
+        <textarea
+          id="additional_information"
+          class="break-lines"
+          formControlName="additional_information"
+          rows="6"
+          [placeholder]="'BOOKING.details.additional_information' | translate"
+          [ngClass]="{
+            'is-invalid':
+              (step.submitted ||
+                form.get(['details', 'additional_information'])?.touched) &&
+              form.get(['details', 'additional_information'])?.errors
+          }"
+        ></textarea>
+      </div>
+
+      <div class="input-group">
+        <h3 translate>BOOKING.details.illustrations</h3>
+        <div class="text-muted" translate>
+          BOOKING.details.illustrations_helper
+        </div>
+        <app-file-dropzone
+          formControlName="illustrations"
+          accept="image/png, image/jpeg"
+          [multiple]="true"
+          [isInvalid]="
+            (step.submitted || form.get('image')?.touched) &&
+            form.get('image')?.errors
+          "
+        ></app-file-dropzone>
+
+        <div
+          class="images-container"
+          *ngIf="imagesPreview$ | async as imagesPreview"
+        >
+          <div
+            class="image-container"
+            *ngFor="let image of imagesPreview; let imageIndex = index"
+          >
+            <img [src]="image" />
+            <button
+              type="button"
+              class="button button-outline"
+              (click)="removeImage(form, imageIndex)"
+            >
+              <i class="fa-regular fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </form>
+</ng-container>
