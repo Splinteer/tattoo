@@ -1,0 +1,56 @@
+:host {
+  --alice-blue: rgba(218, 235, 255, 0.7);
+  --papaya-whip: rgba(255, 242, 217, 0.7);
+  --nyanza: rgba(225, 255, 218, 0.7);
+  --misty-rose: rgba(255, 217, 217, 0.7);
+  --pale-purple: rgba(240, 217, 255, 0.7);
+  padding: var(--space-400);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.header {
+  display: flex;
+  gap: var(--space-400);
+  justify-content: flex-end;
+
+  button {
+    color: var(--gray-800);
+  }
+}
+
+:host {
+  overflow: hidden;
+}
+
+.color {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  margin-top: var(--space-200);
+
+  &.Availability {
+    background: var(--alice-blue);
+  }
+  &.Unavailability {
+    background: var(--misty-rose);
+  }
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+
+  .group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-300);
+  }
+}

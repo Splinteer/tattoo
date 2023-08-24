@@ -7,9 +7,11 @@ import { ShopModule } from './shop/shop.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { FlashModule } from './flash/flash.module';
 import { GalleryModule } from './gallery/gallery.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     AuthModule.forRoot({
       connectionURI: 'http://localhost:3567',
       // apiKey: <API_KEY(if configured)>,

@@ -3,6 +3,7 @@ import {
   ElementRef,
   Input,
   OnChanges,
+  OnInit,
   SimpleChanges,
   ViewChild,
   inject,
@@ -30,7 +31,7 @@ import { ResponsiveComponent } from '@app/shared/responsive/responsive.component
 })
 export class FlashListComponent
   extends ResponsiveComponent
-  implements OnChanges
+  implements OnChanges, OnInit
 {
   @Input() shop?: string;
 
@@ -46,7 +47,15 @@ export class FlashListComponent
 
   public flashs$?: Observable<Flash[]>;
 
+  ngOnInit(): void {
+    this.initObservable();
+  }
+
   ngOnChanges(): void {
+    this.initObservable();
+  }
+
+  private initObservable() {
     this.flashs$ = combineLatest({
       isMobile: this.isMobile$,
       fetchMore: this.fetchMore,

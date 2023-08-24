@@ -1,0 +1,62 @@
+<div
+  class="container"
+  (click)="isOpen.set(true)"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+>
+  <div class="day-header">
+    <div class="week-number">
+      <span *ngIf="day.weekday === 1">
+        {{ day.weekNumber }}
+      </span>
+    </div>
+    <div class="day-number-container">
+      <div class="day-number" [class.active]="day.hasSame(today, 'day')">
+        {{ day.toFormat("d") }}
+      </div>
+      <span *ngIf="day.day === 1">{{ day.toJSDate() | date : "LLL" }}</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <ng-container *ngIf="events()[day.toFormat('yyyy-MM-dd')] as dailyEvents">
+      <app-calendar-item
+        [@slideDown]
+        *ngFor="let event of dailyEvents"
+        [event]="event"
+      ></app-calendar-item>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayPositions]="[
+    {
+      originX: 'end',
+      originY: 'top',
+      overlayX: 'start',
+      overlayY: 'top',
+      offsetX: 5,
+      offsetY: 5,
+    }
+  ]"
+  (overlayOutsideClick)="closeModal($event)"
+>
+  <div class="modal">
+    <div class="header">
+      <button (click)="isOpen.set(false)">
+        <i class="fa-regular fa-times"></i>
+      </button>
+    </div>
+    <h1 translate>CALENDAR.add_event</h1>
+    <app-calendar-form-event
+      [day]="day"
+      (close)="isOpen.set(false)"
+    ></app-calendar-form-event>
+  </div>
+</ng-template>

@@ -91,3 +91,40 @@ export function inputConditionalRequiredValidator(
     return null;
   };
 }
+
+export function minDateValidator(minDate: Date): ValidatorFn {
+  minDate.setHours(0);
+  minDate.setMinutes(0);
+  minDate.setSeconds(0);
+  minDate.setMilliseconds(0);
+
+  return (control: AbstractControl): ValidationErrors | null => {
+    const controlDate = new Date(control.value);
+    controlDate.setHours(0);
+    controlDate.setMinutes(0);
+    controlDate.setSeconds(0);
+    controlDate.setMilliseconds(0);
+
+    if (controlDate < minDate) {
+      return { minDate: { value: control.value } };
+    }
+
+    return null;
+  };
+}
+
+export function dateRangeValidator(
+  startControl: string | string[],
+  endControl: string | string[]
+): ValidatorFn {
+  return (form: AbstractControl): ValidationErrors | null => {
+    const startDate = new Date(form.get(startControl)?.value);
+    const endDate = new Date(form.get(endControl)?.value);
+
+    if (endDate < startDate) {
+      return { dateRange: true };
+    }
+
+    return null;
+  };
+}

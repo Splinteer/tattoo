@@ -1,19 +1,35 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CredentialsService } from '@app/auth/credentials.service';
-import { ShopService } from '../shop.service';
 import { backInDown } from '@shared/animation';
+import { RouterModule } from '@angular/router';
+import {
+  CredentialsService,
+  CredentialsWithShop,
+} from '@app/auth/credentials.service';
+import { Observable } from 'rxjs';
+import { CalendarViewComponent } from '@app/calendar/calendar-view/calendar-view.component';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+
+  template: `
+    <ng-container *ngIf="credentials$ | async as credentials">
+      <app-calendar-view [shopUrl]="credentials.shop_url"></app-calendar-view>
+    </ng-container>
+  `,
+  styles: [
+    `
+      :host {
+        flex-grow: 1;
+      }
+    `,
+  ],
   animations: [backInDown()],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, CalendarViewComponent, RouterModule],
 })
 export class HomeComponent {
-  private readonly credentialsService = inject(CredentialsService);
-
-  public readonly credentials$ = this.credentialsService.credentials$;
-
-  private readonly shopService = inject(ShopService);
+  public readonly credentials$ = inject(CredentialsService)
+    .credentials$ as Observable<CredentialsWithShop>;
 }

@@ -1,0 +1,42 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  color: var(--gray-700);
+}
+
+.calendar {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: var(--gray-300);
+  border: 1px solid var(--gray-300);
+
+  &.weekdays {
+    flex-grow: 0;
+    background-color: white;
+    border: 0;
+  }
+}
+
+.past {
+  background-color: var(--gray-100);
+}
+
+.month {
+  text-transform: capitalize;
+}
+
+.not-active-month {
+  color: var(--gray-700);
+}
+
+.week {
+  padding: var(--space-200);
+}

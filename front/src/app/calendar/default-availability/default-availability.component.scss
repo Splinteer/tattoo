@@ -1,0 +1,61 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-300);
+  width: fit-content;
+}
+
+select,
+input,
+button {
+  width: fit-content;
+}
+
+select::backdrop {
+  margin-right: 80px;
+}
+
+.days-range {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-200);
+  width: fit-content;
+  border: 1px solid var(--gray-200);
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  padding-block: var(--space-500);
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+}
+
+.hour-ranges {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  margin-left: var(--space-300);
+}
+
+.range {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  margin-inline: auto;
+}
+
+.remove-button {
+  color: var(--error-color);
+  font-size: 1.2rem;
+  width: 1.2rem;
+}
+
+button.add-range {
+  margin-inline: auto;
+}
+
+button.add-day-range {
+  margin-top: var(--space-200);
+}

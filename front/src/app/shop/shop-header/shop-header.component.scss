@@ -1,17 +1,17 @@
-:host {
-  display: block;
-  width: 100%;
-  padding: var(--page-content-padding);
-}
-
 .header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: var(--space-400);
+  width: 100%;
+
+  a.active {
+    color: var(--primary-color);
+  }
 
   app-avatar {
+    display: block;
     width: 50px;
     height: 50px;
   }
@@ -39,6 +39,10 @@
         font-size: 0.7rem;
       }
     }
+  }
+
+  nav {
+    flex-grow: 1;
   }
 
   .settings {

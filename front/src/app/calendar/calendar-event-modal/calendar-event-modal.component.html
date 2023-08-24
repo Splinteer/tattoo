@@ -1,0 +1,37 @@
+<div class="header">
+  <ng-container
+    *ngIf="DateTime.local() <= DateTime.fromISO(event.start_time).endOf('day')"
+  >
+    <button (click)="edit = true">
+      <i class="fa-regular fa-pencil"></i>
+    </button>
+    <button (click)="remove()">
+      <i class="fa-regular fa-trash"></i>
+    </button>
+  </ng-container>
+  <button (click)="close.emit()">
+    <i class="fa-regular fa-times"></i>
+  </button>
+</div>
+<div class="content">
+  <div class="group">
+    <div class="color" [ngClass]="event.event_type"></div>
+    <div class="title-container">
+      <div class="title" translate>
+        {{ "CALENDAR.EVENT_TYPE." + event.event_type }}
+      </div>
+      <div class="text-muted">
+        {{ event.start_time | date : "EEEE, MMMM d, y - H:mm" }}
+        {{ "AVAILABILITY.to_hour" | translate | lowercase }}
+        {{ event.end_time | date : "H:mm" }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-calendar-form-event
+  *ngIf="edit"
+  [event]="event"
+  [@slideDown]
+  (close)="edit = false"
+></app-calendar-form-event>

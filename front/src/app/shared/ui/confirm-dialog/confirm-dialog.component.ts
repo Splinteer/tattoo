@@ -24,7 +24,7 @@ interface ConfirmDialogData {
         translate
         (click)="dialogRef.close(false)"
       >
-        {{ data.cancel ?? 'COMMON.CONFIRM.cancel' }}
+        {{ data.cancel ?? 'COMMON.cancel' }}
       </button>
       <button
         class="button"

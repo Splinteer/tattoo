@@ -1,0 +1,107 @@
+<form *ngIf="form$ | async as form" [formGroup]="form" #ngForm="ngForm">
+  <div
+    class="days-range"
+    formArrayName="defaultAvailabilities"
+    *ngFor="
+      let dayAvailability of defaultAvailabilities(form).controls;
+      let dayRangeIndex = index
+    "
+  >
+    <ng-container [formGroupName]="dayRangeIndex">
+      <div class="range">
+        <label translate>AVAILABILITY.from_day</label>
+        <select formControlName="startDay">
+          <option
+            *ngFor="let day of weekdays; let dayIndex = index"
+            [ngValue]="dayIndex + 1"
+            translate
+          >
+            COMMON.DAY.{{ day }}
+          </option>
+        </select>
+        <label class="lowercase" translate>AVAILABILITY.to_day</label>
+        <select formControlName="endDay">
+          <option
+            *ngFor="let day of weekdays; let dayIndex = index"
+            [ngValue]="dayIndex + 1"
+            translate
+          >
+            COMMON.DAY.{{ day }}
+          </option>
+        </select>
+        <div class="remove-button">
+          <button
+            *ngIf="dayRangeIndex > 0"
+            (click)="removeDayRange(form, dayRangeIndex)"
+          >
+            <i class="fa-regular fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="hour-ranges" formArrayName="hourRanges">
+        <div
+          class="range"
+          *ngFor="
+            let hourControl of getHourRangesControls(dayAvailability);
+            let hourRangeIndex = index
+          "
+          [formGroupName]="hourRangeIndex"
+        >
+          <label translate>AVAILABILITY.from_hour</label>
+          <input
+            type="time"
+            formControlName="startTime"
+            [class.is-invalid]="
+              (ngForm.submitted ||
+                getHourControl(dayAvailability, 'startTime', hourRangeIndex)
+                  ?.touched) &&
+              getHourControl(dayAvailability, 'startTime', hourRangeIndex)
+                ?.errors
+            "
+          />
+          <label class="lowercase" translate>AVAILABILITY.to_hour</label>
+          <input
+            type="time"
+            formControlName="endTime"
+            [class.is-invalid]="
+              (ngForm.submitted ||
+                getHourControl(dayAvailability, 'endTime', hourRangeIndex)
+                  ?.touched) &&
+              getHourControl(dayAvailability, 'endTime', hourRangeIndex)?.errors
+            "
+          />
+          <div class="remove-button">
+            <button
+              *ngIf="hourRangeIndex > 0"
+              (click)="removeHourRange(dayAvailability, hourRangeIndex)"
+            >
+              <i class="fa-regular fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="range">
+        <button
+          type="button"
+          class="button button-outline add-range"
+          (click)="addHourRange(dayAvailability)"
+          translate
+        >
+          <i class="fa-regular fa-clock"></i>
+          COMMON.add
+        </button>
+        <div class="remove-button"></div>
+      </div>
+    </ng-container>
+  </div>
+  <button
+    type="button"
+    class="button button-outline add-range"
+    (click)="addNewAvailability(form)"
+    translate
+  >
+    <i class="fa-regular fa-calendar"></i>
+    COMMON.add
+  </button>
+</form>

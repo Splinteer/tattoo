@@ -24,10 +24,10 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     FlashModule,
     GalleryModule,
     ScrollingModule,
+    HomeComponent,
   ],
   declarations: [
     CreationComponent,
-    HomeComponent,
     ShopEditComponent,
     ShopGalleryComponent,
     ShopGalleryAddComponent,

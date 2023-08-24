@@ -1,0 +1,9 @@
+select {
+  width: fit-content;
+}
+
+:host-context(.no-border-bottom)
+  form.grouped-form
+  div[role="group"]:last-of-type {
+  border-bottom: 0;
+}

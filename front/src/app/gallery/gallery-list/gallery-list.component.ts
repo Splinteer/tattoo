@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { Gallery, GalleryService } from '../gallery.service';
 import {
   BehaviorSubject,
@@ -21,7 +28,7 @@ import { ResponsiveComponent } from '@app/shared/responsive/responsive.component
 })
 export class GalleryListComponent
   extends ResponsiveComponent
-  implements OnChanges
+  implements OnChanges, OnInit
 {
   @Input() shop?: string;
 
@@ -35,7 +42,15 @@ export class GalleryListComponent
 
   public gallery$?: Observable<Gallery[]>;
 
+  ngOnInit(): void {
+    this.initObservable();
+  }
+
   ngOnChanges(): void {
+    this.initObservable();
+  }
+
+  private initObservable(): void {
     this.gallery$ = combineLatest({
       isMobile: this.isMobile$,
       fetchMore: this.fetchMore,

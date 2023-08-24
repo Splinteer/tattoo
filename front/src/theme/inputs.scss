@@ -1,5 +1,6 @@
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   padding: var(--input-padding);
   border: 1px solid var(--gray-400);
@@ -52,11 +53,26 @@ input[type="checkbox"] {
   div[role="group"] {
     flex-direction: column;
   }
+
+  form.grouped-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input-group {
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 form.grouped-form {
   width: min(100%, 1500px);
   margin-inline: auto;
+
+  &.no-border-bottom div[role="group"]:last-of-type {
+    border-bottom: 0;
+  }
 
   div[role="group"] {
     display: flex;
@@ -84,6 +100,8 @@ form.grouped-form {
     small {
       font-size: 0.8rem;
       color: var(--gray-800);
+      display: block;
+      margin-top: var(--space-100);
     }
   }
 
@@ -94,6 +112,17 @@ form.grouped-form {
     flex-direction: column;
     gap: var(--space-500);
     // padding-inline: min(2rem, 15px);
+
+    &.inline {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-200);
+
+      label {
+        white-space: nowrap;
+      }
+    }
   }
 }
 

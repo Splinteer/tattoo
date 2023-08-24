@@ -1,0 +1,104 @@
+<form class="grouped-form" [formGroup]="form()">
+  <div role="group" aria-labelledby="group-automatic-management">
+    <div class="group-description">
+      <label id="group-automatic-management" translate
+        >AVAILABILITY.SETTINGS.auto_generate_availability_title</label
+      >
+
+      <small translate>
+        AVAILABILITY.SETTINGS.no_generated_availability_for_existing_days
+      </small>
+    </div>
+
+    <div class="input-group">
+      <app-toggle
+        position="right"
+        formControlName="auto_generate_availability"
+        [text]="'AVAILABILITY.SETTINGS.auto_generate_availability' | translate"
+      ></app-toggle>
+    </div>
+  </div>
+
+  <div
+    role="group"
+    aria-labelledby="group-repeat-interval"
+    *ngIf="form().get('auto_generate_availability')?.value"
+    [@slideDown]
+  >
+    <div class="group-description">
+      <label id="group-repeat-interval" translate
+        >AVAILABILITY.SETTINGS.repeat_interval_title</label
+      >
+    </div>
+
+    <div class="input-group inline">
+      <label
+        translate
+        [translateParams]="{
+          gender:
+            form().get('repeat_availability_time_unit')?.getRawValue() ===
+            'month'
+              ? 'male'
+              : 'female'
+        }"
+        >AVAILABILITY.SETTINGS.repeat_availability_every.each</label
+      >
+      <select formControlName="repeat_availability_every">
+        <option [value]="1">1</option>
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+        <option [value]="5">5</option>
+        <option [value]="6">6</option>
+      </select>
+      <select formControlName="repeat_availability_time_unit">
+        <option
+          value="month"
+          translate
+          [translateParams]="{
+            count: form().get('repeat_availability_every')?.getRawValue()
+          }"
+        >
+          COMMON.DAY_RANGE.month
+        </option>
+        <option
+          value="week"
+          translate
+          [translateParams]="{
+            count: form().get('repeat_availability_every')?.getRawValue()
+          }"
+        >
+          COMMON.DAY_RANGE.week
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-min-appointment_time">
+    <div class="group-description">
+      <label id="group-min-appointment-time" translate
+        >AVAILABILITY.SETTINGS.min_appointment_time_title</label
+      >
+    </div>
+
+    <div class="input-group inline">
+      <select formControlName="min_appointment_time">
+        <option [value]="30" translate>
+          30 {{ "COMMON.TIME.minute" | translate : { count: 30 } }}
+        </option>
+        <option [value]="60" translate>
+          1 {{ "COMMON.TIME.hour" | translate : { count: 1 } }}
+        </option>
+        <option [value]="60 * 2" translate>
+          2 {{ "COMMON.TIME.hour" | translate : { count: 2 } }}
+        </option>
+        <option [value]="60 * 3" translate>
+          3 {{ "COMMON.TIME.hour" | translate : { count: 3 } }}
+        </option>
+        <option [value]="60 * 4" translate>
+          4 {{ "COMMON.TIME.hour" | translate : { count: 4 } }}
+        </option>
+      </select>
+    </div>
+  </div>
+</form>

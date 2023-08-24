@@ -16,6 +16,7 @@ import { environment } from '@env/environment';
       }
     `,
   ],
+  standalone: true,
 })
 export class AvatarComponent implements OnChanges {
   @Input({ required: true }) customer!: {

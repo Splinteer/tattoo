@@ -13,14 +13,19 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { ConfirmService } from './confirm.service';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TranslateModule,
+    ToggleGroupComponent,
+    ToggleGroupItemComponent,
+  ],
   declarations: [
     HamburgerComponent,
     IconInputComponent,
     UrlInputComponent,
     FileDropzoneComponent,
-    ToggleGroupComponent,
-    ToggleGroupItemComponent,
     InputNumberComponent,
     ConfirmDialogComponent,
   ],

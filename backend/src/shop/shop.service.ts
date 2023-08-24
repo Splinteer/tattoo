@@ -6,12 +6,17 @@ export interface ShopCreationBody {
   name: string;
   url: string;
   description: string;
-  logo: File[];
   instagram: string | null;
   twitter: string | null;
   facebook: string | null;
   website: string | null;
 }
+
+export enum AutomaticAvailabilityTimeUnit {
+  week = 'week',
+  month = 'month',
+}
+
 export interface Shop {
   id: string;
   owner_id: string;
@@ -26,6 +31,10 @@ export interface Shop {
   twitter: string | null;
   facebook: string | null;
   website: string | null;
+  auto_generate_availability: boolean;
+  repeat_availability_every: number;
+  repeat_availability_time_unit: AutomaticAvailabilityTimeUnit;
+  min_appointment_time: number;
 }
 
 @Injectable()
@@ -71,6 +80,15 @@ export class ShopService {
     const { rows } = await this.db.query<Shop>(
       'SELECT * FROM shop WHERE owner_id=$1',
       [ownerId],
+    );
+
+    return rows[0];
+  }
+
+  public async getById(id: string) {
+    const { rows } = await this.db.query<Shop>(
+      'SELECT * FROM shop WHERE id=$1',
+      [id],
     );
 
     return rows[0];

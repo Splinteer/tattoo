@@ -1,0 +1,27 @@
+<div [@backInDown]>
+  <app-automatic-availability-settings
+    class="no-border-bottom"
+  ></app-automatic-availability-settings>
+
+  <form class="grouped-form no-border-bottom">
+    <div role="group" aria-labelledby="group-default-availabilities">
+      <div class="group-description">
+        <label id="group-default-availabilities" translate
+          >AVAILABILITY.DEFAULT.availability_generation_title</label
+        >
+
+        <small translate>
+          AVAILABILITY.DEFAULT.availability_generation_info
+        </small>
+      </div>
+
+      <div class="input-group">
+        <app-default-availability
+          class="no-border-bottom"
+        ></app-default-availability>
+      </div>
+    </div>
+  </form>
+
+  <app-generate-availability></app-generate-availability>
+</div>

@@ -3,9 +3,14 @@ import { Injectable, inject } from '@angular/core';
 import { CredentialsService } from '@app/auth/credentials.service';
 import { tap } from 'rxjs';
 
+export enum AutomaticAvailabilityTimeUnit {
+  week = 'week',
+  month = 'month',
+}
+
 export interface Shop {
-  id: string; // UUID
-  owner_id: string; // UUID (foreign key referencing public.customer)
+  id: string;
+  owner_id: string;
   creation_date: string;
   last_update: string;
   name: string;
@@ -13,11 +18,14 @@ export interface Shop {
   description: string;
   got_profile_picture: boolean;
   profile_picture_version: number;
-  country: string | null;
   instagram: string | null;
   twitter: string | null;
   facebook: string | null;
   website: string | null;
+  auto_generate_availability: boolean;
+  repeat_availability_every: number;
+  repeat_availability_time_unit: AutomaticAvailabilityTimeUnit;
+  min_appointment_time: number;
 }
 
 export interface ShopWithRating extends Shop {
