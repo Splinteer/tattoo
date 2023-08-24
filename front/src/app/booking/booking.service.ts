@@ -175,7 +175,7 @@ export class BookingService {
           formGroup: 'customer',
           title: 'BOOKING.customer.title',
           component: CustomerComponent,
-          stepControl: form.get('customer')!,
+          stepControl: form.get('location')!,
         },
       ];
 
