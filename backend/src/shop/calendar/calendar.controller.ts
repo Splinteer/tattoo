@@ -24,6 +24,11 @@ export class CalendarController {
     private readonly googleCalendar: GoogleCalendarService,
   ) {}
 
+  @Get(':shopUrl/min-availability-date')
+  async getMinimumDateAvailability(@Param('shopUrl') shopUrl: string) {
+    return this.calendarService.getMinimumDateAvailability(shopUrl);
+  }
+
   @Get(':shopUrl')
   async getEvents(
     @Param('shopUrl') shopUrl: string,

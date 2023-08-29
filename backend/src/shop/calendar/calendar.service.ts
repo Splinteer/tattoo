@@ -123,6 +123,19 @@ export class CalendarService {
     return rows[0].events;
   }
 
+  public async getMinimumDateAvailability(shopUrl: string) {
+    const { rows } = await this.db.query<{ date: string }>(
+      `SELECT DATE(MIN(a.start_date_time)) as date
+      FROM availability a
+      INNER JOIN shop s ON s.id=a.shop_id
+      WHERE a.start_date_time > NOW()
+      AND s.url=$1`,
+      [shopUrl],
+    );
+
+    return rows[0].date;
+  }
+
   public async addAvailability(
     shopId: string,
     availability: Omit<CalendarEvent, 'id'>,

@@ -35,13 +35,13 @@
   justify-content: center;
   align-items: center;
   font-size: 1.1rem;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
 
   &.active {
-    border-radius: 50%;
     background-color: var(--primary-color);
     color: var(--text-color-light);
-    width: 25px;
-    height: 25px;
   }
 }
 

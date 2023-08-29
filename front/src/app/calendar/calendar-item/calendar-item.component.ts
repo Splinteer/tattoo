@@ -1,4 +1,15 @@
-import { Component, HostBinding, Input, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  Input,
+  OnInit,
+  Signal,
+  WritableSignal,
+  booleanAttribute,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { CalendarEvent } from '../calendar.service';
 import { CommonModule } from '@angular/common';
 import { ShortTimePipe } from '@app/shared/short-time.pipe';
@@ -7,6 +18,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { CalendarEventModalComponent } from '../calendar-event-modal/calendar-event-modal.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DateTime } from 'luxon';
+import { CalendarSelectionService } from '../calendar-selection.service';
 
 @Component({
   selector: 'app-calendar-item',
@@ -22,22 +34,34 @@ import { DateTime } from 'luxon';
   ],
 })
 export class CalendarItemComponent implements OnInit {
-  private readonly sanitizer = inject(DomSanitizer);
+  private readonly calendarSelection = inject(CalendarSelectionService);
+
+  public readonly selectionActive = this.calendarSelection.isActive;
 
   @Input({ required: true }) event!: CalendarEvent;
 
+  @Input({ transform: booleanAttribute, alias: 'date' }) showDate = false;
+
   @HostBinding('style.flex-basis') get flexBasis() {
-    const percentageValue = ((this.hoursBetweenDates ?? 0) / 24) * 100;
-    const result = Math.floor(percentageValue * 10) / 10;
-    return `${result}%`;
+    if (!this.selectionActive()) {
+      const percentageValue = ((this.hoursBetweenDates ?? 0) / 24) * 100;
+      const result = Math.floor(percentageValue * 10) / 10;
+      return `${result}%`;
+    }
+    return '1';
   }
 
   public isOpen = false;
+
+  public selected: Signal<boolean> = signal(false);
 
   public hoursBetweenDates?: number;
 
   ngOnInit(): void {
     this.hoursBetweenDates = this.getHoursBetweenEventDates();
+    this.selected = computed(() => {
+      return !!this.calendarSelection.selectionObject()[this.event.id];
+    });
   }
 
   public getHoursBetweenEventDates() {
@@ -47,9 +71,13 @@ export class CalendarItemComponent implements OnInit {
     return end.diff(start, 'hours').hours;
   }
 
-  showEdit(event: Event) {
+  click(event: Event) {
     event.stopPropagation();
 
-    this.isOpen = true;
+    if (this.calendarSelection.isActive()) {
+      this.calendarSelection.toggle(this.event.id);
+    } else {
+      this.isOpen = true;
+    }
   }
 }

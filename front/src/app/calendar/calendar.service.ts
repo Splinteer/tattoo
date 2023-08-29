@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpService } from '@app/@core/http/http.service';
 import { DateTime } from 'luxon';
+import { CalendarSelectionService } from './calendar-selection.service';
 
 export type EventType = 'Appointment' | 'Availability' | 'Unavailability';
 
@@ -40,8 +41,25 @@ export interface Availability extends DateRange {
 export class CalendarService {
   private readonly http = inject(HttpService);
 
+  private readonly selectionService = inject(CalendarSelectionService);
+
   // Signal Definitions
   public readonly loadedEventsSignal = signal<LoadedEvents>({});
+
+  public readonly loadedEventsByIdSignal = computed(() => {
+    const res: { [eventId: string]: CalendarEvent } = {};
+    const loaded = this.loadedEventsSignal();
+
+    Object.keys(loaded).forEach((shopUrl: string) => {
+      Object.keys(loaded[shopUrl]).forEach((day) => {
+        loaded[shopUrl][day].forEach((event) => {
+          res[event.id] = event;
+        });
+      });
+    });
+
+    return res;
+  });
 
   private readonly selectedShopUrlSignal = signal<string | null>(null);
 
@@ -56,8 +74,12 @@ export class CalendarService {
       if (!selectedShopUrl || !selectedDateRange) {
         return {};
       }
+      const isSelection = this.selectionService.isActive();
 
-      const [startDate, endDate] = selectedDateRange;
+      let [startDate, endDate] = selectedDateRange;
+      if (isSelection) {
+        startDate = DateTime.local().startOf('day');
+      }
       if (!this.areEventsLoadedForRange(selectedShopUrl, startDate, endDate)) {
         this.fetchEvents(
           selectedShopUrl,
@@ -113,6 +135,12 @@ export class CalendarService {
     }
 
     return !notFound;
+  }
+
+  public getMinimumAvailabilityDate(shopUrl: string) {
+    return this.http.get<string | null>(
+      '/calendar/' + shopUrl + '/min-availability-date'
+    );
   }
 
   public add(partialEvent: {

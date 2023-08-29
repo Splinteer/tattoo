@@ -8,7 +8,7 @@ import { Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
 export class ShortTimePipe implements PipeTransform {
   constructor(@Inject(LOCALE_ID) public locale: string) {}
 
-  transform(value: any): string {
+  transform(value: string, showHour?: boolean): string {
     const datePipe = new DatePipe(this.locale);
     const formattedTime = datePipe.transform(value, 'H:mm');
 
@@ -17,7 +17,7 @@ export class ShortTimePipe implements PipeTransform {
     }
 
     return formattedTime.endsWith('00')
-      ? formattedTime.split(':')[0]
+      ? formattedTime.split(':')[0] + (showHour ? 'h' : '')
       : formattedTime;
   }
 }

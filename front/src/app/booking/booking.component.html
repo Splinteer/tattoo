@@ -1,10 +1,14 @@
 <app-form-stepper #stepper>
   <ng-template #headers *ngIf="shop$ | async as shop">
     <div class="form-header">
-      <app-avatar [customer]="shop"></app-avatar>
+      <a class="avatar" [routerLink]="'/shop/' + shop.url">
+        <app-avatar [customer]="shop"></app-avatar>
+      </a>
 
       <div>
-        <h2>{{ shop.name }}</h2>
+        <h2>
+          <a [routerLink]="'/shop/' + shop.url">{{ shop.name }}</a>
+        </h2>
         <span class="text-muted">Lyon, {{ shop.country }}</span>
       </div>
 

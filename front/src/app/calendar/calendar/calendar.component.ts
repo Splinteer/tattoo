@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnChanges,
   OnInit,
   inject,
 } from '@angular/core';
@@ -12,12 +13,12 @@ import { CalendarService } from '../calendar.service';
 @Component({
   template: '',
 })
-export abstract class CalendarComponent implements OnInit {
+export abstract class CalendarComponent implements OnInit, OnChanges {
   @Input({ required: true }) shopUrl!: string;
 
   protected unit: DateTimeUnit = 'month';
 
-  current: DateTime = DateTime.local().startOf(this.unit);
+  @Input() current: DateTime = DateTime.local().startOf(this.unit);
 
   today = DateTime.local().startOf('day');
 
@@ -31,13 +32,17 @@ export abstract class CalendarComponent implements OnInit {
     this.generateDays();
   }
 
+  ngOnChanges(): void {
+    this.calendarService.selectShop(this.shopUrl);
+
+    this.generateDays();
+  }
+
   private generateDays(): void {
     this.days = [];
 
     let startDay = this.getStartDate();
     let endDay = this.getEndDate();
-
-    console.log(startDay.toISODate(), endDay.toISODate());
 
     this.calendarService.updateDateRange(
       this.current.startOf('week'),

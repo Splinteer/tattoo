@@ -128,3 +128,22 @@ export function dateRangeValidator(
     return null;
   };
 }
+
+export function atLeastOneControlSetValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const controls = (group as FormGroup).controls;
+    if (
+      Object.keys(controls).some((k) => {
+        const value = controls[k].value;
+        if (Array.isArray(value)) {
+          return value.length > 0;
+        }
+
+        return Boolean(controls[k].value);
+      })
+    ) {
+      return null;
+    }
+    return { noControlsSet: true }; // no controls have a value, so return the error
+  };
+}

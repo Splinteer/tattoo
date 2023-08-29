@@ -46,11 +46,6 @@ export class BookingComponent implements OnInit {
     steps[this.stepper!.selectedIndex].submitted = true;
 
     if (!this.stepper?.steps.get(this.stepper.selectedIndex + 1)) {
-      if (form.invalid) {
-        console.log('invalid');
-      }
-      console.log('valid');
-
       return;
     }
 

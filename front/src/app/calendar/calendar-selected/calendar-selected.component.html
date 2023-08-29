@@ -1,0 +1,6 @@
+<ng-container *ngFor="let item of selection$ | async">
+  <app-calendar-item
+    [event]="loadedEventsByIdSignal()[item]"
+    date
+  ></app-calendar-item>
+</ng-container>

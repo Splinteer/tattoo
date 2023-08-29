@@ -40,6 +40,11 @@
       "Availability": "Disponible",
       "Unavailability": "Indisponible"
     },
+    "UNIT": {
+      "week": "Semaine",
+      "month": "Mois",
+      "day": "Jour"
+    },
     "add_event": "Ajouter un évènement"
   },
 
@@ -146,6 +151,13 @@
     },
     "flashs": {
       "title": "Flashs"
+    },
+    "availability": {
+      "title": "Disponibilités",
+      "availabilities": "Créneaux horaires",
+      "selected_availabilities": "{count, plural, one{Créneau sélectionné} other{Créneaux sélectionnés}}",
+      "customer_availability": "Vos disponibilités",
+      "noControlsSet": "Vous devez remplir au moins un des champs ci-dessus"
     },
     "customer": {
       "title": "Information personnelles"

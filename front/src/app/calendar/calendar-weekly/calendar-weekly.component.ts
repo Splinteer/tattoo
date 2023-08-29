@@ -13,6 +13,4 @@ import { DateTime, DateTimeUnit } from 'luxon';
 })
 export class CalendarWeeklyComponent extends CalendarComponent {
   protected override unit = 'week' as DateTimeUnit;
-
-  public override current = DateTime.local().startOf(this.unit);
 }

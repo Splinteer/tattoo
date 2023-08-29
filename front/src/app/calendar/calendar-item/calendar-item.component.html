@@ -1,21 +1,33 @@
 <button
-  (click)="showEdit($event)"
+  (click)="click($event)"
   type="button"
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
   class="container"
+  [class.selection]="selectionActive()"
+  [class.selected]="selected()"
   [ngClass]="event.event_type"
 >
-  <div translate>{{ "CALENDAR.EVENT_TYPE." + event.event_type }}</div>
-  <div
-    *ngIf="hoursBetweenDates && hoursBetweenDates > 23; else range"
-    translate
-  >
-    AVAILABILITY.all_day
+  <div *ngIf="!selectionActive()" translate>
+    {{ "CALENDAR.EVENT_TYPE." + event.event_type }}
   </div>
-  <ng-template #range>
-    {{ event.start_time | shortTime }} - {{ event.end_time | shortTime }}
-  </ng-template>
+  <div>
+    <span *ngIf="showDate">
+      {{ event.start_time | date : "fullDate" }}
+      {{ "AVAILABILITY.from_hour" | translate | lowercase }}
+    </span>
+    <div
+      *ngIf="hoursBetweenDates && hoursBetweenDates > 23; else range"
+      translate
+    >
+      AVAILABILITY.all_day
+    </div>
+    <ng-template #range>
+      {{ event.start_time | shortTime }}
+      {{ showDate ? ("AVAILABILITY.to_hour" | translate | lowercase) : "-" }}
+      {{ event.end_time | shortTime : showDate }}
+    </ng-template>
+  </div>
 </button>
 
 <ng-template

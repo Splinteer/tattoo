@@ -13,6 +13,7 @@ import { slideDown } from '@app/shared/animation';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CalendarFormEventComponent } from '../calendar-form-event/calendar-form-event.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { CalendarSelectionService } from '../calendar-selection.service';
 
 @Component({
   selector: 'app-calendar-day',
@@ -36,8 +37,17 @@ export class CalendarDayComponent {
   public isOpen = signal(false);
 
   private readonly calendarService = inject(CalendarService);
+  private readonly selectionService = inject(CalendarSelectionService);
 
   public readonly events = this.calendarService.visibleEventsSignal;
+
+  click(event: Event) {
+    if (this.selectionService.isActive()) {
+      event.stopPropagation();
+    } else {
+      this.isOpen.set(true);
+    }
+  }
 
   public closeModal(event: Event) {
     event.stopPropagation();
