@@ -4,6 +4,7 @@ import { Injectable, inject } from '@angular/core';
 export interface Flash {
   id: string;
   shop_id: string;
+  shop_url: string;
   creation_date: Date;
   name: string;
   description?: string;

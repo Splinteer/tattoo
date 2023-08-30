@@ -5,6 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 export interface Flash {
   id: string;
   shop_id: string;
+  shop_url: string;
   creation_date: Date;
   name: string;
   description?: string;
@@ -24,7 +25,16 @@ export class FlashService {
 
   public async create(shopId: string, data: any): Promise<Flash> {
     const { rows } = await this.db.query<Flash>(
-      'INSERT INTO flash (shop_id, name, description, image_url, available, price_range_start, price_range_end) VALUES ($1, $2, $3,  $4, $5, $6, $7) RETURNING *',
+      `
+        WITH new_flash AS (
+          INSERT INTO flash (shop_id, name, description, image_url, available, price_range_start, price_range_end)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
+          RETURNING *
+        )
+        SELECT new_flash.*, shop.url as shop_url
+        FROM new_flash
+        INNER JOIN shop ON new_flash.shop_id = shop.id;
+      `,
       [
         shopId,
         data.name,
@@ -41,7 +51,14 @@ export class FlashService {
 
   public async update(id: string, data: any): Promise<Flash> {
     const { rows } = await this.db.query<Flash>(
-      'UPDATE flash SET name = $2, description = $3, available = $4, price_range_start = $5, price_range_end = $6 WHERE id = $1 RETURNING *',
+      `
+        WITH updated_flash AS (
+          UPDATE flash SET name = $2, description = $3, available = $4, price_range_start = $5, price_range_end = $6 WHERE id = $1 RETURNING *
+        )
+        SELECT updated_flash.*, shop.url as shop_url
+        FROM updated_flash
+        INNER JOIN shop ON updated_flash.shop_id = shop.id
+      `,
       [
         id,
         data.name,
@@ -83,8 +100,12 @@ export class FlashService {
     available?: boolean,
     lastDate?: string,
   ) {
-    let query =
-      'SELECT flash.* FROM flash INNER JOIN shop ON shop.id=flash.shop_id WHERE shop.url=$1';
+    let query = `
+        SELECT flash.*, shop.url as shop_url
+        FROM flash
+        INNER JOIN shop ON shop.id=flash.shop_id
+        WHERE shop.url=$1
+      `;
     const values: any = [shopUrl, limit];
     if (lastDate) {
       query += ' AND flash.creation_date < $' + (values.length + 1);
@@ -103,7 +124,11 @@ export class FlashService {
 
   public async get(id: string) {
     const { rows } = await this.db.query<Flash>(
-      'SELECT * FROM flash WHERE id=$1',
+      `
+        SELECT flash.*, shop.url as shop_url
+        FROM flash
+        INNER JOIN shop ON shop.id=flash.shop_id
+        WHERE flash.id=$1`,
       [id],
     );
 

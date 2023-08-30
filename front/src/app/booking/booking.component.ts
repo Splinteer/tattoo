@@ -32,7 +32,6 @@ export class BookingComponent implements OnInit {
       );
     this.form$.subscribe((form) => {
       return form.valueChanges.subscribe((value) => {
-        console.log(form.get('flashs')?.valid);
         // setTimeout(() => {
         //   console.log(form.get('flashs')?.hasError('input-condition'));
         // }, 500);

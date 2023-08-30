@@ -12,10 +12,12 @@ import {
   distinctUntilChanged,
   switchMap,
   filter,
+  of,
+  catchError,
 } from 'rxjs';
 import { DetailsComponent } from './details/details.component';
 import { FirstStepComponent } from './first-step/first-step.component';
-import { Flash } from '@app/flash/flash.service';
+import { Flash, FlashService } from '@app/flash/flash.service';
 import {
   atLeastOneControlSetValidator,
   inputConditionalRequiredValidator,
@@ -25,6 +27,7 @@ import { LocationComponent } from './location/location.component';
 import { CustomerComponent } from './customer/customer.component';
 import { FlashSelectionComponent } from './flash-selection/flash-selection.component';
 import { AvailabilitySelectionComponent } from './availability-selection/availability-selection.component';
+import { ActivatedRoute } from '@angular/router';
 
 export interface BookingStep {
   formGroup: string;
@@ -44,6 +47,10 @@ export class BookingService {
 
   private readonly customerService = inject(CustomerService);
 
+  private readonly route = inject(ActivatedRoute);
+
+  public readonly flashService = inject(FlashService);
+
   public readonly shopUrlSubject = new BehaviorSubject<string | null>(null);
 
   public readonly shop$: Observable<any> = this.shopUrlSubject
@@ -56,15 +63,29 @@ export class BookingService {
 
   private readonly customer$ = this.customerService.getMine();
 
+  private readonly getPreselectedFlash$ = this.route.queryParamMap.pipe(
+    switchMap((params) => {
+      const flash = params.get('flash');
+      if (!flash) {
+        return of(null);
+      }
+
+      return this.flashService.get(flash).pipe(catchError(() => of(null)));
+    })
+  );
+
   public readonly form$ = combineLatest({
     shop: this.shop$,
     customer: this.customer$,
+    flash: this.getPreselectedFlash$,
   }).pipe(
-    map(({ shop, customer }) => {
+    map(({ shop, customer, flash }) => {
       return new FormGroup(
         {
           'first-step': new FormGroup({
-            types: new FormControl<string[]>([], [Validators.required]),
+            types: new FormControl<string[]>(flash ? ['flashs'] : [], [
+              Validators.required,
+            ]),
             is_first_tattoo: new FormControl<boolean>(false),
             is_cover_up: new FormControl<boolean>(false),
             is_post_operation_or_over_scar: new FormControl<boolean>(false),
@@ -79,7 +100,7 @@ export class BookingService {
             additional_information: new FormControl<string>(''),
             illustrations: new FormControl<File[]>([], { nonNullable: true }),
           }),
-          flashs: new FormControl<Flash[]>([], {
+          flashs: new FormControl<Flash[]>(flash ? [flash] : [], {
             nonNullable: true,
             validators: [Validators.required],
           }),

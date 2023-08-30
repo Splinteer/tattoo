@@ -47,10 +47,18 @@
           </span>
         </ng-container>
         <ng-template #bookButton>
-          <button class="button" translate>
+          <a
+            *ngIf="flash.available"
+            (click)="dialog.close()"
+            [routerLink]="['book', flash.shop_url]"
+            [queryParams]="{ flash: flash.id }"
+            routerLinkActive="router-link-active"
+            class="button"
+            translate
+          >
             <i class="fa-regular fa-calendar button-icon-left"></i>
             FLASH.book
-          </button>
+          </a>
         </ng-template>
       </div>
       <p class="break-lines" *ngIf="flash.description">

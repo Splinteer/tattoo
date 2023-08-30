@@ -78,10 +78,17 @@ export class FlashSelectionComponent
           return [...acc, ...newPage];
         }),
         takeWhile(() => !this.allDataLoaded),
-        shareReplay(1),
         tap((flashs) => {
+          flashs.forEach((flash: any) => {
+            if (
+              this.value?.some((selectedFlash) => selectedFlash.id === flash.id)
+            ) {
+              flash.selected = true;
+            }
+          });
           this.loadedFlashs = flashs;
-        })
+        }),
+        shareReplay(1)
       );
     }
   }
