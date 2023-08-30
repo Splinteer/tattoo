@@ -44,10 +44,7 @@ export abstract class CalendarComponent implements OnInit, OnChanges {
     let startDay = this.getStartDate();
     let endDay = this.getEndDate();
 
-    this.calendarService.updateDateRange(
-      this.current.startOf('week'),
-      this.current.endOf(this.unit).endOf('week')
-    );
+    this.calendarService.updateDateRange(startDay, endDay);
 
     for (let day = startDay; day <= endDay; day = day.plus({ days: 1 })) {
       this.days.push(day);
@@ -55,7 +52,7 @@ export abstract class CalendarComponent implements OnInit, OnChanges {
   }
 
   protected getStartDate(): DateTime {
-    return this.current.startOf('week');
+    return this.current.startOf(this.unit).startOf('week');
   }
 
   protected getEndDate(): DateTime {
