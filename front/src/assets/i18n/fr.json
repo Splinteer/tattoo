@@ -176,6 +176,11 @@
       "description_description": "Décrivez brièvement votre salon et ce qui le distingue des autres.",
       "description_placeholder": "Ville, style du salon, description de l'équipe, horaires d'ouverture...",
 
+      "conditions_title": "Conditions pour les rendez-vous",
+      "conditions_description": "Définissez les conditions que les clients doivent respecter pour prendre un rendez-vous.",
+      "booking_condition": "Vos conditions de réservation",
+      "booking_condition_placeholder": "Indiquez ici les conditions spécifiques que les clients doivent respecter pour réserver une session avec vous, comme l'âge minimum, les acomptes requis, etc.",
+
       "logo_title": "Logo de la boutique",
       "logo_description": "Permettez a vos clients de vous reconaitre",
 

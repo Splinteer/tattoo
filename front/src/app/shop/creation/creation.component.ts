@@ -49,6 +49,9 @@ export class CreationComponent implements OnInit {
         nonNullable: true,
       }),
       description: new FormControl<string>(this.shop?.description || ''),
+      booking_condition: new FormControl<string>(
+        this.shop?.booking_condition || ''
+      ),
       logo: new FormControl<File[]>([], { nonNullable: true }),
       instagram: new FormControl<string | null>(this.shop?.instagram || null),
       twitter: new FormControl<string | null>(this.shop?.twitter || null),

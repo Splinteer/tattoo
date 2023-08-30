@@ -84,7 +84,7 @@
     </div>
   </div>
 
-  <div role="group" aria-labelledby="group-description">
+  <div role="group" aria-labelledby="group-description" *ngIf="shop">
     <div class="group-description">
       <label id="group-description" translate
         >SHOP.CREATE.description_title</label
@@ -93,8 +93,6 @@
     </div>
 
     <div class="input-group">
-      <label for="description" translate>FLASH.CREATE.description</label>
-
       <textarea
         id="description"
         class="break-lines"
@@ -105,6 +103,30 @@
           'is-invalid':
             (ngForm.submitted || form.get('description')?.touched) &&
             form.get('description')?.errors
+        }"
+      ></textarea>
+    </div>
+  </div>
+
+  <div role="group" aria-labelledby="group-conditions">
+    <div class="group-description">
+      <label id="group-conditions" translate
+        >SHOP.CREATE.conditions_title</label
+      >
+      <small translate>SHOP.CREATE.conditions_description</small>
+    </div>
+
+    <div class="input-group">
+      <textarea
+        id="booking_condition"
+        class="break-lines"
+        formControlName="booking_condition"
+        rows="6"
+        [placeholder]="'SHOP.CREATE.booking_condition_placeholder' | translate"
+        [ngClass]="{
+          'is-invalid':
+            (ngForm.submitted || form.get('booking_condition')?.touched) &&
+            form.get('booking_condition')?.errors
         }"
       ></textarea>
     </div>

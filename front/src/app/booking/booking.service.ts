@@ -89,7 +89,7 @@ export class BookingService {
             is_first_tattoo: new FormControl<boolean>(false),
             is_cover_up: new FormControl<boolean>(false),
             is_post_operation_or_over_scar: new FormControl<boolean>(false),
-            shop_conditions: new FormControl<string>(shop.description),
+            shop_conditions: new FormControl<string>(shop.booking_condition),
             conditions: new FormControl<boolean>(
               false,
               Validators.requiredTrue

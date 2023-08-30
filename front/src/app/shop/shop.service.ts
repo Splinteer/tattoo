@@ -16,6 +16,7 @@ export interface Shop {
   name: string;
   url: string;
   description: string;
+  booking_condition: string;
   got_profile_picture: boolean;
   profile_picture_version: number;
   instagram: string | null;

@@ -2,7 +2,7 @@ import { DbService } from '@app/common/db/db.service';
 import { Bucket } from '@google-cloud/storage';
 import { Inject, Injectable } from '@nestjs/common';
 
-export interface ShopCreationBody {
+export type ShopCreationBody = {
   name: string;
   url: string;
   description: string;
@@ -10,14 +10,18 @@ export interface ShopCreationBody {
   twitter: string | null;
   facebook: string | null;
   website: string | null;
-}
+};
+
+export type ShopUpdateBody = ShopCreationBody & {
+  booking_condition: string;
+};
 
 export enum AutomaticAvailabilityTimeUnit {
   week = 'week',
   month = 'month',
 }
 
-export interface Shop {
+export type Shop = {
   id: string;
   owner_id: string;
   creation_date: string;
@@ -25,6 +29,7 @@ export interface Shop {
   name: string;
   url: string;
   description: string;
+  booking_condition: string;
   got_profile_picture: boolean;
   profile_picture_version: number;
   instagram: string | null;
@@ -35,7 +40,7 @@ export interface Shop {
   repeat_availability_every: number;
   repeat_availability_time_unit: AutomaticAvailabilityTimeUnit;
   min_appointment_time: number;
-}
+};
 
 @Injectable()
 export class ShopService {
@@ -103,9 +108,9 @@ export class ShopService {
     return rows[0];
   }
 
-  public async update(userId: string, data: ShopCreationBody) {
+  public async update(userId: string, data: ShopUpdateBody) {
     const { rows } = await this.db.query<Shop>(
-      `UPDATE shop SET name = $2, url = $3, description = $8, instagram = $4, twitter = $5, facebook = $6, website = $7
+      `UPDATE shop SET name = $2, url = $3, description = $8, booking_condition = $9, instagram = $4, twitter = $5, facebook = $6, website = $7
         WHERE owner_id = $1 RETURNING *;`,
       [
         userId,
@@ -116,6 +121,7 @@ export class ShopService {
         data.facebook ?? null,
         data.website ?? null,
         (data.description ?? '').replace(/\n+/g, '\n').trim(),
+        (data.booking_condition ?? '').replace(/\n+/g, '\n').trim(),
       ],
     );
 
