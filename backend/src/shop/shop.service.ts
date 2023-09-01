@@ -1,5 +1,5 @@
 import { DbService } from '@app/common/db/db.service';
-import { Bucket } from '@google-cloud/storage';
+import { StorageService } from '@app/common/storage/storage.service';
 import { Inject, Injectable } from '@nestjs/common';
 
 export type ShopCreationBody = {
@@ -45,7 +45,7 @@ export type Shop = {
 @Injectable()
 export class ShopService {
   constructor(
-    @Inject('public') private readonly publicBucket: Bucket,
+    @Inject('public') private readonly publicStorage: StorageService,
     private readonly db: DbService,
   ) {}
 
@@ -71,9 +71,8 @@ export class ShopService {
     shopId: string,
     logo: Express.Multer.File,
   ): Promise<void> {
-    const file = this.publicBucket.file(`shops/${shopId}/logo`);
-    await file.save(logo.buffer);
-    await file.makePublic();
+    const path = `shops/${shopId}/logo`;
+    await this.publicStorage.save(path, logo, { public: true });
 
     await this.db.query(
       'UPDATE shop SET got_profile_picture=TRUE, profile_picture_version = profile_picture_version + 1 WHERE id=$1',

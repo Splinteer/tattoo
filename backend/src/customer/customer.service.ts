@@ -1,4 +1,4 @@
-import { Bucket } from '@google-cloud/storage';
+import { StorageService } from '@app/common/storage/storage.service';
 import { DbService } from './../../libs/common/src/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { UserInformations } from 'src/auth/supertokens/supertokens.service';
@@ -43,7 +43,7 @@ export interface CustomerUpdateBody {
 @Injectable()
 export class CustomerService {
   constructor(
-    @Inject('public') private readonly publicBucket: Bucket,
+    @Inject('public') private readonly publicStorage: StorageService,
     private readonly database: DbService,
   ) {}
 
@@ -58,11 +58,10 @@ export class CustomerService {
 
   public async updatePicture(
     userId: string,
-    profile_picture: Express.Multer.File,
+    image: Express.Multer.File,
   ): Promise<void> {
-    const file = this.publicBucket.file(`profile_picture/${userId}`);
-    await file.save(profile_picture.buffer);
-    await file.makePublic();
+    const path = `profile_picture/${userId}`;
+    await this.publicStorage.save(path, image, { public: true });
 
     await this.database.query(
       'UPDATE customer SET got_profile_picture=TRUE, profile_picture_version = profile_picture_version + 1 WHERE id=$1',
