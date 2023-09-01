@@ -14,9 +14,13 @@ import { BookingService, BookingStep } from './booking.service';
 export class BookingComponent implements OnInit {
   @ViewChild('stepper') stepper: FormStepperComponent | undefined;
 
-  private readonly bookingService = inject(BookingService);
+  private readonly router = inject(Router);
+
+  private readonly credentials$ = inject(CredentialsService).credentials$;
 
   private readonly paramMap = inject(ActivatedRoute).paramMap;
+
+  private readonly bookingService = inject(BookingService);
 
   public readonly shop$ = this.bookingService.shop$;
 
@@ -25,20 +29,20 @@ export class BookingComponent implements OnInit {
   public readonly steps$ = this.bookingService.steps$;
 
   ngOnInit() {
-    this.paramMap
+    combineLatest({
+      credentials: this.credentials$,
+      params: this.paramMap,
+    })
       .pipe(take(1))
-      .subscribe((params) =>
-        this.bookingService.shopUrlSubject.next(params.get('shopUrl'))
-      );
-    this.form$.subscribe((form) => {
-      return form.valueChanges.subscribe((value) => {
-        // setTimeout(() => {
-        //   console.log(form.get('flashs')?.hasError('input-condition'));
-        // }, 500);
+      .subscribe(({ params, credentials }) => {
+        const shopUrl = params.get('shopUrl');
+        if (credentials?.shop_url === shopUrl) {
+          this.router.navigate(['shop', shopUrl]);
+          return;
+        }
 
-        console.log(value);
+        this.bookingService.shopUrlSubject.next(shopUrl);
       });
-    });
   }
 
   onSubmit(form: FormGroup, steps: BookingStep[]) {

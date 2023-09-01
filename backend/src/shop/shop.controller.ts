@@ -9,7 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ShopCreationBody, ShopService } from './shop.service';
+import { ShopCreationBody, ShopService, ShopUpdateBody } from './shop.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Credentials } from 'src/auth/session/session.decorator';
 import { Credentials as ICredentials } from 'src/auth/credentials/credentials.service';
@@ -59,7 +59,7 @@ export class ShopController {
   async update(
     @Credentials()
     credentials: ICredentials,
-    @Body() body: ShopCreationBody,
+    @Body() body: ShopUpdateBody,
     @UploadedFile() logo: Express.Multer.File,
   ) {
     const shop = await this.shopService.update(credentials.id, body);

@@ -23,8 +23,15 @@
           }})
         </div>
       </div>
-      <div class="appointment">
-        <a [routerLink]="'/book/' + shop.url" class="button" translate
+      <div
+        class="appointment"
+        *ngIf="{ credentials: credentials$ | async } as vm"
+      >
+        <a
+          *ngIf="vm.credentials?.shop_url !== shop.url"
+          [routerLink]="'/book/' + shop.url"
+          class="button"
+          translate
           >PROJECT.take_appointment</a
         >
       </div>
