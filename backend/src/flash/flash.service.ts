@@ -1,5 +1,5 @@
 import { DbService } from '@app/common/db/db.service';
-import { Bucket } from '@google-cloud/storage';
+import { StorageService } from '@app/common/storage/storage.service';
 import { Inject, Injectable } from '@nestjs/common';
 
 export interface Flash {
@@ -19,7 +19,7 @@ export interface Flash {
 @Injectable()
 export class FlashService {
   constructor(
-    @Inject('public') private readonly publicBucket: Bucket,
+    @Inject('public') private readonly publicStorage: StorageService,
     private readonly db: DbService,
   ) {}
 
@@ -81,17 +81,15 @@ export class FlashService {
     flashId: string,
     image: Express.Multer.File,
   ): Promise<string> {
-    const key = `shops/${shopId}/flashs/${flashId}`;
-    const file = this.publicBucket.file(key);
-    await file.save(image.buffer);
-    await file.makePublic();
+    const path = `shops/${shopId}/flashs/${flashId}`;
+    await this.publicStorage.save(path, image, { public: true });
 
     await this.db.query(
       'UPDATE flash SET image_url=$2, image_version = image_version + 1  WHERE id=$1',
-      [flashId, key],
+      [flashId, path],
     );
 
-    return key;
+    return path;
   }
 
   public async getByShop(
@@ -136,11 +134,20 @@ export class FlashService {
   }
 
   public async delete(id: string) {
-    const { rows } = await this.db.query<Flash>(
-      'DELETE FROM flash WHERE id=$1',
-      [id],
-    );
+    await this.db.begin();
+    try {
+      const { rows } = await this.db.query<Flash>(
+        'DELETE FROM flash WHERE id=$1 RETURNING *',
+        [id],
+      );
 
-    return rows[0];
+      const deletedFlash = rows[0];
+
+      await this.publicStorage.delete(deletedFlash.image_url);
+
+      return rows[0];
+    } catch (error) {
+      await this.db.rollback();
+    }
   }
 }

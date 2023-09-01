@@ -1,5 +1,5 @@
 import { DbService } from '@app/common/db/db.service';
-import { Bucket } from '@google-cloud/storage';
+import { StorageService } from '@app/common/storage/storage.service';
 import { Inject, Injectable } from '@nestjs/common';
 
 export interface Gallery {
@@ -15,7 +15,7 @@ export interface Gallery {
 @Injectable()
 export class GalleryService {
   constructor(
-    @Inject('public') private readonly publicBucket: Bucket,
+    @Inject('public') private readonly publicStorage: StorageService,
     private readonly db: DbService,
   ) {}
 
@@ -46,17 +46,15 @@ export class GalleryService {
     galleryId: string,
     image: Express.Multer.File,
   ): Promise<string> {
-    const key = `shops/${shopId}/gallerys/${galleryId}`;
-    const file = this.publicBucket.file(key);
-    await file.save(image.buffer);
-    await file.makePublic();
+    const path = `shops/${shopId}/gallerys/${galleryId}`;
+    await this.publicStorage.save(path, image, { public: true });
 
     await this.db.query(
       'UPDATE gallery SET image_url=$2, image_version = image_version + 1  WHERE id=$1',
-      [galleryId, key],
+      [galleryId, path],
     );
 
-    return key;
+    return path;
   }
 
   public async getByShop(shopUrl: string, limit: number, lastDate?: string) {
@@ -85,9 +83,13 @@ export class GalleryService {
 
   public async delete(id: string) {
     const { rows } = await this.db.query<Gallery>(
-      'DELETE FROM gallery WHERE id=$1',
+      'DELETE FROM gallery WHERE id=$1 RETURNING *',
       [id],
     );
+
+    const deletedIllustration = rows[0];
+
+    await this.publicStorage.delete(deletedIllustration.image_url);
 
     return rows[0];
   }
