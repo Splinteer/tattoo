@@ -1,9 +1,10 @@
 import { Component, ViewChild, inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormStepperComponent } from '@app/shared/form-stepper/form-stepper.component';
-import { take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { BookingService, BookingStep } from './booking.service';
+import { CredentialsService } from '@app/auth/credentials.service';
 
 @Component({
   selector: 'app-booking',
