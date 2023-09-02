@@ -78,12 +78,41 @@ CREATE TABLE
         CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );
 
-CREATE TYPE
-    public.project_type AS ENUM (
-        'flash',
-        'custom',
-        'adjustment'
+CREATE TABLE
+    IF NOT EXISTS public.default_availability (
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        shop_id uuid NOT NULL,
+        start_day integer NOT NULL,
+        end_day integer NOT NULL,
+        start_time time NOT NULL,
+        end_time time NOT NULL,
+        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );
+
+CREATE TABLE
+    IF NOT EXISTS public.availability (
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        shop_id uuid NOT NULL,
+        start_date_time timestamp NOT NULL,
+        end_date_time timestamp NOT NULL,
+        automatic boolean NOT NULL DEFAULT TRUE,
+        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
+    );
+
+CREATE TABLE
+    IF NOT EXISTS public.unavailability (
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        shop_id uuid NOT NULL,
+        start_date_time timestamp NOT NULL,
+        end_date_time timestamp NOT NULL,
+        CONSTRAINT fk_shop_id_unavail FOREIGN KEY (shop_id) REFERENCES public.shop (id)
+    );
+
+CREATE TYPE public.project_type AS ENUM (
+    'flashs',
+    'custom',
+    'adjustment'
+);
 
 CREATE TABLE
     IF NOT EXISTS public.project (
@@ -168,34 +197,4 @@ CREATE TABLE
         description text,
         CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id),
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
-    );
-
-CREATE TABLE
-    IF NOT EXISTS public.default_availability (
-        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-        shop_id uuid NOT NULL,
-        start_day integer NOT NULL,
-        end_day integer NOT NULL,
-        start_time time NOT NULL,
-        end_time time NOT NULL,
-        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
-    );
-
-CREATE TABLE
-    IF NOT EXISTS public.availability (
-        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-        shop_id uuid NOT NULL,
-        start_date_time timestamp NOT NULL,
-        end_date_time timestamp NOT NULL,
-        automatic boolean NOT NULL DEFAULT TRUE,
-        CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
-    );
-
-CREATE TABLE
-    IF NOT EXISTS public.unavailability (
-        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-        shop_id uuid NOT NULL,
-        start_date_time timestamp NOT NULL,
-        end_date_time timestamp NOT NULL,
-        CONSTRAINT fk_shop_id_unavail FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );

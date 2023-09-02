@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormStepperComponent } from '@app/shared/form-stepper/form-stepper.component';
 import { combineLatest, take } from 'rxjs';
@@ -50,6 +50,11 @@ export class BookingComponent implements OnInit {
     steps[this.stepper!.selectedIndex].submitted = true;
 
     if (!this.stepper?.steps.get(this.stepper.selectedIndex + 1)) {
+      if (form.invalid) {
+        return;
+      }
+
+      this.bookingService.create().subscribe();
       return;
     }
 
@@ -57,6 +62,7 @@ export class BookingComponent implements OnInit {
       this.stepper.steps.get(this.stepper.selectedIndex + 1)?.stepControl.valid
     ) {
       this.stepper?.next();
+      return;
     }
   }
 }
