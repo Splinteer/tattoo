@@ -8,6 +8,7 @@ import { AuthMiddleware } from './auth/auth.middleware';
 import { FlashModule } from './flash/flash.module';
 import { GalleryModule } from './gallery/gallery.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BookingModule } from './booking/booking.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ShopModule,
     FlashModule,
     GalleryModule,
+    BookingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

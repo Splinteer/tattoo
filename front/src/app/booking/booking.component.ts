@@ -1,9 +1,10 @@
 import { Component, ViewChild, inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormStepperComponent } from '@app/shared/form-stepper/form-stepper.component';
-import { take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { BookingService, BookingStep } from './booking.service';
+import { CredentialsService } from '@app/auth/credentials.service';
 
 @Component({
   selector: 'app-booking',
@@ -14,9 +15,13 @@ import { BookingService, BookingStep } from './booking.service';
 export class BookingComponent implements OnInit {
   @ViewChild('stepper') stepper: FormStepperComponent | undefined;
 
-  private readonly bookingService = inject(BookingService);
+  private readonly router = inject(Router);
+
+  private readonly credentials$ = inject(CredentialsService).credentials$;
 
   private readonly paramMap = inject(ActivatedRoute).paramMap;
+
+  private readonly bookingService = inject(BookingService);
 
   public readonly shop$ = this.bookingService.shop$;
 
@@ -25,26 +30,31 @@ export class BookingComponent implements OnInit {
   public readonly steps$ = this.bookingService.steps$;
 
   ngOnInit() {
-    this.paramMap
+    combineLatest({
+      credentials: this.credentials$,
+      params: this.paramMap,
+    })
       .pipe(take(1))
-      .subscribe((params) =>
-        this.bookingService.shopUrlSubject.next(params.get('shopUrl'))
-      );
-    this.form$.subscribe((form) => {
-      return form.valueChanges.subscribe((value) => {
-        // setTimeout(() => {
-        //   console.log(form.get('flashs')?.hasError('input-condition'));
-        // }, 500);
+      .subscribe(({ params, credentials }) => {
+        const shopUrl = params.get('shopUrl');
+        if (credentials?.shop_url === shopUrl) {
+          this.router.navigate(['shop', shopUrl]);
+          return;
+        }
 
-        console.log(value);
+        this.bookingService.shopUrlSubject.next(shopUrl);
       });
-    });
   }
 
   onSubmit(form: FormGroup, steps: BookingStep[]) {
     steps[this.stepper!.selectedIndex].submitted = true;
 
     if (!this.stepper?.steps.get(this.stepper.selectedIndex + 1)) {
+      if (form.invalid) {
+        return;
+      }
+
+      this.bookingService.create().subscribe();
       return;
     }
 
@@ -52,6 +62,7 @@ export class BookingComponent implements OnInit {
       this.stepper.steps.get(this.stepper.selectedIndex + 1)?.stepControl.valid
     ) {
       this.stepper?.next();
+      return;
     }
   }
 }

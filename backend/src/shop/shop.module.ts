@@ -10,5 +10,6 @@ import { CalendarModule } from './calendar/calendar.module';
   imports: [CommonModule, AuthModule, AvailabilityModule, CalendarModule],
   controllers: [ShopController],
   providers: [ShopService],
+  exports: [ShopService],
 })
 export class ShopModule {}

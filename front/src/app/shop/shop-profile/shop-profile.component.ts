@@ -1,13 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ShopWithRating, ShopService } from '../shop.service';
 import { Observable, map, switchMap } from 'rxjs';
 import { environment } from '@env/environment';
+import { CredentialsService } from '@app/auth/credentials.service';
 
 @Component({
   selector: 'app-shop-profile',
@@ -19,6 +15,8 @@ export class ShopProfileComponent {
   private readonly route = inject(ActivatedRoute);
 
   private readonly shopService = inject(ShopService);
+
+  public readonly credentials$ = inject(CredentialsService).credentials$;
 
   public readonly publicBucket = environment.public_bucket;
 

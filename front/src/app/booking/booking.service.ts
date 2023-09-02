@@ -28,6 +28,7 @@ import { CustomerComponent } from './customer/customer.component';
 import { FlashSelectionComponent } from './flash-selection/flash-selection.component';
 import { AvailabilitySelectionComponent } from './availability-selection/availability-selection.component';
 import { ActivatedRoute } from '@angular/router';
+import { HttpService } from '@app/@core/http/http.service';
 
 export interface BookingStep {
   formGroup: string;
@@ -43,6 +44,8 @@ export interface BookingStep {
   providedIn: 'root',
 })
 export class BookingService {
+  private readonly http = inject(HttpService);
+
   private readonly shopService = inject(ShopService);
 
   private readonly customerService = inject(CustomerService);
@@ -227,4 +230,131 @@ export class BookingService {
       });
     })
   );
+
+  public create() {
+    return this.form$.pipe(
+      switchMap((form) => {
+        const formData = this.createFormData(form);
+        const shopUrl = this.shopUrlSubject.getValue();
+        if (!shopUrl) {
+          throw new Error('Shop not defined');
+        }
+
+        return this.http.post('/booking/' + shopUrl, formData);
+      })
+    );
+  }
+
+  private createFormData(form: FormGroup) {
+    const formData = new FormData();
+
+    formData.append('name', form.get(['details', 'name'])?.getRawValue());
+    formData.append('types', form.get(['first-step', 'types'])?.getRawValue());
+    formData.append(
+      'is_first_tattoo',
+      form.get(['first-step', 'is_first_tattoo'])?.getRawValue()
+    );
+    formData.append(
+      'is_cover_up',
+      form.get(['first-step', 'is_cover_up'])?.getRawValue()
+    );
+    formData.append(
+      'is_post_operation_or_over_scar',
+      form.get(['first-step', 'is_post_operation_or_over_scar'])?.getRawValue()
+    );
+    formData.append('zone', form.get(['location', 'zone'])?.getRawValue());
+    formData.append(
+      'height_cm',
+      form.get(['location', 'height_cm'])?.getRawValue()
+    );
+    formData.append(
+      'width_cm',
+      form.get(['location', 'width_cm'])?.getRawValue()
+    );
+    formData.append(
+      'additional_information',
+      form.get(['details', 'additional_information'])?.getRawValue()
+    );
+    formData.append(
+      'customer_availability',
+      form.get(['availability', 'customer_availability'])?.getRawValue()
+    );
+
+    formData.append(
+      'customer_firstname',
+      form.get(['customer', 'firstname'])?.getRawValue()
+    );
+    formData.append(
+      'customer_lastname',
+      form.get(['customer', 'lastname'])?.getRawValue()
+    );
+    formData.append(
+      'customer_birthday',
+      form.get(['customer', 'birthday'])?.getRawValue()
+    );
+    formData.append(
+      'customer_pronouns',
+      form.get(['customer', 'pronouns'])?.getRawValue()
+    );
+    formData.append(
+      'customer_personal_information',
+      form.get(['customer', 'personal_information'])?.getRawValue()
+    );
+    formData.append(
+      'customer_address',
+      form.get(['customer', 'address'])?.getRawValue()
+    );
+    formData.append(
+      'customer_address2',
+      form.get(['customer', 'address2'])?.getRawValue()
+    );
+    formData.append(
+      'customer_city',
+      form.get(['customer', 'city'])?.getRawValue()
+    );
+    formData.append(
+      'customer_zipcode',
+      form.get(['customer', 'zipcode'])?.getRawValue()
+    );
+    formData.append(
+      'customer_phone',
+      form.get(['customer', 'phone'])?.getRawValue()
+    );
+    formData.append(
+      'customer_twitter',
+      form.get(['customer', 'twitter'])?.getRawValue()
+    );
+    formData.append(
+      'customer_instagram',
+      form.get(['customer', 'instagram'])?.getRawValue()
+    );
+
+    const illustrations: File[] = form
+      .get(['details', 'illustrations'])
+      ?.getRawValue();
+    illustrations.forEach((illustration, index) => {
+      formData.append(`illustrations`, illustration);
+    });
+
+    const locations: File[] = form
+      .get(['location', 'illustrations'])
+      ?.getRawValue();
+    locations.forEach((illustration, index) => {
+      formData.append(`locations`, illustration);
+    });
+
+    const flashs: Flash[] = form.get('flashs')?.getRawValue();
+    flashs.forEach((flash, index) => {
+      formData.append(`flashs`, flash.id);
+    });
+
+    const availabilities: string[] = form
+      .get(['availability', 'availabilities'])
+      ?.getRawValue();
+    availabilities.forEach((availability, index) => {
+      formData.append(`availabilities`, availability);
+    });
+
+    return formData;
+  }
 }

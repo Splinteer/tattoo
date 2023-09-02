@@ -8,9 +8,9 @@ import { BookingStepComponent } from '../booking-step/booking-step.component';
 })
 export class LocationComponent extends BookingStepComponent {
   public readonly imagesPreview$ = this.getImagePreview([
-    'details',
+    'location',
     'illustrations',
   ]);
 
-  public removeImage = this.getRemoveImage(['details', 'illustrations']);
+  public removeImage = this.getRemoveImage(['location', 'illustrations']);
 }

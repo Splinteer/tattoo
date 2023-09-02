@@ -78,6 +78,25 @@
       </div>
 
       <div class="input-group">
+        <h3 translate>CUSTOMER.PROFILE.personal_information</h3>
+
+        <textarea
+          id="personal_information"
+          class="break-lines"
+          formControlName="personal_information"
+          rows="6"
+          [placeholder]="
+            'CUSTOMER.PROFILE.personal_information_placeholder' | translate
+          "
+          [ngClass]="{
+            'is-invalid':
+              (step.submitted || form.get('personal_information')?.touched) &&
+              form.get('personal_information')?.errors
+          }"
+        ></textarea>
+      </div>
+
+      <div class="input-group">
         <h3 translate>CUSTOMER.PROFILE.address</h3>
 
         <input
