@@ -30,11 +30,35 @@
   border-radius: 4px;
   margin-top: var(--space-200);
 
+  &.paid_Appointment {
+    background-color: var(--nyanza);
+    &:hover {
+      background-color: var(--nyanza-hover);
+    }
+  }
+  &.confirmed_Appointment {
+    background-color: var(--pale-purple);
+    &:hover {
+      background-color: var(--pale-purple-hover);
+    }
+  }
+  &.Appointment {
+    background-color: var(--papaya-whip);
+    &:hover {
+      background-color: var(--papaya-whip-hover);
+    }
+  }
   &.Availability {
-    background: var(--alice-blue);
+    background-color: var(--alice-blue);
+    &:hover {
+      background-color: var(--alice-blue-hover);
+    }
   }
   &.Unavailability {
-    background: var(--misty-rose);
+    background-color: var(--misty-rose);
+    &:hover {
+      background-color: var(--misty-rose-hover);
+    }
   }
 }
 

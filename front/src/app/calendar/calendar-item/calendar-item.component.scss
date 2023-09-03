@@ -9,10 +9,9 @@
   --misty-rose-hover: rgba(245, 217, 217, 1);
   --pale-purple: rgba(240, 217, 255, 0.7);
   --pale-purple-hover: rgba(230, 217, 255, 1);
-  overflow: hidden;
   min-height: 25px;
-  flex-grow: 0;
-  flex-shrink: 1;
+  width: 100%;
+  flex: 1 1 0px;
 }
 
 .container {
@@ -25,7 +24,26 @@
   width: 100%;
   height: 100%;
   transition: background-color 0.2s ease-in, color 0.2s ease-in;
+  overflow: hidden;
 
+  &.paid_Appointment {
+    background-color: var(--nyanza);
+    &:hover {
+      background-color: var(--nyanza-hover);
+    }
+  }
+  &.confirmed_Appointment {
+    background-color: var(--pale-purple);
+    &:hover {
+      background-color: var(--pale-purple-hover);
+    }
+  }
+  &.Appointment {
+    background-color: var(--papaya-whip);
+    &:hover {
+      background-color: var(--papaya-whip-hover);
+    }
+  }
   &.Availability {
     background-color: var(--alice-blue);
     &:hover {

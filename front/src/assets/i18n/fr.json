@@ -36,7 +36,9 @@
 
   "CALENDAR": {
     "EVENT_TYPE": {
-      "Appointment": "Rendez-vous",
+      "Appointment": "Demande",
+      "confirmed_Appointment": "Rendez-vous",
+      "paid_Appointment": "Payé",
       "Availability": "Disponible",
       "Unavailability": "Indisponible"
     },

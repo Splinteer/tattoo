@@ -19,12 +19,14 @@ import { BookingService } from './booking.service';
 import { ShopService } from 'src/shop/shop.service';
 import { CustomerService } from 'src/customer/customer.service';
 import { SessionService } from 'src/auth/session/session.service';
+import { DbService } from '@app/common/db/db.service';
 
 @Controller('booking')
 export class BookingController {
   constructor(
     private readonly bookingService: BookingService,
     private readonly customerService: CustomerService,
+    private readonly db: DbService,
     private readonly sessionService: SessionService,
     private readonly shopService: ShopService,
   ) {}
@@ -50,40 +52,48 @@ export class BookingController {
       throw new NotFoundException();
     }
 
-    const project = await this.bookingService.createProject(
-      credentials.id,
-      shop.id,
-      body,
-    );
-    if (body.flashs.length) {
-      await Promise.all(
-        body.flashs.map((flash) =>
-          this.bookingService.addFlashToProject(project.id, flash),
-        ),
+    await this.db.begin();
+    try {
+      const project = await this.bookingService.createProject(
+        credentials.id,
+        shop.id,
+        body,
       );
-    }
-    await this.bookingService.createChatForProject(project.id);
-    if (body.availabilities.length) {
-      await this.bookingService.createAppointments(
-        project.id,
-        body.availabilities,
-      );
-    }
+      if (body.flashs && body.flashs.length) {
+        await Promise.all(
+          body.flashs.map((flash) =>
+            this.bookingService.addFlashToProject(project.id, flash),
+          ),
+        );
+      }
+      await this.bookingService.createChatForProject(project.id);
+      if (body.availabilities.length) {
+        await this.bookingService.createAppointments(
+          project.id,
+          body.availabilities,
+        );
+      }
 
-    await this.customerService.update(credentials.id, {
-      firstname: body.customer_firstname,
-      lastname: body.customer_lastname,
-      birthday: new Date(body.customer_birthday),
-      pronouns: body.customer_pronouns,
-      phone: body.customer_phone,
-      personal_information: body.customer_personal_information,
-      instagram: body.customer_instagram,
-      twitter: body.customer_twitter,
-      address: body.customer_address,
-      address2: body.customer_address2,
-      city: body.customer_city,
-      zipcode: body.customer_zipcode,
-    });
-    await this.sessionService.refreshSession(credentials.supertokens_id);
+      await this.customerService.update(credentials.id, {
+        firstname: body.customer_firstname,
+        lastname: body.customer_lastname,
+        birthday: new Date(body.customer_birthday),
+        pronouns: body.customer_pronouns,
+        phone: body.customer_phone,
+        personal_information: body.customer_personal_information,
+        instagram: body.customer_instagram,
+        twitter: body.customer_twitter,
+        address: body.customer_address,
+        address2: body.customer_address2,
+        city: body.customer_city,
+        zipcode: body.customer_zipcode,
+      });
+      await this.sessionService.refreshSession(credentials.supertokens_id);
+
+      this.db.commit();
+    } catch (error) {
+      this.db.rollback();
+      throw error;
+    }
   }
 }

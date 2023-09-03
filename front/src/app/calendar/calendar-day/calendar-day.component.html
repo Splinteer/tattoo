@@ -20,11 +20,12 @@
 
   <div class="content">
     <ng-container *ngIf="events()[day.toFormat('yyyy-MM-dd')] as dailyEvents">
-      <app-calendar-item
-        [@slideDown]
-        *ngFor="let event of dailyEvents"
-        [event]="event"
-      ></app-calendar-item>
+      <ng-container *ngFor="let timeRangeEvents of dailyEvents">
+        <app-calendar-time-range
+          *ngIf="timeRangeEvents.length"
+          [events]="timeRangeEvents"
+        ></app-calendar-time-range>
+      </ng-container>
     </ng-container>
   </div>
 </div>

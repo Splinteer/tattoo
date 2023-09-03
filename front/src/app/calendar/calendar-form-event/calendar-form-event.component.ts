@@ -97,7 +97,7 @@ export class CalendarFormEventComponent implements OnInit {
 
       this.form?.setValue({
         type: this.event.event_type,
-        date: new Date(this.event.start_time).toISOString().substring(0, 10),
+        date: start.toISODate(),
         startTime: start.toFormat('H:mm'),
         endTime: end.toFormat('H:mm'),
         allDay: end.diff(start, 'minutes').minutes >= 1439,

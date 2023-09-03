@@ -16,9 +16,9 @@ import { ShortTimePipe } from '@app/shared/short-time.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CalendarEventModalComponent } from '../calendar-event-modal/calendar-event-modal.component';
-import { DomSanitizer } from '@angular/platform-browser';
 import { DateTime } from 'luxon';
 import { CalendarSelectionService } from '../calendar-selection.service';
+import { slideDown } from '@app/shared/animation';
 
 @Component({
   selector: 'app-calendar-item',
@@ -32,6 +32,7 @@ import { CalendarSelectionService } from '../calendar-selection.service';
     OverlayModule,
     CalendarEventModalComponent,
   ],
+  animations: [slideDown(250)],
 })
 export class CalendarItemComponent implements OnInit {
   private readonly calendarSelection = inject(CalendarSelectionService);
@@ -41,15 +42,6 @@ export class CalendarItemComponent implements OnInit {
   @Input({ required: true }) event!: CalendarEvent;
 
   @Input({ transform: booleanAttribute, alias: 'date' }) showDate = false;
-
-  @HostBinding('style.flex-basis') get flexBasis() {
-    if (!this.selectionActive()) {
-      const percentageValue = ((this.hoursBetweenDates ?? 0) / 24) * 100;
-      const result = Math.floor(percentageValue * 10) / 10;
-      return `${result}%`;
-    }
-    return '1';
-  }
 
   public isOpen = false;
 
@@ -79,5 +71,33 @@ export class CalendarItemComponent implements OnInit {
     } else {
       this.isOpen = true;
     }
+  }
+
+  close(event?: Event) {
+    if (event?.target instanceof HTMLElement) {
+      const clickedInsideAppEvent = this.hasClickedAnotherEvent(event.target);
+      if (!clickedInsideAppEvent) {
+        event.stopPropagation();
+      }
+    }
+
+    this.isOpen = false;
+  }
+
+  hasClickedAnotherEvent(parent: HTMLElement): boolean {
+    let node: any = parent;
+    const tagName = 'app-calendar-item'.toUpperCase();
+    let found = false;
+
+    while (node != null && !found) {
+      if (node.tagName === tagName) {
+        found = true;
+        continue;
+      }
+
+      node = node.parentNode;
+    }
+
+    return found;
   }
 }

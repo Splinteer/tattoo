@@ -3,18 +3,38 @@ import { HttpService } from '@app/@core/http/http.service';
 import { DateTime } from 'luxon';
 import { CalendarSelectionService } from './calendar-selection.service';
 
-export type EventType = 'Appointment' | 'Availability' | 'Unavailability';
+type EmptyObj = Record<PropertyKey, never>;
 
-export type CalendarEvent = {
+export type AppointmentType =
+  | 'Appointment'
+  | 'paid_Appointment'
+  | 'confirmed_Appointment';
+
+export type EventType = AppointmentType | 'Availability' | 'Unavailability';
+
+export type BaseCalendarEvent = {
   id: string;
   shop_url: string;
   start_time: string;
   end_time: string;
   event_type: EventType;
+  properties?: EmptyObj;
 };
 
+export type AppointmentEvent = BaseCalendarEvent & {
+  event_type: AppointmentType;
+  properties: {
+    project_id: string;
+    is_paid: string;
+  };
+};
+
+export type CalendarEvent = AppointmentEvent | BaseCalendarEvent;
+
+export type CalendarEventGroupedByTimeInterval = CalendarEvent[];
+
 export type CalendarEventGroupedByDay = {
-  [day: string]: CalendarEvent[];
+  [day: string]: CalendarEventGroupedByTimeInterval[];
 };
 
 type LoadedEvents = {
@@ -52,8 +72,10 @@ export class CalendarService {
 
     Object.keys(loaded).forEach((shopUrl: string) => {
       Object.keys(loaded[shopUrl]).forEach((day) => {
-        loaded[shopUrl][day].forEach((event) => {
-          res[event.id] = event;
+        loaded[shopUrl][day].forEach((eventByInterval) => {
+          eventByInterval.forEach((event) => {
+            res[event.id] = event;
+          });
         });
       });
     });
@@ -94,7 +116,16 @@ export class CalendarService {
         (result: CalendarEventGroupedByDay, currentDay) => {
           const dateOfCurrentDay = DateTime.fromISO(currentDay);
           if (dateOfCurrentDay >= startDate && dateOfCurrentDay <= endDate) {
-            result[currentDay] = allEventsForShop[currentDay];
+            if (isSelection) {
+              result[currentDay] = allEventsForShop[currentDay].map(
+                (eventsByTimeRange) =>
+                  eventsByTimeRange.filter(
+                    (event) => event.event_type === 'Availability'
+                  )
+              );
+            } else {
+              result[currentDay] = allEventsForShop[currentDay];
+            }
           }
 
           return result;
@@ -198,25 +229,56 @@ export class CalendarService {
 
   private addToObject(events: LoadedEvents, event: CalendarEvent) {
     const date = DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd');
-    if (!(event.shop_url in events)) {
-      events[event.shop_url] = { [date]: [] };
-    } else if (!(event.shop_url in events)) {
+
+    // Initialize the shop URL and date if they don't already exist
+    if (!events[event.shop_url]) {
+      events[event.shop_url] = {};
+    }
+    if (!events[event.shop_url][date]) {
       events[event.shop_url][date] = [];
     }
 
-    events[event.shop_url][date].push(event);
+    // Find the appropriate time interval for the event or create one
+    const timeInterval = events[event.shop_url][date].find((interval) =>
+      interval.some(
+        (e) =>
+          e.start_time === event.start_time && e.end_time === event.end_time
+      )
+    );
+
+    if (timeInterval) {
+      timeInterval.push(event);
+    } else {
+      events[event.shop_url][date].push([event]);
+    }
 
     return events;
   }
 
   private removeFromObject(events: LoadedEvents, event: CalendarEvent) {
-    const dayEvents =
-      events[event.shop_url][
-        DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd')
-      ];
+    const date = DateTime.fromISO(event.start_time).toFormat('yyyy-MM-dd');
+    const dayEvents = events[event.shop_url][date];
 
-    const indexToRemove = dayEvents.findIndex((value) => value.id === event.id);
-    dayEvents.splice(indexToRemove, 1);
+    for (const timeInterval of dayEvents) {
+      const indexToRemove = timeInterval.findIndex((e) => e.id === event.id);
+
+      if (indexToRemove !== -1) {
+        timeInterval.splice(indexToRemove, 1);
+
+        // Remove empty time intervals
+        if (timeInterval.length === 0) {
+          const intervalIndex = dayEvents.indexOf(timeInterval);
+          dayEvents.splice(intervalIndex, 1);
+        }
+
+        break;
+      }
+    }
+
+    // Remove empty days
+    if (dayEvents.length === 0) {
+      delete events[event.shop_url][date];
+    }
 
     return events;
   }

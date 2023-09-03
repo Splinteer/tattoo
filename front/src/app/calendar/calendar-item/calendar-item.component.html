@@ -7,6 +7,7 @@
   [class.selection]="selectionActive()"
   [class.selected]="selected()"
   [ngClass]="event.event_type"
+  [@slideDown]
 >
   <div *ngIf="!selectionActive()" translate>
     {{ "CALENDAR.EVENT_TYPE." + event.event_type }}
@@ -45,10 +46,10 @@
       offsetX: 5,
     }
   ]"
-  (overlayOutsideClick)="isOpen = false"
+  (overlayOutsideClick)="close($event)"
 >
   <app-calendar-event-modal
     [event]="event"
-    (close)="isOpen = false"
+    (close)="close()"
   ></app-calendar-event-modal>
 </ng-template>

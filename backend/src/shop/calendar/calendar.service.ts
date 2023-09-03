@@ -5,18 +5,38 @@ import {
   LinkedDateRange,
 } from '../availability/availability.service';
 
-export type EventType = 'Appointment' | 'Availability' | 'Unavailability';
+type EmptyObj = Record<PropertyKey, never>;
 
-export type CalendarEvent = {
+export type AppointmentType =
+  | 'Appointment'
+  | 'paid_Appointment'
+  | 'confirmed_Appointment';
+
+export type EventType = AppointmentType | 'Availability' | 'Unavailability';
+
+export type BaseCalendarEvent = {
   id: string;
   shop_url: string;
   start_time: Date;
   end_time: Date;
   event_type: EventType;
+  properties: EmptyObj;
 };
 
+export type AppointmentEvent = BaseCalendarEvent & {
+  event_type: AppointmentType;
+  properties: {
+    project_id: string;
+    is_paid: string;
+  };
+};
+
+export type CalendarEvent = AppointmentEvent | BaseCalendarEvent;
+
+export type CalendarEventGroupedByTimeInterval = CalendarEvent[];
+
 export type CalendarEventGroupedByDay = {
-  [day: string]: CalendarEvent[];
+  [day: string]: CalendarEventGroupedByTimeInterval[];
 };
 
 @Injectable()
@@ -41,11 +61,17 @@ export class CalendarService {
               start_date::date AS day,
               start_date AS start_time,
               COALESCE(end_date, start_date) AS end_time,
-              'Appointment' AS event_type
+              CASE
+                WHEN p.is_paid IS TRUE THEN 'paid_Appointment'
+                  WHEN is_confirmed IS TRUE THEN 'confirmed_Appointment'
+                  ELSE 'Appointment'
+              END AS event_type,
+              json_build_object('project_id', p.id, 'is_paid', p.is_paid) AS properties
           FROM
               public.appointment a
           INNER JOIN project p ON p.id=a.project_id
           INNER JOIN shop s ON p.shop_id=s.id AND s.url = $1
+          INNER JOIN customer c ON c.id=p.customer_id
           WHERE start_date BETWEEN $2 AND $3
       ),
 
@@ -57,7 +83,8 @@ export class CalendarService {
               start_date_time::date AS day,
               start_date_time AS start_time,
               end_date_time AS end_time,
-              'Availability' AS event_type
+              'Availability' AS event_type,
+        json_build_object() AS properties
           FROM
               public.availability a
           INNER JOIN shop s ON s.id=a.shop_id AND s.url = $1
@@ -72,7 +99,8 @@ export class CalendarService {
               start_date_time::date AS day,
               start_date_time AS start_time,
               end_date_time AS end_time,
-              'Unavailability' AS event_type
+              'Unavailability' AS event_type,
+        json_build_object() AS properties
           FROM
               public.unavailability u
           INNER JOIN shop s ON s.id=u.shop_id AND s.url = $1
@@ -88,10 +116,12 @@ export class CalendarService {
           SELECT * FROM Unavailabilities
       ),
 
-      -- Aggregate events for each date
-      EventsAggregated AS (
+      -- Aggregate events for each time interval
+      EventsAggregatedByInterval AS (
           SELECT
-              d.day,
+          	  d.day,
+              e.start_time,
+              e.end_time,
               COALESCE(
                   ARRAY_AGG(
                       json_build_object(
@@ -99,20 +129,34 @@ export class CalendarService {
                           'shop_url', e.shop_url,
                           'start_time', e.start_time,
                           'end_time', e.end_time,
-                          'event_type', e.event_type
+                          'event_type', e.event_type,
+                          'properties', e.properties
                       )
                       ORDER BY start_time, end_time
                   ) FILTER (WHERE e.id IS NOT NULL),
                   ARRAY[]::json[]
-              ) AS day_events
+              ) AS events
           FROM DateSeries d
           LEFT JOIN CombinedEvents e ON d.day = e.day
-          GROUP BY d.day
+          GROUP BY d.day, e.start_time, e.end_time
+      ),
+
+      -- Aggregate events for each date
+      EventsAggregatedByDay AS (
+          SELECT
+		       i.DAY,
+           CASE
+              WHEN COUNT(events) = 0 THEN '[]'
+              ELSE JSON_AGG(events)
+           END AS day_events
+
+          FROM EventsAggregatedByInterval i
+          GROUP BY i.day
       )
 
       -- Create the desired output format
       SELECT jsonb_object_agg(day, day_events) AS events
-      FROM EventsAggregated;
+      FROM EventsAggregatedByDay
     `;
 
     const { rows } = await this.db.query<{ events: CalendarEventGroupedByDay }>(
