@@ -21,7 +21,7 @@
     left: 8px;
     border-radius: 25px;
     background-color: var(--text-color-light);
-    box-shadow: 0px 0px 10px -1px rgba(94, 104, 121, 0.3);
+    box-shadow: var(--box-shadow);
 
     .circle {
       width: 8px;

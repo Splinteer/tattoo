@@ -23,8 +23,8 @@
   --font-size: clamp(0.8rem, 2.8vw, 0.95rem);
   --text-sm: clamp(0.8rem, 0.9rem, 0.9rem);
   --text-xs: clamp(0.7rem, 0.8rem, 0.8rem);
-  --border-radius: 20px;
-  --border-radius-small: 2px;
+  --border-radius: 4px;
+  --box-shadow: 2px 2px 8px var(--gray-500), -2px -2px 8px var(--gray-200);
 
   --input-padding-x: 0.6rem;
   --input-padding-y: 0.8rem;

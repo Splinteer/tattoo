@@ -36,10 +36,9 @@ app-root {
 }
 
 .cdk-overlay-pane {
-  border: 1px solid var(--primary-color);
   border-radius: var(--border-radius);
   background-color: var(--bg-color);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--box-shadow);
   overflow-y: auto;
   max-height: 90vh;
 
