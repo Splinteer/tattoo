@@ -108,11 +108,12 @@ CREATE TABLE
         CONSTRAINT fk_shop_id_unavail FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );
 
-CREATE TYPE public.project_type AS ENUM (
-    'flashs',
-    'custom',
-    'adjustment'
-);
+CREATE TYPE
+    public.project_type AS ENUM (
+        'flashs',
+        'custom',
+        'adjustment'
+    );
 
 CREATE TABLE
     IF NOT EXISTS public.project (
@@ -144,6 +145,33 @@ CREATE TABLE
         PRIMARY KEY (project_id, flash_id),
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id),
         CONSTRAINT fk_flash_id FOREIGN KEY (flash_id) REFERENCES public.flash (id)
+    );
+
+CREATE TYPE
+    public.project_attachment_type AS ENUM ('illustration', 'location');
+
+CREATE TABLE
+    IF NOT EXISTS public.project_attachment(
+        project_id uuid NOT NULL,
+        image_url varchar(255) NOT NULL,
+        type project_attachment_type NOT NULL,
+        PRIMARY KEY (project_id, image_url),
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
+    );
+
+CREATE TABLE
+    IF NOT EXISTS public.bill (
+        project_id uuid NOT NULL,
+        customer_id uuid NOT NULL,
+        firstname varchar(255) NOT NULL,
+        lastname varchar(255) NOT NULL,
+        address varchar(255) NOT NULL,
+        address2 varchar(255),
+        city varchar(255) NOT NULL,
+        zipcode varchar(255) NOT NULL,
+        PRIMARY KEY (project_id, customer_id),
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id),
+        CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES public.customer (id)
     );
 
 CREATE TABLE

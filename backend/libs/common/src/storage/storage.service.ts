@@ -16,7 +16,7 @@ export class StorageService {
   async save(
     path: string,
     file: Express.Multer.File,
-    options: { public?: boolean },
+    options: { public?: boolean } = { public: true },
   ) {
     const savedFile = this.#bucket.file(path);
     await savedFile.save(file.buffer);

@@ -43,7 +43,7 @@ export class BookingController {
     @UploadedFiles()
     files: {
       illustrations?: Express.Multer.File[];
-      location?: Express.Multer.File[];
+      locations?: Express.Multer.File[];
     },
     @Body() body: BookingDTO,
   ) {
@@ -52,25 +52,28 @@ export class BookingController {
       throw new NotFoundException();
     }
 
-    await this.db.begin();
+    const client = await this.db.connect();
     try {
+      await client.query('BEGIN');
       const project = await this.bookingService.createProject(
         credentials.id,
         shop.id,
         body,
+        client,
       );
       if (body.flashs && body.flashs.length) {
         await Promise.all(
           body.flashs.map((flash) =>
-            this.bookingService.addFlashToProject(project.id, flash),
+            this.bookingService.addFlashToProject(project.id, flash, client),
           ),
         );
       }
-      await this.bookingService.createChatForProject(project.id);
+      await this.bookingService.createChatForProject(project.id, client);
       if (body.availabilities.length) {
         await this.bookingService.createAppointments(
           project.id,
           body.availabilities,
+          client,
         );
       }
 
@@ -88,11 +91,30 @@ export class BookingController {
         city: body.customer_city,
         zipcode: body.customer_zipcode,
       });
+      await this.bookingService.generateBill(project.id, client);
       await this.sessionService.refreshSession(credentials.supertokens_id);
 
-      this.db.commit();
+      if (files?.illustrations?.length) {
+        await this.bookingService.addAttachments(
+          project.id,
+          files.illustrations,
+          'illustration',
+          client,
+        );
+      }
+
+      if (files?.locations?.length) {
+        await this.bookingService.addAttachments(
+          project.id,
+          files.locations,
+          'location',
+          client,
+        );
+      }
+
+      await client.query('COMMIT');
     } catch (error) {
-      this.db.rollback();
+      await client.query('ROLLBACK');
       throw error;
     }
   }

@@ -1,6 +1,7 @@
 import { DbService } from '@app/common/db/db.service';
 import { StorageService } from '@app/common/storage/storage.service';
 import { Inject, Injectable } from '@nestjs/common';
+import { PoolClient } from 'pg';
 
 export interface CreateBookingInput {
   name: string;
@@ -42,6 +43,14 @@ type Appointment = {
   is_confirmed: boolean;
 };
 
+export type ProjectAttachmentType = 'illustration' | 'location';
+
+export type ProjectAttachment = {
+  project_id: string;
+  image_url: string;
+  type: ProjectAttachmentType;
+};
+
 @Injectable()
 export class BookingService {
   constructor(
@@ -53,6 +62,7 @@ export class BookingService {
     customerId: string,
     shopId: string,
     bookingData: CreateBookingInput,
+    client?: PoolClient,
   ) {
     const {
       name,
@@ -68,7 +78,7 @@ export class BookingService {
 
     const {
       rows: [project],
-    } = await this.db.query<Project>(
+    } = await (client || this.db).query<Project>(
       `INSERT INTO public.project (
         customer_id,
         shop_id,
@@ -103,16 +113,17 @@ export class BookingService {
   public async addFlashToProject(
     projectId: string,
     flashId: string,
+    client?: PoolClient,
   ): Promise<void> {
     const query = `
       INSERT INTO public.project_flash (project_id, flash_id)
       VALUES ($1, $2) RETURNING *;
     `;
 
-    await this.db.query(query, [projectId, flashId]);
+    await (client || this.db).query(query, [projectId, flashId]);
   }
 
-  public async createChatForProject(projectId: string) {
+  public async createChatForProject(projectId: string, client?: PoolClient) {
     const query = `
       INSERT INTO public.chat (project_id)
       VALUES ($1) RETURNING *;
@@ -120,7 +131,7 @@ export class BookingService {
 
     const {
       rows: [chat],
-    } = await this.db.query<{
+    } = await (client || this.db).query<{
       id: string;
       project_id: string;
       creation_date: Date;
@@ -129,7 +140,11 @@ export class BookingService {
     return chat;
   }
 
-  public async createAppointments(projectId: string, availabilities: string[]) {
+  public async createAppointments(
+    projectId: string,
+    availabilities: string[],
+    client?: PoolClient,
+  ): Promise<Appointment[]> {
     const query = `
       INSERT INTO public.appointment (project_id, start_date, end_date)
       SELECT $1, start_date_time, end_date_time
@@ -138,11 +153,75 @@ export class BookingService {
       RETURNING *;
     `;
 
-    const { rows: appointments } = await this.db.query<Appointment>(query, [
-      projectId,
-      availabilities,
-    ]);
+    const { rows: appointments } = await (client || this.db).query<Appointment>(
+      query,
+      [projectId, availabilities],
+    );
 
     return appointments;
+  }
+
+  public async generateBill(
+    projectId: string,
+    client?: PoolClient,
+  ): Promise<void> {
+    const query = `
+      INSERT INTO public.bill (
+        project_id,
+        customer_id,
+        firstname,
+        lastname,
+        address,
+        address2,
+        city,
+        zipcode
+      )
+      SELECT
+        p.id,
+        c.id,
+        c.firstname,
+        c.lastname,
+        c.address,
+        c.address2,
+        c.city,
+        c.zipcode
+      FROM public.project p
+      INNER JOIN customer c ON c.id=p.customer_id
+      WHERE p.id = $1;
+    `;
+
+    await (client || this.db).query(query, [projectId]);
+  }
+
+  public async addAttachments(
+    projectId: string,
+    attachments: Express.Multer.File[],
+    type: ProjectAttachmentType,
+    client?: PoolClient,
+  ): Promise<ProjectAttachment[]> {
+    return Promise.all(
+      attachments.map(async (attachment) => {
+        const attachmentId = DbService.getUUID();
+        const path = `projects/${projectId}/${type}/${attachmentId}`;
+
+        await this.publicStorage.save(path, attachment, { public: false });
+
+        const query = `
+          INSERT INTO public.project_attachment (project_id, image_url, type)
+          VALUES($1, $2, $3)
+          RETURNING *;
+        `;
+
+        const {
+          rows: [newAttachment],
+        } = await (client || this.db).query<ProjectAttachment>(query, [
+          projectId,
+          path,
+          type,
+        ]);
+
+        return newAttachment;
+      }),
+    );
   }
 }
