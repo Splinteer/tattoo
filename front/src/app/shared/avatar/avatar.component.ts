@@ -3,6 +3,18 @@ import { Credentials } from '@app/auth/credentials.service';
 import { Customer } from '@app/customer/customer.service';
 import { environment } from '@env/environment';
 
+export type AvatarCustomer = {
+  id: string;
+
+  got_profile_picture?: boolean;
+  profile_picture_version?: number;
+
+  owner_id?: string; // to identify if it's a shop
+  shop_id?: string;
+  shop_got_picture?: boolean;
+  shop_image_version?: number;
+};
+
 @Component({
   selector: 'app-avatar',
   template: ` <img [src]="src" alt="Avatar" />`,
@@ -19,17 +31,7 @@ import { environment } from '@env/environment';
   standalone: true,
 })
 export class AvatarComponent implements OnChanges {
-  @Input({ required: true }) customer!: {
-    id: string;
-
-    got_profile_picture?: boolean;
-    profile_picture_version?: number;
-
-    owner_id?: string; // to identify if it's a shop
-    shop_id?: string;
-    shop_got_picture?: boolean;
-    shop_image_version?: number;
-  };
+  @Input({ required: true }) customer!: AvatarCustomer;
 
   @Input() ignoreShop?: boolean = false;
 

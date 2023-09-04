@@ -1,0 +1,45 @@
+<ng-container *ngIf="chat() as chat; else noChatActive">
+  <div class="header">
+    <img
+      class="profile-pic"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png"
+      alt="Profile Picture"
+    />
+
+    <div class="content">
+      <div class="name">{{ chat.contact_name }}</div>
+      <div class="project-name">Project name</div>
+    </div>
+
+    <button class="info-btn">
+      <i class="far fa-info-circle"></i>
+    </button>
+  </div>
+  <ul class="message-list">
+    <ng-container
+      *ngFor="let message of chat.messages() as messages; let index = index"
+    >
+      <li
+        class="day"
+        *ngIf="
+          index === 0 ||
+          (messages[index - 1] &&
+            (messages[index - 1].creation_date | date : 'mediumDate') !==
+              (message.creation_date | date : 'mediumDate'))
+        "
+      >
+        {{ message.creation_date | date : "mediumDate" }}
+      </li>
+      <li class="message" [ngClass]="message.is_sender ? 'mine' : 'theirs'">
+        <span class="message-content">{{ message.content }}</span>
+        <span class="message-time">{{
+          message.creation_date | date : "shortTime"
+        }}</span>
+      </li>
+    </ng-container>
+  </ul>
+
+  <app-chat-input></app-chat-input>
+</ng-container>
+
+<ng-template #noChatActive> Aucun chat sélectionné </ng-template>

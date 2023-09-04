@@ -1,0 +1,89 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-400);
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--gray-400);
+  padding: var(--space-300);
+
+  .content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .name {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .project-name {
+      color: var(--gray-800);
+    }
+  }
+
+  .info-btn {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+  }
+
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+}
+
+.message-list {
+  list-style-type: none;
+  margin: 0;
+  padding: var(--space-300);
+  flex-grow: 1;
+
+  .day {
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--gray-800);
+    padding-block: var(--space-400);
+  }
+
+  .message {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-200);
+    gap: var(--space-200);
+
+    .message-content {
+      background-color: var(--primary-color);
+      color: white;
+      padding: var(--space-200) var(--space-300);
+      border-radius: var(--border-radius);
+      max-width: 70%;
+    }
+
+    .message-time {
+      font-size: var(--text-xs);
+      color: var(--gray-800);
+    }
+
+    &.mine {
+      flex-direction: row-reverse;
+    }
+
+    &.theirs {
+      justify-content: flex-start;
+
+      .message-content {
+        background-color: #f0f0f0;
+        color: black;
+      }
+    }
+  }
+}

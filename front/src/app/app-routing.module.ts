@@ -25,6 +25,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./booking/booking.module').then((m) => m.BookingModule),
   },
+  {
+    path: 'chat',
+    loadComponent: () =>
+      import('./chat/chat.component').then((mod) => mod.ChatComponent),
+  },
 ];
 
 @NgModule({

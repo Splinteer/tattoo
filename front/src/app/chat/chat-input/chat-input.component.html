@@ -1,0 +1,54 @@
+<button class="media-btn">
+  <i class="fa-solid fa-image"></i>
+</button>
+<div class="input-container">
+  <input
+    [(ngModel)]="newMessage"
+    type="text"
+    placeholder="Aa"
+    (keyup.enter)="addMessage()"
+  />
+
+  <button
+    (click)="isEmojiOverlayOpen = true"
+    class="emoji-btn"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+  >
+    <i class="fa-sharp fa-solid fa-face-smile"></i>
+  </button>
+</div>
+
+<button class="send-btn" (click)="addMessage()">
+  <i class="fa-sharp fa-solid fa-paper-plane-top"></i>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isEmojiOverlayOpen"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayPush]="true"
+  (overlayOutsideClick)="isEmojiOverlayOpen = false"
+  [cdkConnectedOverlayPositions]="[
+    {
+      originX: 'end',
+      originY: 'top',
+      overlayX: 'end',
+      overlayY: 'bottom',
+      offsetX: 5,
+    }
+  ]"
+>
+  <emoji-mart
+    title="Pick your emoji…"
+    emoji="thumbs_up"
+    [i18n]="emojiMartTranslation()"
+    color="var(--primary-color)"
+    [darkMode]="false"
+    [isNative]="true"
+    (emojiSelect)="addEmoji($event)"
+    [enableFrequentEmojiSort]="true"
+    [showPreview]="false"
+  ></emoji-mart>
+</ng-template>

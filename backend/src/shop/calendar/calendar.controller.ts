@@ -16,6 +16,7 @@ import { ShopService } from '../shop.service';
 import { GoogleCalendarService } from './google-calendar/google-calendar.service';
 import { DateTime } from 'luxon';
 
+// TODO Auth
 @Controller('calendar')
 export class CalendarController {
   constructor(

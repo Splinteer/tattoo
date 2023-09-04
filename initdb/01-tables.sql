@@ -190,6 +190,7 @@ CREATE TABLE
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         project_id uuid NOT NULL,
         creation_date timestamp NOT NULL DEFAULT NOW(),
+        last_update timestamp NOT NULL DEFAULT NOW(),
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
     );
 

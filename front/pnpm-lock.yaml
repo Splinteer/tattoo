@@ -32,6 +32,9 @@ dependencies:
   '@angular/router':
     specifier: ^16.2.0-rc.0
     version: 16.2.0-rc.0(@angular/common@16.2.0-rc.0)(@angular/core@16.2.0-rc.0)(@angular/platform-browser@16.2.0-rc.0)(rxjs@7.5.7)
+  '@ctrl/ngx-emoji-mart':
+    specifier: ^9.2.0
+    version: 9.2.0(@angular/core@16.2.0-rc.0)
   '@messageformat/core':
     specifier: ^3.1.0
     version: 3.1.0
@@ -1954,6 +1957,15 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
     dev: true
+
+  /@ctrl/ngx-emoji-mart@9.2.0(@angular/core@16.2.0-rc.0):
+    resolution: {integrity: sha512-q8B7DiXPfyTe+VOGO6Ix7eh5gKCuADxAsud2xXRTlECTfchoKGTmirSczyjaxIKE/xmB+/ZsnkpthZqUM7SAJQ==}
+    peerDependencies:
+      '@angular/core': '>=15.0.0-0'
+    dependencies:
+      '@angular/core': 16.2.0-rc.0(rxjs@7.5.7)(zone.js@0.13.1)
+      tslib: 2.6.1
+    dev: false
 
   /@discoveryjs/json-ext@0.5.7:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}

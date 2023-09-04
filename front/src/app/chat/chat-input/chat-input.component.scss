@@ -1,0 +1,37 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 5px;
+
+  button.emoji-btn,
+  button.send-btn,
+  button.media-btn {
+    color: var(--primary-color);
+    border-radius: 50%;
+    transition: background-color 0.2s ease-in;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+
+    &:hover {
+      background-color: var(--gray-200);
+    }
+  }
+}
+
+.input-container {
+  position: relative;
+  flex-grow: 1;
+
+  input {
+    height: 100%;
+  }
+
+  .emoji-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}

@@ -9,6 +9,7 @@ import { FlashModule } from './flash/flash.module';
 import { GalleryModule } from './gallery/gallery.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BookingModule } from './booking/booking.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { BookingModule } from './booking/booking.module';
     FlashModule,
     GalleryModule,
     BookingModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

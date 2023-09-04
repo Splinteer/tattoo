@@ -297,5 +297,32 @@
         "time_ago": "{count}{unit}"
       }
     }
+  },
+  "EMOJI_MART": {
+    "search": "Recherche",
+    "emojilist": "Liste d'émojis",
+    "notfound": "Émoji introuvable",
+    "clear": "Effacer",
+    "categories": {
+      "search": "Résultats de recherche",
+      "recent": "Fréquemment utilisés",
+      "people": "Visages & Personnes",
+      "nature": "Animaux & Nature",
+      "foods": "Nourriture & Boissons",
+      "activity": "Activité",
+      "places": "Voyages & Lieux",
+      "objects": "Objets",
+      "symbols": "Symboles",
+      "flags": "Drapeaux",
+      "custom": "Personnalisé"
+    },
+    "skintones": {
+      "1": "Teint par défaut",
+      "2": "Teint clair",
+      "3": "Teint moyen-clair",
+      "4": "Teint moyen",
+      "5": "Teint moyen-foncé",
+      "6": "Teint foncé"
+    }
   }
 }

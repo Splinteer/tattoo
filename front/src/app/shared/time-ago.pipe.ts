@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, combineLatest, of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
 const intervals = {
@@ -16,16 +16,15 @@ const intervals = {
 @Pipe({
   name: 'timeAgo',
   pure: false,
-  standalone: true,
 })
 export class TimeAgoPipe implements PipeTransform {
   constructor(
     @Inject(TranslateService) private translateService: TranslateService
   ) {}
 
-  transform(value: string, type: 'long' | 'short' = 'long'): Observable<any> {
+  transform(value: Date, type: 'long' | 'short' = 'long') {
     if (!value) {
-      return of(value);
+      return value;
     }
 
     return combineLatest([
