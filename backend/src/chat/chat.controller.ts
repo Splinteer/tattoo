@@ -41,6 +41,18 @@ export class ChatController {
     return this.chatService.getShopChats(credentials.shop_id, date);
   }
 
+  @Get(':chatId/messages')
+  @UseGuards(new AuthGuard())
+  @UseInterceptors(FilesInterceptor('attachments'))
+  async getMessages(
+    @Param('chatId') chatId: string,
+    @Credentials()
+    credentials: ICredentials,
+    @Query('date') date: string,
+  ): Promise<Message[]> {
+    return this.chatService.getMessages(credentials.id, chatId, date);
+  }
+
   @Post(':chatId/message')
   @UseGuards(new AuthGuard())
   @UseInterceptors(FilesInterceptor('attachments'))

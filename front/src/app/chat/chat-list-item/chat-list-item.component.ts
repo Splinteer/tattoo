@@ -14,9 +14,11 @@ import { TimeAgoPipe } from '@app/shared/timeAgo.pipe';
 export class ChatListItemComponent {
   @Input({ required: true }) chat!: ReactiveChat;
 
-  private readonly chatService = inject(ChatService);
+  readonly #chatService = inject(ChatService);
+
+  readonly activeChat = this.#chatService.activeChatSignal;
 
   @HostListener('click') click() {
-    this.chatService.setActiveChat(this.chat);
+    this.#chatService.setActiveChat(this.chat);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Renderer2, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../chat.service';
@@ -46,11 +46,15 @@ type Emoji = {
 export class ChatInputComponent {
   private readonly chatService = inject(ChatService);
 
+  private readonly renderer = inject(Renderer2);
+
   private readonly translateService = inject(TranslateService);
 
   public readonly chat = this.chatService.activeChatSignal;
 
   public newMessage = '';
+
+  public readonly attachments: File[] = [];
 
   public isEmojiOverlayOpen = false;
 
@@ -78,5 +82,43 @@ export class ChatInputComponent {
 
     this.chatService.addMessage(chat, this.newMessage);
     this.newMessage = '';
+  }
+
+  adjustTextareaHeight(event: any): void {
+    const textarea = event.target;
+    this.renderer.setStyle(textarea, 'height', 'auto');
+    this.renderer.setStyle(textarea, 'height', textarea.scrollHeight + 'px');
+  }
+
+  fileSizeError: boolean = false;
+
+  fileTypeError: boolean = false;
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    // Check file size
+    if (file.size > maxSize) {
+      this.fileSizeError = true;
+      // Optionally, clear the input
+      event.target.value = '';
+      return; // Exit the function early if the file size is too large
+    } else {
+      this.fileSizeError = false;
+    }
+
+    // Check file type
+    const allowedTypes = ['image/jpeg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+      this.fileTypeError = true;
+      // Optionally, clear the input
+      event.target.value = '';
+      return; // Exit the function early if the file type is not allowed
+    } else {
+      this.fileTypeError = false;
+    }
+
+    // Handle the file upload or any other operations
   }
 }

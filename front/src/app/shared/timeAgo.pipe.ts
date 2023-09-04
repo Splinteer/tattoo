@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { DateTime } from 'luxon';
 import { Observable, combineLatest, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
@@ -23,16 +24,21 @@ export class TimeAgoPipe implements PipeTransform {
     @Inject(TranslateService) private translateService: TranslateService
   ) {}
 
-  transform(value: string, type: 'long' | 'short' = 'long'): Observable<any> {
+  transform(
+    value: string | DateTime,
+    type: 'long' | 'short' = 'long'
+  ): Observable<any> {
     if (!value) {
       return of(value);
     }
+
+    const date = value instanceof DateTime ? value.toJSDate() : new Date(value);
 
     return combineLatest([
       this.translateService.onLangChange.pipe(
         startWith({}), // To trigger immediately
         switchMap(() => {
-          const seconds = Math.floor((+new Date() - +new Date(value)) / 1000);
+          const seconds = Math.floor((+new Date() - +date) / 1000);
           if (seconds < 29) {
             return this.translateService.get('PIPE.TIMEAGO.just_now');
           }

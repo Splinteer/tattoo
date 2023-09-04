@@ -1,0 +1,48 @@
+<div class="container">
+  <ng-container
+    *ngFor="let message of messages; let index = index; let isLast = last"
+    infiniteScroll
+    (scrolled)="onScroll()"
+  >
+    <div
+      class="day item"
+      *ngIf="
+        index === 0 ||
+        (messages[index - 1] &&
+          (messages[index - 1].creation_date | date : 'mediumDate') !==
+            (message.creation_date | date : 'mediumDate'))
+      "
+    >
+      {{ message.creation_date | date : "mediumDate" }}
+    </div>
+    <div class="item">
+      <div
+        class="message-container"
+        [ngClass]="message.is_sender ? 'mine' : 'theirs'"
+      >
+        <span class="message">
+          <div class="message-content break-lines">
+            {{ message.content }}
+          </div>
+        </span>
+        <span class="message-time">{{
+          message.creation_date | date : "shortTime"
+        }}</span>
+      </div>
+
+      <div
+        class="read-indicator"
+        *ngIf="
+          (message.is_sender && message.is_read && isLast) ||
+          (!isLast &&
+            message.is_read &&
+            messages[index + 1] &&
+            messages[index + 1].is_sender &&
+            !messages[index + 1].is_read)
+        "
+      >
+        Lu
+      </div>
+    </div>
+  </ng-container>
+</div>

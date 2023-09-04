@@ -1,0 +1,61 @@
+:host {
+  margin: 0;
+  padding: var(--space-300);
+  overflow-y: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.day {
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--gray-800);
+  padding-block: var(--space-400);
+}
+
+.item {
+  margin-bottom: var(--space-200);
+
+  .message-container {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-200);
+
+    .message {
+      max-width: 70%;
+    }
+
+    .message-content {
+      background-color: var(--primary-color);
+      color: white;
+      padding: var(--space-200) var(--space-300);
+      border-radius: var(--border-radius);
+    }
+
+    &.mine {
+      flex-direction: row-reverse;
+    }
+
+    &.theirs {
+      justify-content: flex-start;
+
+      .message-content {
+        background-color: #f0f0f0;
+        color: black;
+      }
+    }
+  }
+
+  .read-indicator {
+    text-align: right;
+  }
+
+  .read-indicator,
+  .message-time {
+    font-size: var(--text-xs);
+    color: var(--gray-800);
+  }
+}

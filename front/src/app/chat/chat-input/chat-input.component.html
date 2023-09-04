@@ -1,13 +1,15 @@
-<button class="media-btn">
+<button class="media-btn" (click)="fileInput.click()">
   <i class="fa-solid fa-image"></i>
 </button>
 <div class="input-container">
-  <input
+  <textarea
+    (input)="adjustTextareaHeight($event)"
+    rows="1"
     [(ngModel)]="newMessage"
     type="text"
     placeholder="Aa"
     (keyup.enter)="addMessage()"
-  />
+  ></textarea>
 
   <button
     (click)="isEmojiOverlayOpen = true"
@@ -22,6 +24,14 @@
 <button class="send-btn" (click)="addMessage()">
   <i class="fa-sharp fa-solid fa-paper-plane-top"></i>
 </button>
+
+<input
+  #fileInput
+  type="file"
+  style="display: none"
+  (change)="onFileChange($event)"
+  accept=".jpg, .jpeg, .png"
+/>
 
 <ng-template
   cdkConnectedOverlay

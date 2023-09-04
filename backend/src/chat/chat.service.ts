@@ -1,6 +1,5 @@
 import { DbService } from '@app/common/db/db.service';
 import { Injectable } from '@nestjs/common';
-import { DateTime } from 'luxon';
 
 export type Attachment = string;
 
@@ -32,27 +31,17 @@ export class ChatService {
       SELECT
           c.id AS id,
           c.project_id,
-          c.creation_date AS chat_creation_date,
+          p.name as project_name,
+          c.creation_date AS creation_date,
+          COALESCE(m.creation_date, c.creation_date) AS last_update,
           CONCAT_WS(' ', customer.firstname, customer.lastname) as contact_name,
           json_build_object(
             'id', customer.id,
             'got_profile_picture', customer.got_profile_picture,
             'profile_picture_version', customer.profile_picture_version
           ) as avatar,
-          COALESCE(MAX(m.creation_date), NOW()) AS last_message_update,
-            array_agg(
-              json_build_object(
-                  'id', m.id,
-                  'chat_id', m.chat_id,
-                  'creation_date', m.creation_date,
-                  'is_sender', CASE WHEN m.sender_id <> p.customer_id THEN true ELSE false END,
-                  'content', m.content,
-                  'is_read', m.is_read,
-                  'attachments', m.attachments
-              )
-              ORDER BY m.creation_date
-            ) FILTER (WHERE m.id IS NOT NULL)
-           AS messages
+          m.content as last_message,
+          m.id IS NULL OR m.sender_id <> customer.id OR m.is_read as is_read
       FROM chat c
 
       INNER JOIN project p ON p.id = c.project_id
@@ -61,26 +50,21 @@ export class ChatService {
         SELECT
           m.id,
           m.chat_id,
+          m.content,
           m.creation_date,
           m.sender_id,
-          m.content,
-          m.is_read,
-          COALESCE(
-            array_agg(ma.image_url) FILTER (WHERE ma.message_id IS NOT NULL),
-            ARRAY[]::varchar[]
-          ) AS attachments
+          m.is_read
         FROM message m
         LEFT JOIN message_attachment ma ON m.id = ma.message_id
         WHERE chat_id = c.id
         GROUP BY m.id
         ORDER BY creation_date DESC
-        LIMIT 5
+        LIMIT 1
       ) AS m ON c.id = m.chat_id
 
       WHERE p.shop_id=$1
       AND c.last_update < $2
-
-      GROUP BY c.id, customer.id
+      GROUP BY c.id, customer.id, p.name, m.id, m.sender_id, m.is_read, m.content, m.creation_date
       ORDER BY c.creation_date DESC
       LIMIT 10
     `;
@@ -110,5 +94,37 @@ export class ChatService {
     }>(query, [chatId, senderId, content]);
 
     return message;
+  }
+
+  async getMessages(
+    customerId: string,
+    chatId: string,
+    last_fetched_date: string,
+    limit = 10,
+  ) {
+    const query = `--sql
+      SELECT
+        m.*,
+        m.sender_id = $1 as is_sender,
+        COALESCE(
+          array_agg(ma.image_url) FILTER (WHERE ma.message_id IS NOT NULL),
+          ARRAY[]::varchar[]
+        ) AS attachments
+      FROM message m
+      LEFT JOIN message_attachment ma ON m.id = ma.message_id
+      WHERE m.chat_id=$2
+      AND m.creation_date < $3
+      GROUP BY m.id
+      ORDER BY creation_date DESC
+      LIMIT ${limit}
+    `;
+
+    const { rows: chats } = await this.db.query<Message>(query, [
+      customerId,
+      chatId,
+      last_fetched_date,
+    ]);
+
+    return chats.reverse();
   }
 }

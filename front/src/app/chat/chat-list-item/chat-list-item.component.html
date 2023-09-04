@@ -1,27 +1,23 @@
-<app-avatar [customer]="chat.avatar"></app-avatar>
+<div
+  class="container"
+  [class.active]="activeChat()?.id === chat.id"
+  [class.unread]="!chat.is_read"
+>
+  <app-avatar [customer]="chat.avatar"></app-avatar>
 
-<div class="details">
-  <span class="contact-name">
-    {{ chat.contact_name }}
-  </span>
-  <div class="sub">
-    <ng-container *ngIf="chat.messages() as messages">
-      <div class="last-message">
-        {{ messages[messages.length - 1].content }}
-      </div>
-      <div class="last-update">
-        {{
-          messages[messages.length - 1].creation_date
-            | timeAgo : "short"
-            | async
-        }}
-      </div>
-    </ng-container>
+  <div class="details">
+    <div class="contact-name">
+      {{ chat.contact_name }}
+    </div>
+    <div class="project-name">{{ chat.project_name }}</div>
+    <div class="last-message" *ngIf="chat.last_message">
+      {{ chat.last_message }}
+    </div>
+  </div>
+  <div class="indicators">
+    <div *ngIf="!chat.is_read" class="unread-indicator"></div>
+    <div class="last-update">
+      {{ chat.last_update | timeAgo : "short" | async }}
+    </div>
   </div>
 </div>
-<ng-container *ngIf="chat.messages() as messages">
-  <span
-    *ngIf="messages.length && !messages[0].is_read && !messages[0].is_sender"
-    class="unread-indicator"
-  ></span>
-</ng-container>
