@@ -1,6 +1,6 @@
-<div class="container" infiniteScroll (scrolled)="onScroll()">
+<app-infinite-scroll (loadMore)="onScroll()" [fullyLoaded]="isLoaded()">
   <app-chat-list-item
     *ngFor="let chat of loadedChatsSignal(); trackBy: trackByIdx"
     [chat]="chat"
   ></app-chat-list-item>
-</div>
+</app-infinite-scroll>

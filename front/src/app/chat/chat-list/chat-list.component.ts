@@ -2,25 +2,24 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService, ReactiveChat } from '../chat.service';
 import { ChatListItemComponent } from '../chat-list-item/chat-list-item.component';
+import { InfiniteScrollComponent } from '@app/shared/infinite-scroll/infinite-scroll.component';
 
 @Component({
   selector: 'app-chat-list',
   standalone: true,
-  imports: [CommonModule, ChatListItemComponent],
+  imports: [CommonModule, ChatListItemComponent, InfiniteScrollComponent],
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.scss'],
 })
 export class ChatListComponent {
-  public readonly loadedChatsSignal = inject(ChatService).loadedChatsSignal;
+  readonly #chatservice = inject(ChatService);
 
-  private allDataLoaded = false;
+  readonly loadedChatsSignal = this.#chatservice.loadedChatsSignal;
 
-  constructor() {}
+  readonly isLoaded = this.#chatservice.isLoadedSignal;
 
   onScroll() {
-    // if (!this.allDataLoaded) {
-    //   this.fetchMore.next(true);
-    // }
+    this.#chatservice.loadMoreChats().subscribe();
   }
 
   trackByIdx(index: number, item: ReactiveChat): string {

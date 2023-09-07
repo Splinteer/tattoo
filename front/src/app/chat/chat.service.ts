@@ -4,7 +4,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
 import { AvatarCustomer } from '@app/shared/avatar/avatar.component';
 import { DateTime } from 'luxon';
-import { tap } from 'rxjs';
+import { of, tap } from 'rxjs';
 
 export type Attachment = string;
 
@@ -71,6 +71,8 @@ export class ChatService {
 
   private lastLoadedChatDate = DateTime.local();
 
+  readonly isLoadedSignal = signal(false);
+
   constructor() {
     this.loadMoreChats().subscribe();
 
@@ -91,6 +93,10 @@ export class ChatService {
   }
 
   public loadMoreChats() {
+    if (this.isLoadedSignal()) {
+      return of([]);
+    }
+
     let queryParams = new HttpParams();
     queryParams = queryParams.append(
       'date',
@@ -103,20 +109,23 @@ export class ChatService {
       })
       .pipe(
         tap((newChats) => {
-          if (newChats.length) {
-            const formatedNewChats = newChats.map(this.formatToReactiveChat);
-            this.loadedChatsSignal.update((currentChats) => [
-              ...currentChats,
-              ...formatedNewChats,
-            ]);
+          if (!newChats.length) {
+            this.isLoadedSignal.set(true);
+            return;
+          }
 
-            this.lastLoadedChatDate = DateTime.fromISO(
-              (newChats.at(-1) as Chat).last_update
-            );
+          const formatedNewChats = newChats.map(this.formatToReactiveChat);
+          this.loadedChatsSignal.update((currentChats) => [
+            ...currentChats,
+            ...formatedNewChats,
+          ]);
 
-            if (!this.activeChatSignal()) {
-              this.activeChatSignal.set(formatedNewChats[0]);
-            }
+          this.lastLoadedChatDate = DateTime.fromISO(
+            (newChats.at(-1) as Chat).last_update
+          );
+
+          if (!this.activeChatSignal()) {
+            this.activeChatSignal.set(formatedNewChats[0]);
           }
         })
       );

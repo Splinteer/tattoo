@@ -65,7 +65,7 @@ export class ChatService {
       WHERE p.shop_id=$1
       AND c.last_update < $2
       GROUP BY c.id, customer.id, p.name, m.id, m.sender_id, m.is_read, m.content, m.creation_date
-      ORDER BY c.creation_date DESC
+      ORDER BY last_update DESC
       LIMIT 10
     `;
 
