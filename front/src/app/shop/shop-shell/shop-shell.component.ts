@@ -18,6 +18,7 @@ import { RouterModule } from '@angular/router';
         padding: var(--page-content-padding);
         display: flex;
         flex-direction: column;
+        overflow-y: auto;
       }
 
       app-shop-header {
