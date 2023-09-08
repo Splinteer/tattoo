@@ -125,6 +125,6 @@ export class ChatService {
       last_fetched_date,
     ]);
 
-    return chats.reverse();
+    return chats;
   }
 }

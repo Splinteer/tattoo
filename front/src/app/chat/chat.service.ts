@@ -74,8 +74,6 @@ export class ChatService {
   readonly isLoadedSignal = signal(false);
 
   constructor() {
-    this.loadMoreChats().subscribe();
-
     console.log(this.lastLoadedChatDate.toISO());
   }
 
@@ -143,7 +141,6 @@ export class ChatService {
         params: queryParams,
       })
       .subscribe((newMessages) => {
-        console.log(newMessages);
         if (newMessages.length) {
           if (!chat.messages) {
             chat.messages = signal<Message[]>(newMessages);

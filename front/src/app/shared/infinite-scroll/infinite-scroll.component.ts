@@ -10,6 +10,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  booleanAttribute,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -41,12 +42,18 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
 
   @Input() fullyLoaded = false;
 
+  @Input({ transform: booleanAttribute }) reverse = false;
+
   @Input({ alias: 'threshold' }) thresholdPercentage = 1;
 
   @Output() loadMore = new EventEmitter<void>();
 
   @HostBinding('style.flex-direction') get flexDirection() {
-    return this.direction === 'horizontal' ? 'row' : 'column';
+    let direction = this.direction === 'horizontal' ? 'row' : 'column';
+    if (this.reverse) {
+      direction += '-reverse';
+    }
+    return direction;
   }
 
   readonly host = inject(ElementRef).nativeElement;
@@ -65,6 +72,7 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
     filter(() => !this.loading),
     debounceTime(15),
     tap(() => {
+      console.log('onScrollObservable');
       this.#checkIfShouldLoadMore();
     })
   );
@@ -78,18 +86,28 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
     filter(() => !this.loading),
     tap(() => {
       this.#setBoxSize();
+      console.log('resize');
       this.#checkIfShouldLoadMore();
     })
   );
 
   readonly #childContentObserver = new MutationObserver(() => {
+    const needCheck = this.#listSize === 0;
     this.#setBoxSize();
     this.loading = false;
+
+    if (needCheck) {
+      console.log('childContentObserver');
+      this.#checkIfShouldLoadMore();
+    }
   });
 
   ngAfterViewInit() {
     this.#setBoxSize();
-    this.#checkIfShouldLoadMore();
+    if (this.#listSize > 0) {
+      console.log('ngAfterViewInit');
+      this.#checkIfShouldLoadMore();
+    }
     this.#observeChildContent();
     this.#onScrollObservable.subscribe();
     this.#onResizeObservable.subscribe();
@@ -126,9 +144,25 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
 
     const distanceFromOrigin =
       this.direction === 'vertical' ? host.scrollTop : host.scrollLeft;
-    const scrollPosition = this.#boxSize + distanceFromOrigin;
-    const thresold = (1 - this.thresholdPercentage / 100) * this.#listSize;
 
+    const scrollDirection = this.#getScrollDirection(distanceFromOrigin);
+
+    const isGoodScrollDirection =
+      this.#checkIfGoodScrollDirection(scrollDirection);
+
+    if (!isGoodScrollDirection) {
+      return;
+    }
+
+    const isNearEnd = this.#checkIfNearEnd(distanceFromOrigin);
+    if (isNearEnd && !this.loading) {
+      this.loading = true;
+      console.log('loading');
+      this.loadMore.next();
+    }
+  }
+
+  #getScrollDirection(distanceFromOrigin: number) {
     let scrollDirection: 'left' | 'right' | 'up' | 'down' =
       this.direction === 'vertical' ? 'down' : 'right';
 
@@ -137,12 +171,39 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
     }
     this.#previousScrollPosition = distanceFromOrigin;
 
-    const needMore =
-      ['down', 'right'].includes(scrollDirection) && thresold < scrollPosition;
+    // if (this.reverse) {
+    //   const opposites = {
+    //     up: 'down',
+    //     down: 'up',
+    //     left: 'right',
+    //     right: 'left',
+    //   };
 
-    if (needMore) {
-      this.loading = true;
-      this.loadMore.next();
+    //   return opposites[scrollDirection];
+    // }
+
+    return scrollDirection;
+  }
+
+  #checkIfNearEnd(distanceFromOrigin: number) {
+    const threshold = this.#boxSize * (this.thresholdPercentage / 100);
+
+    if (this.reverse) {
+      return this.direction === 'vertical'
+        ? distanceFromOrigin <= threshold
+        : distanceFromOrigin <= threshold;
     }
+
+    return this.direction === 'vertical'
+      ? distanceFromOrigin + this.#boxSize >= this.#listSize - threshold
+      : distanceFromOrigin + this.#boxSize >= this.#listSize - threshold;
+  }
+
+  #checkIfGoodScrollDirection(scrollDirection: string) {
+    if (this.reverse) {
+      return ['up', 'left'].includes(scrollDirection);
+    }
+
+    return ['down', 'right'].includes(scrollDirection);
   }
 }
