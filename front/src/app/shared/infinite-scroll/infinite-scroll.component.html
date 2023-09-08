@@ -1,3 +1,10 @@
-<span class="loading" *ngIf="reverse && !fullyLoaded && loading"></span>
-<ng-content></ng-content>
+<div
+  #containerRef
+  class="container"
+  [style.flex-direction]="this.flexDirection"
+  (scroll)="scroll && scroll($event)"
+  (resize)="resize && resize()"
+>
+  <ng-content></ng-content>
+</div>
 <span class="loading" *ngIf="!reverse && !fullyLoaded && loading"></span>

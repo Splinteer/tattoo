@@ -4,7 +4,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
 import { AvatarCustomer } from '@app/shared/avatar/avatar.component';
 import { DateTime } from 'luxon';
-import { of, tap } from 'rxjs';
+import { Subject, concatMap, of, skipWhile, tap } from 'rxjs';
 
 export type Attachment = string;
 
@@ -64,7 +64,8 @@ export class ChatService {
           return;
         }
 
-        this.loadMoreMessages(activeChat);
+        this.queueLoadMoreMessages(activeChat);
+        // this.loadMoreMessages(activeChat).subscribe();
       })
     )
     .subscribe();
@@ -72,10 +73,6 @@ export class ChatService {
   private lastLoadedChatDate = DateTime.local();
 
   readonly isLoadedSignal = signal(false);
-
-  constructor() {
-    console.log(this.lastLoadedChatDate.toISO());
-  }
 
   setActiveChat(chat: ReactiveChat) {
     this.activeChatSignal.set(chat);
@@ -129,39 +126,58 @@ export class ChatService {
       );
   }
 
-  public loadMoreMessages(
-    chat: ReactiveChat,
-    date: string = DateTime.local().toISO() as string
-  ) {
+  private loadRequests = new Subject<ReactiveChat>();
+  private listenLoads = this.loadRequests
+    .pipe(
+      skipWhile((chat) => !!chat.is_fully_loaded),
+      concatMap((chat: ReactiveChat) => this.loadMessagesForChat(chat))
+    )
+    .subscribe();
+
+  public queueLoadMoreMessages(chat: ReactiveChat) {
+    this.loadRequests.next(chat);
+  }
+
+  private loadMessagesForChat(chat: ReactiveChat) {
+    const messages = chat.messages && chat.messages();
+
+    const date = (
+      messages?.length
+        ? DateTime.fromISO(messages.at(-1)?.creation_date as string).toISO()
+        : DateTime.local().toISO()
+    ) as string;
+
     let queryParams = new HttpParams();
     queryParams = queryParams.append('date', date);
 
-    this.http
+    return this.http
       .get<Message[]>(`/chat/${chat.id}/messages`, {
         params: queryParams,
       })
-      .subscribe((newMessages) => {
-        if (newMessages.length) {
-          if (!chat.messages) {
-            chat.messages = signal<Message[]>(newMessages);
-            this.loadedChatsSignal.update((chats) => {
-              const chatIndex = chats.findIndex(
-                (currentChat) => currentChat.id === chat.id
-              );
-              chats[chatIndex] = chat;
+      .pipe(
+        tap((newMessages) => {
+          if (newMessages.length) {
+            if (!chat.messages) {
+              chat.messages = signal<Message[]>(newMessages);
+              this.loadedChatsSignal.update((chats) => {
+                const chatIndex = chats.findIndex(
+                  (currentChat) => currentChat.id === chat.id
+                );
+                chats[chatIndex] = chat;
 
-              return chats;
-            });
+                return chats;
+              });
+            } else {
+              chat.messages.update((currentMessages) => [
+                ...(currentMessages ?? []),
+                ...newMessages,
+              ]);
+            }
           } else {
-            chat.messages.update((currentMessages) => [
-              ...(currentMessages ?? []),
-              ...newMessages,
-            ]);
+            chat.is_fully_loaded = true;
           }
-        } else {
-          chat.is_fully_loaded = true;
-        }
-      });
+        })
+      );
   }
 
   addMessage(chat: ReactiveChat, content: string) {

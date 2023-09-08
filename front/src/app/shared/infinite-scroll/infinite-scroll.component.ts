@@ -3,7 +3,6 @@ import {
   ElementRef,
   EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -11,24 +10,11 @@ import {
   SimpleChanges,
   ViewChild,
   booleanAttribute,
-  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import {
-  combineLatest,
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  fromEvent,
-  map,
-  skipWhile,
-  startWith,
-  takeWhile,
-  tap,
-} from 'rxjs';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { DateTime } from 'luxon';
+import { combineLatest, filter, fromEvent, takeWhile, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-infinite-scroll',
@@ -56,7 +42,7 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
     return direction;
   }
 
-  readonly host = inject(ElementRef).nativeElement;
+  @ViewChild('containerRef', { static: true }) containerRef!: ElementRef;
 
   #boxSize: number = 0;
 
@@ -66,56 +52,48 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
 
   loading = false;
 
-  readonly #onScrollObservable = fromEvent(this.host, 'scroll').pipe(
-    takeUntilDestroyed(),
-    takeWhile(() => !this.fullyLoaded),
-    filter(() => !this.loading),
-    debounceTime(15),
-    tap(() => {
-      console.log('onScrollObservable');
-      this.#checkIfShouldLoadMore();
-    })
-  );
+  scroll: ((event: Event) => void) | null = (event: any) => {
+    if (this.loading) {
+      return;
+    }
 
-  readonly #onResizeObservable = combineLatest([
-    fromEvent(this.host, 'resize'),
-    fromEvent(window, 'resize'),
-  ]).pipe(
-    takeUntilDestroyed(),
-    takeWhile(() => !this.fullyLoaded),
-    filter(() => !this.loading),
-    tap(() => {
-      this.#setBoxSize();
-      console.log('resize');
-      this.#checkIfShouldLoadMore();
-    })
-  );
+    this.#setBoxSize();
+    this.#checkIfShouldLoadMore();
+  };
+
+  resize: (() => void) | null = () => {
+    this.#setBoxSize();
+    this.#checkIfShouldLoadMore();
+  };
+
+  readonly #onResizeObservable = combineLatest([fromEvent(window, 'resize')])
+    .pipe(
+      takeUntilDestroyed(),
+      takeWhile(() => !this.fullyLoaded),
+      filter(() => !this.loading),
+      tap(() => this.resize && this.resize())
+    )
+    .subscribe();
 
   readonly #childContentObserver = new MutationObserver(() => {
-    const needCheck = this.#listSize === 0;
     this.#setBoxSize();
     this.loading = false;
 
-    if (needCheck) {
-      console.log('childContentObserver');
-      this.#checkIfShouldLoadMore();
-    }
+    this.#checkIfShouldLoadMore();
   });
 
   ngAfterViewInit() {
     this.#setBoxSize();
     if (this.#listSize > 0) {
-      console.log('ngAfterViewInit');
       this.#checkIfShouldLoadMore();
     }
     this.#observeChildContent();
-    this.#onScrollObservable.subscribe();
-    this.#onResizeObservable.subscribe();
   }
 
   ngOnChanges({ fullyLoaded }: SimpleChanges): void {
     if (fullyLoaded && this.fullyLoaded) {
-      this.#childContentObserver.disconnect();
+      this.scroll = null;
+      this.resize = null;
     }
   }
 
@@ -124,7 +102,7 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
   }
 
   #setBoxSize() {
-    const host = this.host as HTMLElement;
+    const host = this.containerRef.nativeElement as HTMLElement;
     this.#boxSize =
       this.direction === 'vertical' ? host.clientHeight : host.clientWidth;
 
@@ -133,14 +111,18 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
   }
 
   #observeChildContent() {
-    this.#childContentObserver.observe(this.host, {
+    this.#childContentObserver.observe(this.containerRef.nativeElement, {
       childList: true,
       subtree: true,
     });
   }
 
   #checkIfShouldLoadMore() {
-    const host = this.host as HTMLElement;
+    const host = this.containerRef.nativeElement as HTMLElement;
+
+    if (this.#boxSize === this.#listSize) {
+      return this.#sendLoadMoreEvent();
+    }
 
     const distanceFromOrigin =
       this.direction === 'vertical' ? host.scrollTop : host.scrollLeft;
@@ -156,10 +138,14 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
 
     const isNearEnd = this.#checkIfNearEnd(distanceFromOrigin);
     if (isNearEnd && !this.loading) {
-      this.loading = true;
-      console.log('loading');
-      this.loadMore.next();
+      this.#sendLoadMoreEvent();
     }
+  }
+
+  #sendLoadMoreEvent() {
+    this.loading = true;
+    console.log('loading');
+    this.loadMore.next();
   }
 
   #getScrollDirection(distanceFromOrigin: number) {

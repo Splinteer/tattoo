@@ -1,13 +1,11 @@
 <app-infinite-scroll
-  (loadMore)="onScroll()"
+  (loadMore)="loadMessages()"
   [fullyLoaded]="chat.is_fully_loaded ?? false"
   reverse
 >
   <ng-container *ngIf="chat.messages && chat.messages() as messages">
     <ng-container
       *ngFor="let message of messages; let index = index; let isLast = last"
-      infiniteScroll
-      (scrolled)="onScroll()"
     >
       <div class="item">
         <div
