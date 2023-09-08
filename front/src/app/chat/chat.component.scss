@@ -9,3 +9,9 @@
 app-chat-list {
   border-right: 1px solid var(--gray-400);
 }
+
+@media (max-width: 768px) {
+  :host {
+    grid-template-columns: auto 1fr;
+  }
+}

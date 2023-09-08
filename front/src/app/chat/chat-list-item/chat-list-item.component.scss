@@ -71,25 +71,25 @@
   align-items: center;
   align-content: space-between;
   align-self: stretch;
+  gap: var(--space-200);
 }
 
 @media (max-width: 768px) {
-  :host {
-    flex-wrap: wrap;
-    text-align: center;
+  .container {
+    flex-direction: column;
 
-    .profile-pic {
-      flex-basis: 100%;
-    }
-
-    .last-message {
+    .details {
       display: none;
     }
 
-    .unread-indicator {
-      position: inherit !important;
-      right: 0 !important;
-      transform: none !important;
+    app-avatar {
+      width: 35px;
+      height: 35px;
     }
+  }
+
+  .indicators {
+    flex-direction: row-reverse;
+    justify-content: center;
   }
 }

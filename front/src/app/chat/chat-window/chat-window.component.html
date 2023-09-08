@@ -12,8 +12,7 @@
       <i class="far fa-info-circle"></i>
     </button>
   </div>
-  <app-chat-message-list *ngIf="chat.messages" [messages]="chat.messages()">
-  </app-chat-message-list>
+  <app-chat-message-list [chat]="chat"> </app-chat-message-list>
 
   <app-chat-input></app-chat-input>
 </ng-container>
