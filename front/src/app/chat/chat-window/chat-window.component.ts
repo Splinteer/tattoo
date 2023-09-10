@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../chat.service';
 import { ChatInputComponent } from '../chat-input/chat-input.component';
@@ -15,4 +15,13 @@ export class ChatWindowComponent {
   private readonly chatService = inject(ChatService);
 
   public readonly chat = this.chatService.activeChatSignal;
+
+  @HostListener('click') onClick() {
+    const chat = this.chat();
+    if (!chat || chat.is_read) {
+      return;
+    }
+
+    this.chatService.setChatAsRead(chat).subscribe();
+  }
 }

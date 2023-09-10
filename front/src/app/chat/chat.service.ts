@@ -91,8 +91,39 @@ export class ChatService {
 
   readonly isLoadedSignal = signal(false);
 
-  setActiveChat(chat: ReactiveChat) {
+  setActiveChat(chat: ReactiveChat, setRead = true) {
     this.activeChatSignal.set(chat);
+
+    if (setRead && !chat.is_read) {
+      this.setChatAsRead(chat).subscribe();
+    }
+  }
+
+  public setChatAsRead(chat: ReactiveChat) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append(
+      'date',
+      chat.last_update.toISO() as string
+    );
+
+    return this.http
+      .post<void>(
+        `/chat/read`,
+        { chatId: chat.id },
+        {
+          params: queryParams,
+        }
+      )
+      .pipe(
+        tap(() => {
+          chat.is_read = true;
+          if (chat.messages) {
+            chat.messages.update((messages) =>
+              messages.map((message) => ({ ...message, is_read: true }))
+            );
+          }
+        })
+      );
   }
 
   private formatToReactiveChat(chat: Chat): ReactiveChat {
@@ -137,7 +168,7 @@ export class ChatService {
           );
 
           if (!this.activeChatSignal()) {
-            this.activeChatSignal.set(formatedNewChats[0]);
+            this.setActiveChat(formatedNewChats[0], false);
           }
         })
       );
@@ -211,10 +242,6 @@ export class ChatService {
     }
 
     this.loadedChatsSignal.update((chats) => {
-      const chatIndex = chats.findIndex(
-        (currentChat) => currentChat.id === chat.id
-      );
-
       if (!chat.messages) {
         chat.messages = signal<Message[]>(messages);
       } else {

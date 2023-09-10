@@ -238,4 +238,14 @@ export class ChatService {
 
     this.chatNotificationService.sendMessageToUser(recipientId, message);
   }
+
+  async markChatAsRead(chatId: string, date: string) {
+    const query = `--sql
+      UPDATE message SET is_read=TRUE WHERE chat_id=$1 AND creation_date <= $2;
+    `;
+
+    console.log(chatId, date);
+
+    await this.db.query(query, [chatId, date]);
+  }
 }

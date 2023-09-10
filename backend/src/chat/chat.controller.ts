@@ -39,6 +39,17 @@ export class ChatController {
     return this.chatService.getCustomerChats(credentials.id, date);
   }
 
+  @Post('read')
+  @UseGuards(new ShopGuard())
+  async readChat(
+    @Credentials()
+    credentials: ICredentials,
+    @Query('date') date: string,
+    @Body('chatId') chatId: string,
+  ) {
+    return this.chatService.markChatAsRead(chatId, date);
+  }
+
   @Get('shop')
   @UseGuards(new ShopGuard())
   async getShopChats(
@@ -110,15 +121,5 @@ export class ChatController {
   ): Observable<MessageEvent> {
     console.log('connected');
     return this.chatNotificationService.addClient(credentials.id, request);
-  }
-
-  @Get('temp')
-  temp(@Query('message') message: string) {
-    return this.addMessage(
-      '7c914559-a6cf-47c6-9429-503f011052cb',
-      { id: '5831feb1-0ccd-4715-878b-0c73a1cd8a8f' } as ICredentials,
-      message,
-      [],
-    );
   }
 }
