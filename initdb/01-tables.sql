@@ -4,8 +4,8 @@ CREATE TABLE
     IF NOT EXISTS public.customer (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         supertokens_id uuid NOT NULL UNIQUE,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
-        last_update timestamp NOT NULL DEFAULT NOW(),
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
+        last_update timestamp(3) NOT NULL DEFAULT NOW(),
         email varchar(255) NOT NULL,
         firstname varchar(255),
         lastname varchar(255),
@@ -27,8 +27,8 @@ CREATE TABLE
     IF NOT EXISTS public.shop (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         owner_id uuid NOT NULL UNIQUE,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
-        last_update timestamp NOT NULL DEFAULT NOW(),
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
+        last_update timestamp(3) NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,
         url varchar(255) NOT NULL,
         description text,
@@ -52,8 +52,8 @@ CREATE TABLE
     IF NOT EXISTS public.address(
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
-        last_update timestamp NOT NULL DEFAULT NOW(),
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
+        last_update timestamp(3) NOT NULL DEFAULT NOW(),
         address_line_1 varchar(255) NOT NULL,
         address_line_2 varchar(255),
         state varchar(255) NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE
     IF NOT EXISTS public.flash (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,
         description text,
         image_url varchar(255) NOT NULL,
@@ -93,8 +93,8 @@ CREATE TABLE
     IF NOT EXISTS public.availability (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
-        start_date_time timestamp NOT NULL,
-        end_date_time timestamp NOT NULL,
+        start_date_time timestamp(3) NOT NULL,
+        end_date_time timestamp(3) NOT NULL,
         automatic boolean NOT NULL DEFAULT TRUE,
         CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );
@@ -103,8 +103,8 @@ CREATE TABLE
     IF NOT EXISTS public.unavailability (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,
-        start_date_time timestamp NOT NULL,
-        end_date_time timestamp NOT NULL,
+        start_date_time timestamp(3) NOT NULL,
+        end_date_time timestamp(3) NOT NULL,
         CONSTRAINT fk_shop_id_unavail FOREIGN KEY (shop_id) REFERENCES public.shop (id)
     );
 
@@ -178,9 +178,9 @@ CREATE TABLE
     IF NOT EXISTS public.appointment(
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         project_id uuid NOT NULL,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
-        start_date timestamp NOT NULL,
-        end_date timestamp,
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
+        start_date timestamp(3) NOT NULL,
+        end_date timestamp(3),
         is_confirmed boolean NOT NULL DEFAULT false,
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
     );
@@ -189,8 +189,8 @@ CREATE TABLE
     IF NOT EXISTS public.chat(
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         project_id uuid NOT NULL,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
-        last_update timestamp NOT NULL DEFAULT NOW(),
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
+        last_update timestamp(3) NOT NULL DEFAULT NOW(),
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
     );
 
@@ -198,7 +198,7 @@ CREATE TABLE
     IF NOT EXISTS public.message (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         chat_id uuid NOT NULL,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
         sender_id uuid NOT NULL,
         content text NOT NULL,
         is_read boolean NOT NULL DEFAULT false,
@@ -221,7 +221,7 @@ CREATE TABLE
         image_url varchar(255) NOT NULL,
         image_version integer NOT NULL DEFAULT 0,
         project_id uuid,
-        creation_date timestamp NOT NULL DEFAULT NOW(),
+        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
         name varchar(255) NOT NULL,
         description text,
         CONSTRAINT fk_shop_id FOREIGN KEY (shop_id) REFERENCES public.shop (id),
