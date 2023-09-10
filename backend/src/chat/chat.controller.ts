@@ -49,6 +49,16 @@ export class ChatController {
     return this.chatService.getShopChats(credentials.shop_id, date);
   }
 
+  @Get('shop/:chatId')
+  @UseGuards(new ShopGuard())
+  async getShopChat(
+    @Credentials()
+    credentials: ICredentials,
+    @Param('chatId') chatId: string,
+  ) {
+    return this.chatService.getShopChat(chatId);
+  }
+
   @Get(':chatId/messages')
   @UseGuards(new AuthGuard())
   @UseInterceptors(FilesInterceptor('attachments'))
@@ -98,6 +108,17 @@ export class ChatController {
     @Credentials()
     credentials: ICredentials,
   ): Observable<MessageEvent> {
+    console.log('connected');
     return this.chatNotificationService.addClient(credentials.id, request);
+  }
+
+  @Get('temp')
+  temp(@Query('message') message: string) {
+    return this.addMessage(
+      '7c914559-a6cf-47c6-9429-503f011052cb',
+      { id: '5831feb1-0ccd-4715-878b-0c73a1cd8a8f' } as ICredentials,
+      message,
+      [],
+    );
   }
 }

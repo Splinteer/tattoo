@@ -143,6 +143,25 @@ export class ChatService {
       );
   }
 
+  private loadChat(chatId: string) {
+    return this.http.get<Chat>(`/chat/shop/${chatId}`).pipe(
+      tap((chat) => {
+        const formatedNewChat = this.formatToReactiveChat(chat);
+        let chats: ReactiveChat[] = [];
+        this.loadedChatsSignal.update((currentChats) => {
+          chats = [...currentChats, formatedNewChat];
+
+          return chats;
+        });
+
+        const lastChat = chats.at(-1);
+        if (lastChat) {
+          this.lastLoadedChatDate = lastChat.last_update;
+        }
+      })
+    );
+  }
+
   readonly #loadRequests = new Subject<ReactiveChat>();
 
   readonly #listenLoads = this.#loadRequests
@@ -208,8 +227,7 @@ export class ChatService {
 
       const registeredMessages = chat.messages();
       chat.last_update =
-        (registeredMessages.length &&
-          DateTime.fromISO(registeredMessages.at(-1)!.creation_date)) ||
+        DateTime.fromISO(registeredMessages[0].creation_date) ||
         chat.last_update;
 
       return chats;
@@ -249,7 +267,7 @@ export class ChatService {
 
         const chat = loadedChats.find((c) => c.id === newMessage.chat_id);
         if (!chat) {
-          // TODO
+          this.loadChat(newMessage.chat_id).subscribe();
           return;
         }
 

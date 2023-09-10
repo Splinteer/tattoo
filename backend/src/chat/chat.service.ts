@@ -81,6 +81,51 @@ export class ChatService {
     return chats;
   }
 
+  async getShopChat(chatId: string) {
+    const query = `--sql
+      SELECT
+          c.id AS id,
+          c.project_id,
+          p.name as project_name,
+          c.creation_date AS creation_date,
+          COALESCE(m.creation_date, c.creation_date) AS last_update,
+          CONCAT_WS(' ', customer.firstname, customer.lastname) as contact_name,
+          json_build_object(
+            'id', customer.id,
+            'got_profile_picture', customer.got_profile_picture,
+            'profile_picture_version', customer.profile_picture_version
+          ) as avatar,
+          m.content as last_message,
+          m.id IS NULL OR m.sender_id <> customer.id OR m.is_read as is_read
+      FROM chat c
+
+      INNER JOIN project p ON p.id = c.project_id
+      INNER JOIN customer ON customer.id = p.customer_id
+      LEFT JOIN LATERAL(
+        SELECT
+          m.id,
+          m.chat_id,
+          m.content,
+          m.creation_date,
+          m.sender_id,
+          m.is_read
+        FROM message m
+        LEFT JOIN message_attachment ma ON m.id = ma.message_id
+        WHERE chat_id = c.id
+        GROUP BY m.id
+        ORDER BY creation_date DESC
+        LIMIT 1
+      ) AS m ON c.id = m.chat_id
+
+      WHERE c.id = $1
+      GROUP BY c.id, customer.id, p.name, m.id, m.sender_id, m.is_read, m.content, m.creation_date
+    `;
+
+    const { rows: chats } = await this.db.query(query, [chatId]);
+
+    return chats[0];
+  }
+
   async addMessage(chatId: string, senderId: string, content: string) {
     const query = `--sql
       INSERT INTO message(chat_id, sender_id, content) VALUES ($1, $2, $3) RETURNING *;
