@@ -1,5 +1,6 @@
 import { DbService } from '@app/common/db/db.service';
 import { Injectable } from '@nestjs/common';
+import { ChatNotificationService } from './chat-notification/chat-notification.service';
 
 export type Attachment = string;
 
@@ -15,7 +16,10 @@ export type Message = {
 
 @Injectable()
 export class ChatService {
-  constructor(private readonly db: DbService) {
+  constructor(
+    private readonly db: DbService,
+    private readonly chatNotificationService: ChatNotificationService,
+  ) {
     this.getShopChats(
       '2d24ec73-d53b-451f-9d6f-89b9194c795d',
       '2023-09-04T01:47:28.564+02:00',
@@ -101,7 +105,7 @@ export class ChatService {
     chatId: string,
     last_fetched_date: string,
     limit = 10,
-  ) {
+  ): Promise<Message[]> {
     const query = `--sql
       SELECT
         m.*,
@@ -119,12 +123,74 @@ export class ChatService {
       LIMIT ${limit}
     `;
 
-    const { rows: chats } = await this.db.query<Message>(query, [
+    const { rows: messages } = await this.db.query<Message>(query, [
       customerId,
       chatId,
       last_fetched_date,
     ]);
 
-    return chats;
+    return messages;
+  }
+
+  async getMessage(id: string): Promise<Message> {
+    const query = `--sql
+      SELECT
+        m.*,
+        FALSE as is_sender,
+        COALESCE(
+          array_agg(ma.image_url) FILTER (WHERE ma.message_id IS NOT NULL),
+          ARRAY[]::varchar[]
+        ) AS attachments
+      FROM message m
+      LEFT JOIN message_attachment ma ON m.id = ma.message_id
+      WHERE m.id = $1
+      GROUP BY m.id
+      ORDER BY creation_date DESC
+    `;
+
+    const { rows: messages } = await this.db.query<Message>(query, [id]);
+
+    return messages[0];
+  }
+
+  async getRecipientIdWithMessageId(messageId: string): Promise<string> {
+    const query = `--sql
+      SELECT
+        CASE
+            WHEN m.sender_id = p.customer_id  THEN s.owner_id
+            ELSE p.customer_id
+        END AS recipient_id
+      FROM message m
+      INNER JOIN chat c ON c.id=m.chat_id
+      INNER JOIN project p ON p.id=c.project_id
+      INNER JOIN shop s ON s.id=p.shop_id
+      WHERE m.id = $1
+    `;
+
+    const { rows: ids } = await this.db.query<{ recipient_id: string }>(query, [
+      messageId,
+    ]);
+
+    return ids[0].recipient_id;
+  }
+
+  async sendMessageToUser(messageId: string) {
+    const recipientId = await this.getRecipientIdWithMessageId(messageId);
+    if (!recipientId) {
+      console.error(`Can't find recipiend id. Message id: ${messageId}`);
+      return;
+    }
+
+    if (!this.chatNotificationService.checkUserConnected(recipientId)) {
+      return;
+    }
+
+    const message = await this.getMessage(messageId);
+    if (!message) {
+      console.error(`Can't find message. Message id: ${messageId}`);
+      return;
+    }
+
+    this.chatNotificationService.sendMessageToUser(recipientId, message);
   }
 }

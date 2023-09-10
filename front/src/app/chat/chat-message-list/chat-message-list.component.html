@@ -40,10 +40,9 @@
       <div
         class="day item"
         *ngIf="
-          index === 0 ||
-          (messages[index - 1] &&
-            (messages[index - 1].creation_date | date : 'mediumDate') !==
-              (message.creation_date | date : 'mediumDate'))
+          isLast ||
+          (messages[index + 1].creation_date | date : 'mediumDate') !==
+            (message.creation_date | date : 'mediumDate')
         "
       >
         {{ message.creation_date | date : "mediumDate" }}

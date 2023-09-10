@@ -129,6 +129,8 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
 
     const scrollDirection = this.#getScrollDirection(distanceFromOrigin);
 
+    this.#previousScrollPosition = distanceFromOrigin;
+
     const isGoodScrollDirection =
       this.#checkIfGoodScrollDirection(scrollDirection);
 
@@ -144,7 +146,6 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
 
   #sendLoadMoreEvent() {
     this.loading = true;
-    console.log('loading');
     this.loadMore.next();
   }
 
@@ -155,18 +156,6 @@ export class InfiniteScrollComponent implements OnDestroy, OnChanges {
     if (distanceFromOrigin < this.#previousScrollPosition) {
       scrollDirection = this.direction === 'vertical' ? 'up' : 'left';
     }
-    this.#previousScrollPosition = distanceFromOrigin;
-
-    // if (this.reverse) {
-    //   const opposites = {
-    //     up: 'down',
-    //     down: 'up',
-    //     left: 'right',
-    //     right: 'left',
-    //   };
-
-    //   return opposites[scrollDirection];
-    // }
 
     return scrollDirection;
   }

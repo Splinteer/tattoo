@@ -14,9 +14,13 @@ import { InfiniteScrollComponent } from '@app/shared/infinite-scroll/infinite-sc
 export class ChatListComponent {
   readonly #chatservice = inject(ChatService);
 
-  readonly loadedChatsSignal = this.#chatservice.loadedChatsSignal;
+  readonly chats = this.#chatservice.orderedLoadedChats;
 
   readonly isLoaded = this.#chatservice.isLoadedSignal;
+
+  constructor() {
+    this.#chatservice.createEventSource();
+  }
 
   onScroll() {
     this.#chatservice.loadMoreChats().subscribe();

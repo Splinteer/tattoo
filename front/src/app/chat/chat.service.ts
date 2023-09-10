@@ -1,10 +1,18 @@
 import { HttpParams } from '@angular/common/http';
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import {
+  Injectable,
+  WritableSignal,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
+import { Credentials } from '@app/auth/credentials.service';
 import { AvatarCustomer } from '@app/shared/avatar/avatar.component';
+import { environment } from '@env/environment';
 import { DateTime } from 'luxon';
-import { Subject, concatMap, of, skipWhile, tap } from 'rxjs';
+import { Observable, Subject, concatMap, of, skipWhile, tap } from 'rxjs';
 
 export type Attachment = string;
 
@@ -52,7 +60,16 @@ export type ReactiveChat = {
 export class ChatService {
   private readonly http = inject(HttpService); // Inject your HttpService
 
+  public readonly synced = signal(false);
+
   public readonly loadedChatsSignal = signal<ReactiveChat[]>([]);
+
+  public readonly orderedLoadedChats = computed(() => {
+    const loadedChats = this.loadedChatsSignal();
+    loadedChats.sort((a, b) => (a.last_update < b.last_update ? 1 : -1));
+
+    return loadedChats;
+  });
 
   public readonly activeChatSignal = signal<ReactiveChat | null>(null);
 
@@ -126,8 +143,9 @@ export class ChatService {
       );
   }
 
-  private loadRequests = new Subject<ReactiveChat>();
-  private listenLoads = this.loadRequests
+  readonly #loadRequests = new Subject<ReactiveChat>();
+
+  readonly #listenLoads = this.#loadRequests
     .pipe(
       skipWhile((chat) => !!chat.is_fully_loaded),
       concatMap((chat: ReactiveChat) => this.loadMessagesForChat(chat))
@@ -135,7 +153,7 @@ export class ChatService {
     .subscribe();
 
   public queueLoadMoreMessages(chat: ReactiveChat) {
-    this.loadRequests.next(chat);
+    this.#loadRequests.next(chat);
   }
 
   private loadMessagesForChat(chat: ReactiveChat) {
@@ -156,28 +174,46 @@ export class ChatService {
       })
       .pipe(
         tap((newMessages) => {
-          if (newMessages.length) {
-            if (!chat.messages) {
-              chat.messages = signal<Message[]>(newMessages);
-              this.loadedChatsSignal.update((chats) => {
-                const chatIndex = chats.findIndex(
-                  (currentChat) => currentChat.id === chat.id
-                );
-                chats[chatIndex] = chat;
-
-                return chats;
-              });
-            } else {
-              chat.messages.update((currentMessages) => [
-                ...(currentMessages ?? []),
-                ...newMessages,
-              ]);
-            }
-          } else {
+          this.addMessagesToChat(chat, newMessages);
+          if (!newMessages.length) {
             chat.is_fully_loaded = true;
           }
         })
       );
+  }
+
+  private addMessagesToChat(
+    chat: ReactiveChat,
+    messages: Message[],
+    isNew = false
+  ) {
+    if (!messages.length) {
+      return;
+    }
+
+    this.loadedChatsSignal.update((chats) => {
+      const chatIndex = chats.findIndex(
+        (currentChat) => currentChat.id === chat.id
+      );
+
+      if (!chat.messages) {
+        chat.messages = signal<Message[]>(messages);
+      } else {
+        chat.messages.update((currentMessages) => {
+          return isNew
+            ? [...messages, ...(currentMessages ?? [])]
+            : [...(currentMessages ?? []), ...messages];
+        });
+      }
+
+      const registeredMessages = chat.messages();
+      chat.last_update =
+        (registeredMessages.length &&
+          DateTime.fromISO(registeredMessages.at(-1)!.creation_date)) ||
+        chat.last_update;
+
+      return chats;
+    });
   }
 
   addMessage(chat: ReactiveChat, content: string) {
@@ -193,5 +229,49 @@ export class ChatService {
           message,
         ]);
       });
+  }
+
+  createEventSource(tryCount = 1) {
+    try {
+      const source = new EventSource(`${environment.serverUrl}/chat/sync`, {
+        withCredentials: true,
+      });
+
+      source.addEventListener('open', () => this.synced.set(true));
+
+      source.addEventListener('message', ({ data }) => {
+        const newMessage = JSON.parse(data) as Message;
+        if (!newMessage) {
+          return;
+        }
+
+        const loadedChats = this.loadedChatsSignal();
+
+        const chat = loadedChats.find((c) => c.id === newMessage.chat_id);
+        if (!chat) {
+          // TODO
+          return;
+        }
+
+        this.addMessagesToChat(chat, [newMessage], true);
+      });
+
+      source.addEventListener('error', (error) => {
+        this.synced.set(false);
+        if (source.readyState === EventSource.CLOSED) {
+          setTimeout(() => {
+            this.createEventSource();
+          }, 5000); // 5 seconds delay
+        } else {
+          console.error('EventSource failed:', error);
+        }
+      });
+    } catch (error) {
+      if (tryCount <= 5) {
+        setTimeout(() => {
+          this.createEventSource(tryCount + 1);
+        }, 5000); // 5 seconds delay
+      }
+    }
   }
 }

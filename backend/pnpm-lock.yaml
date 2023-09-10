@@ -35,6 +35,9 @@ dependencies:
   class-validator:
     specifier: ^0.14.0
     version: 0.14.0
+  express:
+    specifier: ^4.18.2
+    version: 4.18.2
   express-jwt:
     specifier: ^7.7.7
     version: 7.7.7
@@ -86,7 +89,7 @@ devDependencies:
     specifier: ^2.4.0
     version: 2.4.0
   '@types/express':
-    specifier: ^4.17.13
+    specifier: ^4.17.14
     version: 4.17.14
   '@types/jest':
     specifier: 28.1.8
