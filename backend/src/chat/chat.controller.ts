@@ -2,31 +2,35 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   MessageEvent,
   Param,
   Post,
   Query,
   Req,
+  NotFoundException,
   Sse,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ChatService, Message } from './chat.service';
+import { Attachment, ChatService, Message } from './chat.service';
 import { Credentials } from 'src/auth/session/session.decorator';
 import { Credentials as ICredentials } from 'src/auth/credentials/credentials.service';
 import { ShopGuard } from 'src/shop/shop.guard';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { Observable, Subject, map, tap } from 'rxjs';
+import { NotFoundError, Observable, Subject, map, tap } from 'rxjs';
 import { ChatNotificationService } from './chat-notification/chat-notification.service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { StorageService } from '@app/common/storage/storage.service';
 
 @Controller('chat')
 export class ChatController {
   constructor(
     private readonly chatService: ChatService,
     private readonly chatNotificationService: ChatNotificationService,
+    @Inject('public') private readonly publicStorage: StorageService,
   ) {}
 
   @Get()
@@ -67,6 +71,14 @@ export class ChatController {
     credentials: ICredentials,
     @Param('chatId') chatId: string,
   ) {
+    const canAccessChat = await this.chatService.checkChatAccess(
+      credentials,
+      chatId,
+    );
+    if (!canAccessChat) {
+      throw new NotFoundException();
+    }
+
     return this.chatService.getShopChat(chatId);
   }
 
@@ -79,7 +91,33 @@ export class ChatController {
     credentials: ICredentials,
     @Query('date') date: string,
   ): Promise<Message[]> {
-    return this.chatService.getMessages(credentials.id, chatId, date);
+    const canAccessChat = await this.chatService.checkChatAccess(
+      credentials,
+      chatId,
+    );
+    if (!canAccessChat) {
+      throw new NotFoundException();
+    }
+
+    const messages = await this.chatService.getMessages(
+      credentials.id,
+      chatId,
+      date,
+    );
+
+    return Promise.all(
+      messages.map(async (message) => {
+        if (message.attachments.length) {
+          message.attachments = await Promise.all(
+            message.attachments.map((attachment) =>
+              this.publicStorage.getSignedUrl(attachment),
+            ),
+          );
+        }
+
+        return message;
+      }),
+    );
   }
 
   @Post(':chatId/message')
@@ -92,15 +130,33 @@ export class ChatController {
     @Body('content') content: string,
     @UploadedFiles() files?: Array<Express.Multer.File>,
   ): Promise<Message> {
+    const canAccessChat = await this.chatService.checkChatAccess(
+      credentials,
+      chatId,
+    );
+    if (!canAccessChat) {
+      throw new NotFoundException();
+    }
+
     const message = await this.chatService.addMessage(
       chatId,
       credentials.id,
       content,
     );
 
-    const attachments = [];
+    let attachments: string[] = [];
     if (files?.length) {
-      // TODO
+      const addedAttachments = await this.chatService.addAttachments(
+        message.id,
+        message.chat_id,
+        files,
+      );
+
+      attachments = await Promise.all(
+        addedAttachments.map((attachment) =>
+          this.publicStorage.getSignedUrl(attachment.image_url),
+        ),
+      );
     }
 
     this.chatService.sendMessageToUser(message.id).catch(console.error);
@@ -112,6 +168,26 @@ export class ChatController {
     };
   }
 
+  // @Get('message/:messageId/:attachmentId')
+  // @UseGuards(new AuthGuard())
+  // async getAttachmentData(
+  //   @Credentials()
+  //   credentials: ICredentials,
+  //   @Param('messageId') messageId: string,
+  //   @Param('attachmentId') attachmentId: string,
+  // ) {
+  //   const attachment = await this.chatService.getAttachment(
+  //     messageId,
+  //     attachmentId,
+  //   );
+
+  //   const signelUrl = await this.publicStorage.getSignedUrl(
+  //     attachment.image_url,
+  //   );
+
+  //   return { url: signelUrl };
+  // }
+
   @Sse('sync')
   @UseGuards(new AuthGuard())
   sse(
@@ -119,7 +195,6 @@ export class ChatController {
     @Credentials()
     credentials: ICredentials,
   ): Observable<MessageEvent> {
-    console.log('connected');
     return this.chatNotificationService.addClient(credentials.id, request);
   }
 }

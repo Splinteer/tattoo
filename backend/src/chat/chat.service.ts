@@ -1,8 +1,16 @@
 import { DbService } from '@app/common/db/db.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ChatNotificationService } from './chat-notification/chat-notification.service';
+import { StorageService } from '@app/common/storage/storage.service';
+import { type } from 'os';
+import { ProjectAttachment } from 'src/booking/booking.service';
+import { Credentials } from 'src/auth/credentials/credentials.service';
 
-export type Attachment = string;
+export type Attachment = {
+  id: string;
+  message_id: string;
+  image_url: string;
+};
 
 export type Message = {
   id: string;
@@ -11,7 +19,7 @@ export type Message = {
   is_sender: boolean;
   content: string;
   is_read: boolean;
-  attachments: Attachment[];
+  attachments: string[];
 };
 
 @Injectable()
@@ -19,6 +27,7 @@ export class ChatService {
   constructor(
     private readonly db: DbService,
     private readonly chatNotificationService: ChatNotificationService,
+    @Inject('public') private readonly publicStorage: StorageService,
   ) {
     this.getShopChats(
       '2d24ec73-d53b-451f-9d6f-89b9194c795d',
@@ -59,7 +68,6 @@ export class ChatService {
           m.sender_id,
           m.is_read
         FROM message m
-        LEFT JOIN message_attachment ma ON m.id = ma.message_id
         WHERE chat_id = c.id
         GROUP BY m.id
         ORDER BY creation_date DESC
@@ -110,7 +118,6 @@ export class ChatService {
           m.sender_id,
           m.is_read
         FROM message m
-        LEFT JOIN message_attachment ma ON m.id = ma.message_id
         WHERE chat_id = c.id
         GROUP BY m.id
         ORDER BY creation_date DESC
@@ -124,6 +131,27 @@ export class ChatService {
     const { rows: chats } = await this.db.query(query, [chatId]);
 
     return chats[0];
+  }
+
+  async checkChatAccess(
+    credentials: Credentials,
+    chatId: string,
+  ): Promise<boolean> {
+    const query = `--sql
+      SELECT p.customer_id=$1 OR p.shop_id=$2 as can_access FROM chat c
+      INNER JOIN project p ON p.id=c.project_id
+      WHERE c.id=$3
+    `;
+
+    const {
+      rows: [{ can_access }],
+    } = await this.db.query<{ can_access: boolean }>(query, [
+      credentials.id,
+      credentials.shop_id,
+      chatId,
+    ]);
+
+    return can_access;
   }
 
   async addMessage(chatId: string, senderId: string, content: string) {
@@ -143,6 +171,34 @@ export class ChatService {
     }>(query, [chatId, senderId, content]);
 
     return message;
+  }
+
+  public async addAttachments(
+    messageId: string,
+    chatId: string,
+    attachments: Express.Multer.File[],
+  ): Promise<Attachment[]> {
+    return Promise.all(
+      attachments.map(async (attachment) => {
+        const attachmentId = DbService.getUUID();
+        const path = `chats/${chatId}/${attachmentId}`;
+
+        await this.publicStorage.save(path, attachment, {
+          public: false,
+        });
+
+        const query = `--sql
+          INSERT INTO public.message_attachment (message_id, image_url)
+          VALUES($1, $2) RETURNING *;
+        `;
+
+        const {
+          rows: [insertedAttachment],
+        } = await this.db.query<Attachment>(query, [messageId, path]);
+
+        return insertedAttachment;
+      }),
+    );
   }
 
   async getMessages(
@@ -193,9 +249,19 @@ export class ChatService {
       ORDER BY creation_date DESC
     `;
 
-    const { rows: messages } = await this.db.query<Message>(query, [id]);
+    const {
+      rows: [message],
+    } = await this.db.query<Message>(query, [id]);
 
-    return messages[0];
+    if (message.attachments.length) {
+      message.attachments = await Promise.all(
+        message.attachments.map((attachment) =>
+          this.publicStorage.getSignedUrl(attachment),
+        ),
+      );
+    }
+
+    return message;
   }
 
   async getRecipientIdWithMessageId(messageId: string): Promise<string> {
@@ -239,12 +305,27 @@ export class ChatService {
     this.chatNotificationService.sendMessageToUser(recipientId, message);
   }
 
+  // async getAttachment(
+  //   messageId: string,
+  //   attachmentId: string,
+  // ): Promise<Attachment> {
+  //   const query = `--sql
+  //     SELECT * FROM message_attachment
+  //     WHERE id=$2
+  //     AND message_id=$1
+  //   `;
+
+  //   const {
+  //     rows: [attachment],
+  //   } = await this.db.query<Attachment>(query, [messageId, attachmentId]);
+
+  //   return attachment;
+  // }
+
   async markChatAsRead(chatId: string, date: string) {
     const query = `--sql
       UPDATE message SET is_read=TRUE WHERE chat_id=$1 AND creation_date <= $2;
     `;
-
-    console.log(chatId, date);
 
     await this.db.query(query, [chatId, date]);
   }

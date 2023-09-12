@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChatMessageListComponent } from './chat-message-list.component';
+import { ChatMessageListComponent } from './ChatMessageListComponent';
 
 describe('ChatMessageListComponent', () => {
   let component: ChatMessageListComponent;
@@ -8,7 +8,7 @@ describe('ChatMessageListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ChatMessageListComponent]
+      imports: [ChatMessageListComponent],
     });
     fixture = TestBed.createComponent(ChatMessageListComponent);
     component = fixture.componentInstance;

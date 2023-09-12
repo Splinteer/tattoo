@@ -208,9 +208,9 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS public.message_attachment(
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         message_id uuid NOT NULL,
         image_url varchar(255) NOT NULL,
-        PRIMARY KEY (message_id, image_url),
         CONSTRAINT fk_message_id FOREIGN KEY (message_id) REFERENCES public.message (id)
     );
 

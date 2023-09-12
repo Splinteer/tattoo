@@ -27,6 +27,17 @@
       max-width: 70%;
     }
 
+    .message-attachments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-100);
+
+      img {
+        max-height: 150px;
+        border-radius: var(--border-radius);
+      }
+    }
+
     .message-content {
       background-color: var(--primary-color);
       color: white;

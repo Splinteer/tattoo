@@ -1,12 +1,22 @@
-import { Component, Renderer2, inject } from '@angular/core';
+import { Component, Renderer2, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../chat.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { map, startWith, switchMap } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  BehaviorSubject,
+  Observable,
+  forkJoin,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ImagePreviewService } from '@app/shared/image-preview.service';
 
 type SkinVariation = {
   unified: string;
@@ -40,6 +50,7 @@ type Emoji = {
     TranslateModule,
     OverlayModule,
   ],
+  providers: [ImagePreviewService],
   templateUrl: './chat-input.component.html',
   styleUrls: ['./chat-input.component.scss'],
 })
@@ -50,11 +61,21 @@ export class ChatInputComponent {
 
   private readonly translateService = inject(TranslateService);
 
+  readonly #imagePreviewService = inject(ImagePreviewService);
+
   public readonly chat = this.chatService.activeChatSignal;
 
   public newMessage = '';
 
-  public readonly attachments: File[] = [];
+  readonly #attachments$ = signal<File[]>([]);
+
+  readonly imagesPreview$ = this.#imagePreviewService.getImagesPreviews(
+    toObservable(this.#attachments$)
+  );
+
+  fileSizeError: boolean = false;
+
+  fileTypeError: boolean = false;
 
   public isEmojiOverlayOpen = false;
 
@@ -76,12 +97,16 @@ export class ChatInputComponent {
 
   addMessage() {
     const chat = this.chat();
-    if (!this.newMessage.length || !chat) {
+    const attachments = this.#attachments$();
+    if ((!this.newMessage.length && !attachments.length) || !chat) {
       return;
     }
 
-    this.chatService.addMessage(chat, this.newMessage);
+    this.chatService.addMessage(chat, this.newMessage, attachments);
     this.newMessage = '';
+    this.fileSizeError = false;
+    this.fileTypeError = false;
+    this.#attachments$.set([]);
   }
 
   adjustTextareaHeight(event: any): void {
@@ -90,35 +115,34 @@ export class ChatInputComponent {
     this.renderer.setStyle(textarea, 'height', textarea.scrollHeight + 'px');
   }
 
-  fileSizeError: boolean = false;
-
-  fileTypeError: boolean = false;
-
   onFileChange(event: any) {
-    const file = event.target.files[0];
+    const files = Array.from(event.target.files as FileList);
     const maxSize = 2 * 1024 * 1024; // 2MB
+    this.fileSizeError = false;
+    this.fileTypeError = false;
 
-    // Check file size
-    if (file.size > maxSize) {
-      this.fileSizeError = true;
-      // Optionally, clear the input
-      event.target.value = '';
-      return; // Exit the function early if the file size is too large
-    } else {
-      this.fileSizeError = false;
-    }
+    files.forEach((file: File) => {
+      if (file.size > maxSize) {
+        this.fileSizeError = true;
+        event.target.value = '';
+        return;
+      }
 
-    // Check file type
-    const allowedTypes = ['image/jpeg', 'image/png'];
-    if (!allowedTypes.includes(file.type)) {
-      this.fileTypeError = true;
-      // Optionally, clear the input
-      event.target.value = '';
-      return; // Exit the function early if the file type is not allowed
-    } else {
-      this.fileTypeError = false;
-    }
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        this.fileTypeError = true;
+        event.target.value = '';
+        return;
+      }
 
-    // Handle the file upload or any other operations
+      this.#attachments$.update((files) => [...files, file]);
+    });
+  }
+
+  removeImage(index: number) {
+    this.#attachments$.update((files) => {
+      files.splice(index, 1);
+      return files;
+    });
   }
 }

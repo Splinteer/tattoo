@@ -13,7 +13,13 @@
           [ngClass]="message.is_sender ? 'mine' : 'theirs'"
         >
           <span class="message">
-            <div class="message-content break-lines">
+            <div class="message-attachments" *ngIf="message.attachments.length">
+              <img
+                *ngFor="let attachment of message.attachments"
+                [src]="attachment"
+              />
+            </div>
+            <div class="message-content break-lines" *ngIf="message.content">
               {{ message.content }}
             </div>
           </span>

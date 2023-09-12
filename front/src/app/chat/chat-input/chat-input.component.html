@@ -1,64 +1,88 @@
-<button class="media-btn" (click)="fileInput.click()">
-  <i class="fa-solid fa-image"></i>
-</button>
+<ng-container *ngIf="imagesPreview$ | async as imagesPreview">
+  <div class="preview-container" *ngIf="imagesPreview.length">
+    <div
+      class="image-container"
+      *ngFor="let image of imagesPreview; let imageIndex = index"
+    >
+      <img [src]="image" />
+
+      <button type="button" class="button button-outline">
+        <i class="fa-regular fa-times" (click)="removeImage(imageIndex)"></i>
+      </button>
+    </div>
+  </div>
+  <div class="preview-error-container">
+    <div class="error-group" *ngIf="fileSizeError" translate>
+      Fichier trop gros
+    </div>
+
+    <div class="error-group" *ngIf="fileTypeError" translate>Pas une image</div>
+  </div>
+</ng-container>
 <div class="input-container">
-  <textarea
-    (input)="adjustTextareaHeight($event)"
-    rows="1"
-    [(ngModel)]="newMessage"
-    type="text"
-    placeholder="Aa"
-    (keyup.enter)="addMessage()"
-  ></textarea>
-
-  <button
-    (click)="isEmojiOverlayOpen = true"
-    class="emoji-btn"
-    cdkOverlayOrigin
-    #trigger="cdkOverlayOrigin"
-  >
-    <i class="fa-sharp fa-solid fa-face-smile"></i>
+  <button class="media-btn" (click)="fileInput.click()">
+    <i class="fa-solid fa-image"></i>
   </button>
+  <div class="input-container">
+    <textarea
+      (input)="adjustTextareaHeight($event)"
+      rows="1"
+      [(ngModel)]="newMessage"
+      type="text"
+      placeholder="Aa"
+      (keyup.enter)="addMessage()"
+    ></textarea>
+
+    <button
+      (click)="isEmojiOverlayOpen = true"
+      class="emoji-btn"
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+    >
+      <i class="fa-sharp fa-solid fa-face-smile"></i>
+    </button>
+  </div>
+
+  <button class="send-btn" (click)="addMessage()">
+    <i class="fa-sharp fa-solid fa-paper-plane-top"></i>
+  </button>
+
+  <input
+    #fileInput
+    type="file"
+    style="display: none"
+    (change)="onFileChange($event)"
+    accept=".jpg, .jpeg, .png"
+    multiple
+  />
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isEmojiOverlayOpen"
+    [cdkConnectedOverlayFlexibleDimensions]="true"
+    [cdkConnectedOverlayPush]="true"
+    (overlayOutsideClick)="isEmojiOverlayOpen = false"
+    [cdkConnectedOverlayPositions]="[
+      {
+        originX: 'end',
+        originY: 'top',
+        overlayX: 'end',
+        overlayY: 'bottom',
+        offsetX: 5,
+      }
+    ]"
+  >
+    <emoji-mart
+      title="Pick your emoji…"
+      emoji="thumbs_up"
+      [i18n]="emojiMartTranslation()"
+      color="var(--primary-color)"
+      [darkMode]="false"
+      [isNative]="true"
+      (emojiSelect)="addEmoji($event)"
+      [enableFrequentEmojiSort]="true"
+      [showPreview]="false"
+    ></emoji-mart>
+  </ng-template>
 </div>
-
-<button class="send-btn" (click)="addMessage()">
-  <i class="fa-sharp fa-solid fa-paper-plane-top"></i>
-</button>
-
-<input
-  #fileInput
-  type="file"
-  style="display: none"
-  (change)="onFileChange($event)"
-  accept=".jpg, .jpeg, .png"
-/>
-
-<ng-template
-  cdkConnectedOverlay
-  [cdkConnectedOverlayOrigin]="trigger"
-  [cdkConnectedOverlayOpen]="isEmojiOverlayOpen"
-  [cdkConnectedOverlayFlexibleDimensions]="true"
-  [cdkConnectedOverlayPush]="true"
-  (overlayOutsideClick)="isEmojiOverlayOpen = false"
-  [cdkConnectedOverlayPositions]="[
-    {
-      originX: 'end',
-      originY: 'top',
-      overlayX: 'end',
-      overlayY: 'bottom',
-      offsetX: 5,
-    }
-  ]"
->
-  <emoji-mart
-    title="Pick your emoji…"
-    emoji="thumbs_up"
-    [i18n]="emojiMartTranslation()"
-    color="var(--primary-color)"
-    [darkMode]="false"
-    [isNative]="true"
-    (emojiSelect)="addEmoji($event)"
-    [enableFrequentEmojiSort]="true"
-    [showPreview]="false"
-  ></emoji-mart>
-</ng-template>

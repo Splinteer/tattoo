@@ -261,9 +261,16 @@ export class ChatService {
     });
   }
 
-  addMessage(chat: ReactiveChat, content: string) {
+  addMessage(chat: ReactiveChat, content: string, attachments: File[]) {
+    const formData = new FormData();
+
+    formData.append('content', content);
+    attachments.forEach((file) => {
+      formData.append('attachments', file);
+    });
+
     this.http
-      .post<Message>(`/chat/${chat.id}/message`, { content })
+      .post<Message>(`/chat/${chat.id}/message`, formData)
       .subscribe((message) => {
         if (!chat.messages) {
           chat.messages = signal<Message[]>([]);
