@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, fromEvent, of } from 'rxjs';
 import { map, share, shareReplay, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
+import { Dialog } from '@angular/cdk/dialog';
+import { ImagePreviewDialogComponent } from './image-preview-dialog/image-preview-dialog.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ImagePreviewService {
+  private readonly dialog = inject(Dialog);
+
   getImagesPreviews(observable: Observable<File[]>) {
     return observable.pipe(
       switchMap((files) => {
-        console.log('getPPPPPPP');
         if (files.length === 0) {
           return of([]);
         }
@@ -37,5 +40,13 @@ export class ImagePreviewService {
       }),
       share()
     );
+  }
+
+  public openModal(src: string) {
+    this.dialog.open(ImagePreviewDialogComponent, {
+      maxWidth: '1000px',
+      maxHeight: '90%',
+      data: src,
+    });
   }
 }

@@ -14,10 +14,13 @@
         >
           <span class="message">
             <div class="message-attachments" *ngIf="message.attachments.length">
-              <img
+              <button
                 *ngFor="let attachment of message.attachments"
-                [src]="attachment"
-              />
+                (click)="openModalPreview(attachment)"
+                class="cursor-pointer"
+              >
+                <img [src]="attachment" />
+              </button>
             </div>
             <div class="message-content break-lines" *ngIf="message.content">
               {{ message.content }}
@@ -38,8 +41,9 @@
               messages[index + 1].is_sender &&
               !messages[index + 1].is_read)
           "
+          translate
         >
-          Lu
+          CHAT.read
         </div>
       </div>
 

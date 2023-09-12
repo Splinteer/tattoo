@@ -45,6 +45,7 @@ app-root {
   .cdk-dialog-container {
     transform-origin: top;
     animation: slide-down 200ms ease-in-out;
+    outline: none;
   }
 
   .cdk-menu {

@@ -5,11 +5,14 @@ import { InfiniteScrollComponent } from '@app/shared/infinite-scroll/infinite-sc
 import { HttpService } from '@app/@core/http/http.service';
 import { Observable, map } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImagePreviewService } from '@app/shared/image-preview.service';
+import { DialogModule } from '@angular/cdk/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat-message-list',
   standalone: true,
-  imports: [CommonModule, InfiniteScrollComponent],
+  imports: [CommonModule, InfiniteScrollComponent, TranslateModule],
   templateUrl: './chat-message-list.component.html',
   styleUrls: ['./chat-message-list.component.scss'],
 })
@@ -17,6 +20,12 @@ export class ChatMessageListComponent {
   @Input({ required: true }) chat!: ReactiveChat;
 
   readonly #chatService = inject(ChatService);
+
+  readonly #imagePreviewService = inject(ImagePreviewService);
+
+  openModalPreview(src: string) {
+    return this.#imagePreviewService.openModal(src);
+  }
 
   loadMessages() {
     this.#chatService.queueLoadMoreMessages(this.chat);

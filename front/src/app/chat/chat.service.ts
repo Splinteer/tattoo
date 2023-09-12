@@ -73,6 +73,17 @@ export class ChatService {
 
   public readonly activeChatSignal = signal<ReactiveChat | null>(null);
 
+  public readonly chatAttachments = computed(() => {
+    const chat = this.activeChatSignal();
+
+    if (!chat || !chat.messages) {
+      return [];
+    }
+
+    // Use flatMap to iterate over messages and extract attachments
+    return chat.messages().flatMap((message) => message.attachments);
+  });
+
   private readonly onActiveChange = toObservable(this.activeChatSignal)
     .pipe(
       takeUntilDestroyed(),

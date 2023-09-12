@@ -5,6 +5,15 @@ $size: 40px;
   justify-content: space-between;
   align-items: flex-end;
   gap: 5px;
+  position: relative;
+  flex-grow: 1;
+
+  textarea {
+    min-height: 100%;
+    max-height: 120px;
+    padding-right: $size;
+    resize: none;
+  }
 
   button.emoji-btn,
   button.send-btn,
@@ -21,25 +30,17 @@ $size: 40px;
       background-color: var(--gray-200);
     }
   }
-}
 
-.input-container {
-  position: relative;
-  flex-grow: 1;
-
-  textarea {
-    min-height: 100%;
-    max-height: 120px;
-    padding-right: $size;
-    resize: none;
-  }
-
-  .emoji-btn {
-    width: calc($size - 2px);
-    height: calc($size - 2px);
+  button.emoji-btn {
+    width: calc($size - 10px);
+    height: calc($size - 10px);
     position: absolute;
     bottom: 1px;
     right: 1px;
+
+    i {
+      font-size: calc($size - 20px - 2px);
+    }
   }
 }
 

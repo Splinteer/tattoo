@@ -50,6 +50,10 @@
     "add_event": "Ajouter un évènement"
   },
 
+  "CHAT": {
+    "read": "Lu"
+  },
+
   "AVAILABILITY": {
     "the_day": "Le",
     "from_day": "Du",

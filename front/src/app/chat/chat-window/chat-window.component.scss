@@ -12,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--gray-400);
-  padding: var(--space-300);
+  padding: var(--space-200);
 
   .info-btn {
     margin-left: auto;
@@ -20,7 +20,7 @@
 
   .name {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .project-name {
@@ -29,16 +29,18 @@
 
   .info-btn {
     color: var(--primary-color);
-    font-size: 1.2rem;
+    padding: 0.2rem;
+    font-size: 1rem;
   }
 
   .profile-pic {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
   }
 }
 
 app-chat-input {
   margin-top: auto;
+  margin-bottom: var(--space-300);
 }
