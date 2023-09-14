@@ -14,7 +14,7 @@
   </div>
   <div>
     <span *ngIf="showDate">
-      {{ event.start_time | date : "fullDate" }}
+      {{ event.start_time | date : "shortDate" }}
       {{ "AVAILABILITY.from_hour" | translate | lowercase }}
     </span>
     <div

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Subject } from 'rxjs';
 import Session from 'supertokens-auth-react/recipe/session';
 
@@ -36,6 +37,8 @@ export class CredentialsService {
   );
 
   public readonly credentials$ = this.credentialsSubject$.asObservable();
+
+  public readonly credentials = toSignal(this.credentials$);
 
   public readonly refreshCredentials$ = new Subject<void>();
 

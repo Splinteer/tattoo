@@ -23,10 +23,10 @@ import { FlashSelectionComponent } from './flash-selection/flash-selection.compo
     RouterModule,
     InfiniteScrollModule,
     ScrollingModule,
+    FlashItemComponent,
   ],
   declarations: [
     ShopFlashAddComponent,
-    FlashItemComponent,
     FlashDialogComponent,
     FlashEditComponent,
     FlashListComponent,

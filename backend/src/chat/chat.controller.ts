@@ -14,22 +14,24 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Attachment, ChatService, Message } from './chat.service';
+import { ChatService } from './chat.service';
 import { Credentials } from 'src/auth/session/session.decorator';
 import { Credentials as ICredentials } from 'src/auth/credentials/credentials.service';
 import { ShopGuard } from 'src/shop/shop.guard';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { NotFoundError, Observable, Subject, map, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ChatNotificationService } from './chat-notification/chat-notification.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { StorageService } from '@app/common/storage/storage.service';
+import { Message, MessageService } from './message/message.service';
 
 @Controller('chat')
 export class ChatController {
   constructor(
     private readonly chatService: ChatService,
     private readonly chatNotificationService: ChatNotificationService,
+    private readonly messageService: MessageService,
     @Inject('public') private readonly publicStorage: StorageService,
   ) {}
 
@@ -99,7 +101,7 @@ export class ChatController {
       throw new NotFoundException();
     }
 
-    const messages = await this.chatService.getMessages(
+    const messages = await this.messageService.getMessages(
       credentials.id,
       chatId,
       date,
@@ -138,7 +140,7 @@ export class ChatController {
       throw new NotFoundException();
     }
 
-    const message = await this.chatService.addMessage(
+    const message = await this.messageService.addMessage(
       chatId,
       credentials.id,
       content,
@@ -146,7 +148,7 @@ export class ChatController {
 
     let attachments: string[] = [];
     if (files?.length) {
-      const addedAttachments = await this.chatService.addAttachments(
+      const addedAttachments = await this.messageService.addAttachments(
         message.id,
         message.chat_id,
         files,
@@ -159,7 +161,7 @@ export class ChatController {
       );
     }
 
-    this.chatService.sendMessageToUser(message.id).catch(console.error);
+    this.messageService.sendMessageToUser(message.id).catch(console.error);
 
     return {
       ...message,

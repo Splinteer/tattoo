@@ -1,0 +1,112 @@
+<ng-container *ngIf="chat() as chat">
+  <ng-container *ngIf="chat.project as project">
+    <div class="details">
+      <div class="header">
+        <h2>Projet</h2>
+        <button (click)="close()" *ngIf="isMobile()">
+          <i class="fa-regular fa-times-circle"></i>
+        </button>
+      </div>
+
+      <div class="detail" *ngFor="let type of project.types">
+        {{ temp[type].text | translate }}
+        <i class="type-icon" [ngClass]="temp[type].icon"></i>
+      </div>
+
+      <div class="detail" *ngIf="project.is_first_tattoo">
+        <div class="name">Premier tatouage</div>
+        <i class="fa-solid fa-stars"></i>
+      </div>
+
+      <div class="detail" *ngIf="project.is_cover_up">
+        <div class="name">Recouvrement</div>
+        <i class="fa-solid fa-star-half-stroke"></i>
+      </div>
+
+      <div class="detail" *ngIf="project.is_post_operation_or_over_scar">
+        <div class="name">Post opé</div>
+        <i class="fa-solid fa-bandage"></i>
+      </div>
+
+      <div class="detail">
+        <div class="name">Zone</div>
+        <div class="text-bold">{{ project.zone }}</div>
+      </div>
+
+      <div class="detail">
+        <div class="name">Taille (lxh)</div>
+        <div class="text-bold">
+          {{ project.width_cm }}x{{ project.height_cm }}
+        </div>
+      </div>
+
+      <ng-container *ngIf="project.appointments">
+        <h3>Rendez-vous</h3>
+        <div class="details">
+          <app-calendar-item
+            *ngFor="let event of project.appointments"
+            [event]="event"
+            date
+          ></app-calendar-item>
+          <ng-container *ngIf="project.customer_availability">
+            <h4>Disponibilités</h4>
+            <div class="details">
+              {{ project.customer_availability }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="project.illustrations">
+        <h3>Illustrations</h3>
+        <div class="media-grid">
+          <button
+            *ngFor="let src of project.illustrations"
+            (click)="openModalPreview(src)"
+            class="cursor-pointer media"
+          >
+            <img [src]="src" />
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="project.locations">
+        <h3>Emplacement</h3>
+        <div class="media-grid">
+          <button
+            *ngFor="let src of project.locations"
+            (click)="openModalPreview(src)"
+            class="cursor-pointer media"
+          >
+            <img [src]="src" />
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="project.flashs">
+        <h3>Flash</h3>
+        <div class="media-grid">
+          <app-flash-item
+            class="media"
+            *ngFor="let flash of project.flashs"
+            [flash]="flash"
+          >
+          </app-flash-item>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="project.attachments">
+        <h3>Médias</h3>
+        <div class="media-grid">
+          <button
+            *ngFor="let src of project.attachments"
+            (click)="openModalPreview(src)"
+            class="cursor-pointer media"
+          >
+            <img [src]="src" />
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-container>

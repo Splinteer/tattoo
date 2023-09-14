@@ -6,10 +6,16 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {
+  takeUntilDestroyed,
+  toObservable,
+  toSignal,
+} from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
 import { Credentials } from '@app/auth/credentials.service';
+import { Project } from '@app/project/project.service';
 import { AvatarCustomer } from '@app/shared/avatar/avatar.component';
+import { ResponsiveService } from '@app/shared/responsive/responsive.service';
 import { environment } from '@env/environment';
 import { DateTime } from 'luxon';
 import { Observable, Subject, concatMap, of, skipWhile, tap } from 'rxjs';
@@ -28,8 +34,9 @@ export type Message = {
 
 export type Chat = {
   id: string;
-  project_id: string;
   project_name: string;
+  shop_id: string;
+  project_id: string;
   creation_date: string;
   last_update: string;
   contact_name: string;
@@ -41,6 +48,7 @@ export type Chat = {
 
 export type ReactiveChat = {
   id: string;
+  shop_id: string;
   project_id: string;
   project_name: string;
   creation_date: DateTime;
@@ -50,7 +58,7 @@ export type ReactiveChat = {
   is_read: boolean;
   avatar: AvatarCustomer;
   messages?: WritableSignal<Message[]>;
-
+  project?: Project;
   is_fully_loaded?: true;
 };
 
@@ -58,7 +66,13 @@ export type ReactiveChat = {
   providedIn: 'root',
 })
 export class ChatService {
-  private readonly http = inject(HttpService); // Inject your HttpService
+  private readonly http = inject(HttpService);
+
+  private readonly responsiveService = inject(ResponsiveService);
+
+  private readonly showDetailsPanelByDefault = toSignal(
+    this.responsiveService.isLargeDesktop$
+  );
 
   public readonly synced = signal(false);
 
@@ -73,20 +87,12 @@ export class ChatService {
 
   public readonly activeChatSignal = signal<ReactiveChat | null>(null);
 
-  public readonly chatAttachments = computed(() => {
-    const chat = this.activeChatSignal();
-
-    if (!chat || !chat.messages) {
-      return [];
-    }
-
-    // Use flatMap to iterate over messages and extract attachments
-    return chat.messages().flatMap((message) => message.attachments);
-  });
+  readonly showDetailsPanel = signal(this.showDetailsPanelByDefault());
 
   private readonly onActiveChange = toObservable(this.activeChatSignal)
     .pipe(
       takeUntilDestroyed(),
+      tap(() => this.showDetailsPanel.set(this.showDetailsPanelByDefault())),
       tap((activeChat) => {
         if (!activeChat || activeChat.messages) {
           return;
@@ -101,6 +107,10 @@ export class ChatService {
   private lastLoadedChatDate = DateTime.local();
 
   readonly isLoadedSignal = signal(false);
+
+  toggleDetailsPanel() {
+    this.showDetailsPanel.set(!this.showDetailsPanel());
+  }
 
   setActiveChat(chat: ReactiveChat, setRead = true) {
     this.activeChatSignal.set(chat);

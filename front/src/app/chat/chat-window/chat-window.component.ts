@@ -1,21 +1,50 @@
-import { Component, HostListener, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../chat.service';
 import { ChatInputComponent } from '../chat-input/chat-input.component';
 import { ChatMessageListComponent } from '../chat-message-list/chat-message-list.component';
 import { AvatarComponent } from '@app/shared/avatar/avatar.component';
+import { ChatHeaderComponent } from '@app/chat-header/chat-header.component';
 
 @Component({
   selector: 'app-chat-window',
   standalone: true,
   imports: [
     CommonModule,
-    AvatarComponent,
+    ChatHeaderComponent,
     ChatMessageListComponent,
     ChatInputComponent,
   ],
-  templateUrl: './chat-window.component.html',
-  styleUrls: ['./chat-window.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <ng-container *ngIf="chat() as chat; else noChatActive">
+      <app-chat-header [chat]="chat"></app-chat-header>
+      <app-chat-message-list [chat]="chat"> </app-chat-message-list>
+      <app-chat-input></app-chat-input>
+    </ng-container>
+
+    <ng-template #noChatActive> Aucun chat sélectionné </ng-template>
+  `,
+  styles: [
+    `
+      :host {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: hidden;
+      }
+
+      app-chat-input {
+        margin-top: auto;
+        margin-bottom: var(--space-300);
+      }
+    `,
+  ],
 })
 export class ChatWindowComponent {
   private readonly chatService = inject(ChatService);

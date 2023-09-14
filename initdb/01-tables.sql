@@ -132,6 +132,7 @@ CREATE TABLE
         is_drawing_done boolean NOT NULL DEFAULT false,
         is_drawing_approved boolean NOT NULL DEFAULT false,
         is_paid boolean NOT NULL DEFAULT false,
+        customer_availability varchar,
         customer_rating integer,
         shop_rating integer,
         CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES public.customer (id),

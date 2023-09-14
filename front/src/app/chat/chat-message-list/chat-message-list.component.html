@@ -34,7 +34,8 @@
         <div
           class="read-indicator"
           *ngIf="
-            (message.is_sender && message.is_read && isLast) ||
+            (chat.shop_id === credentials()?.shop_id &&
+              message.is_sender && message.is_read && isLast) ||
             (!isLast &&
               message.is_read &&
               messages[index + 1] &&

@@ -12,6 +12,7 @@ export interface CreateBookingInput {
   zone: string;
   height_cm: number;
   width_cm: number;
+  customer_availability?: string;
   additional_information?: string;
 }
 
@@ -73,6 +74,7 @@ export class BookingService {
       zone,
       height_cm,
       width_cm,
+      customer_availability,
       additional_information,
     } = bookingData;
 
@@ -90,8 +92,9 @@ export class BookingService {
         zone,
         height_cm,
         width_cm,
+        customer_availability,
         additional_information
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;`,
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *;`,
       [
         customerId,
         shopId,
@@ -103,6 +106,7 @@ export class BookingService {
         zone,
         height_cm,
         width_cm,
+        customer_availability,
         additional_information,
       ],
     );

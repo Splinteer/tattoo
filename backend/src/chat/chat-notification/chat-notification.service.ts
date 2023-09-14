@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import { Subject, tap } from 'rxjs';
-import { Message } from '../chat.service';
+import { Subject } from 'rxjs';
+import { Message } from '../message/message.service';
 
 @Injectable()
 export class ChatNotificationService {
