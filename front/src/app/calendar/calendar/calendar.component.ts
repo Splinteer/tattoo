@@ -20,7 +20,7 @@ export abstract class CalendarComponent implements OnInit, OnChanges {
 
   @Input() current: DateTime = DateTime.local().startOf(this.unit);
 
-  today = DateTime.local().startOf('day');
+  readonly today = DateTime.local().startOf('day');
 
   days: DateTime[] = [];
 
@@ -66,6 +66,15 @@ export abstract class CalendarComponent implements OnInit, OnChanges {
 
   next(): void {
     this.current = this.current.plus({ [this.unit]: 1 });
+    this.generateDays();
+  }
+
+  showToday(): void {
+    if (this.today.hasSame(this.current, this.unit)) {
+      return;
+    }
+
+    this.current = this.today;
     this.generateDays();
   }
 }

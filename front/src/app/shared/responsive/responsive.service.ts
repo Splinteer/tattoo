@@ -4,6 +4,7 @@ import {
   RendererFactory2,
   inject,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -50,6 +51,8 @@ export class ResponsiveService {
     switchMap((width) => of(width < this.breakpoints.tabletSmall)),
     distinctUntilChanged()
   );
+
+  readonly isMobile = toSignal(this.isMobile$);
 
   public readonly isTabletOrLess$ = this.screenWidth$.asObservable().pipe(
     switchMap((width) => of(width < this.breakpoints.tabletSmall)),

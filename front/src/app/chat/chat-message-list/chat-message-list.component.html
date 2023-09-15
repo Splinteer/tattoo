@@ -3,53 +3,57 @@
   [fullyLoaded]="chat.is_fully_loaded ?? false"
   reverse
 >
-  <ng-container *ngIf="chat.messages && chat.messages() as messages">
+  <ng-container *ngIf="chat.messages() as messages">
     <ng-container
-      *ngFor="let message of messages; let index = index; let isLast = last"
+      *ngFor="
+        let message of chat.messages();
+        let index = index;
+        let isLast = last
+      "
     >
-      <div class="item">
-        <div
-          class="message-container"
-          [ngClass]="message.is_sender ? 'mine' : 'theirs'"
-        >
-          <span class="message">
-            <div class="message-attachments" *ngIf="message.attachments.length">
-              <button
-                *ngFor="let attachment of message.attachments"
-                (click)="openModalPreview(attachment)"
-                class="cursor-pointer"
-              >
-                <img [src]="attachment" />
-              </button>
-            </div>
-            <div class="message-content break-lines" *ngIf="message.content">
-              {{ message.content }}
-            </div>
-          </span>
-          <span class="message-time">{{
-            message.creation_date | date : "shortTime"
-          }}</span>
-        </div>
-
-        <div
-          class="read-indicator"
-          *ngIf="
-            (chat.shop_id === credentials()?.shop_id &&
-              message.is_sender && message.is_read && isLast) ||
-            (!isLast &&
-              message.is_read &&
-              messages[index + 1] &&
-              messages[index + 1].is_sender &&
-              !messages[index + 1].is_read)
-          "
-          translate
-        >
-          CHAT.read
-        </div>
+      <div
+        class="message-container"
+        [ngClass]="message.is_sender ? 'mine' : 'theirs'"
+      >
+        <span class="message">
+          <div class="message-attachments" *ngIf="message.attachments.length">
+            <button
+              *ngFor="let attachment of message.attachments"
+              (click)="openModalPreview(attachment)"
+              class="cursor-pointer"
+            >
+              <img [src]="attachment" />
+            </button>
+          </div>
+          <div class="message-content break-lines" *ngIf="message.content">
+            {{ message.content }}
+          </div>
+        </span>
+        <span class="message-time">{{
+          message.creation_date | date : "shortTime"
+        }}</span>
       </div>
 
       <div
-        class="day item"
+        class="read-indicator"
+        *ngIf="
+          (chat.shop_id === credentials()?.shop_id &&
+            message.is_sender &&
+            message.is_read &&
+            isLast) ||
+          (!isLast &&
+            message.is_read &&
+            messages[index + 1] &&
+            messages[index + 1].is_sender &&
+            !messages[index + 1].is_read)
+        "
+        translate
+      >
+        CHAT.read
+      </div>
+
+      <div
+        class="day"
         *ngIf="
           isLast ||
           (messages[index + 1].creation_date | date : 'mediumDate') !==

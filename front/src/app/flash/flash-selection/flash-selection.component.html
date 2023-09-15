@@ -10,11 +10,7 @@
     (click)="toggle(flash)"
     [class.selected]="flash.selected"
   >
-    <app-flash-item
-      [clickable]="false"
-      [hideAvailability]="true"
-      [flash]="flash"
-    >
+    <app-flash-item [clickable]="false" [flash]="flash" hideAvailability>
     </app-flash-item>
   </button>
 </section>
@@ -28,11 +24,7 @@
       *ngFor="let flash of value"
       (click)="toggle(flash)"
     >
-      <app-flash-item
-        [clickable]="false"
-        [hideAvailability]="true"
-        [flash]="flash"
-      >
+      <app-flash-item [clickable]="false" [flash]="flash" hideAvailability>
       </app-flash-item>
     </button>
   </div>

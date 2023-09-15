@@ -4,3 +4,7 @@ form {
     gap: var(--space-300);
   }
 }
+
+:host {
+  display: block;
+}

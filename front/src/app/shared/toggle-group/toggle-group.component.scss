@@ -5,38 +5,38 @@
   flex-wrap: wrap;
   flex-grow: 1;
   width: fit-content;
-  background-color: var(--gray-100);
-  padding: var(--space-100);
-  border: 1px solid var(--gray-300);
-  border-radius: var(--border-radius);
-  gap: var(--space-100);
-}
+  background-color: var(--fill-quinary);
+  box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.05),
+    inset 0px 0px 4px rgba(0, 0, 0, 0.05), inset 0px 0px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--separator-opaque);
+  border-radius: calc(var(--small-border-radius) + 1.5px);
+  padding: 1px;
 
-::ng-deep {
-  app-toggle-group-item {
-    flex-grow: 1;
-  }
-
-  app-toggle-group-item div {
-    color: var(--gray-800);
-
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: var(--space-300);
-    padding: var(--space-100) var(--space-400);
-    border-radius: var(--border-radius);
-    transition: all 0.3s ease-out, transform none;
-
-    &.selected {
-      color: var(--text-color-dark);
-
-      background-color: var(--text-color-light);
-      box-shadow: var(--box-shadow);
+  ::ng-deep {
+    app-toggle-group-item {
+      flex-grow: 1;
     }
 
-    &:hover {
-      cursor: pointer;
+    app-toggle-group-item div {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: var(--space-middle);
+      padding: var(--space-short) var(--space-middle);
+      border-radius: var(--small-border-radius);
+      color: var(--label-primary);
+      transition: all 0.3s ease-out, transform none;
+
+      &.selected {
+        background-color: var(--bg-primary);
+        border: 0.5px solid rgba(0, 0, 0, 0.02);
+        box-shadow: 0px 0.25px 0.25px rgba(0, 0, 0, 0.15),
+          0px 1px 0.75px rgba(0, 0, 0, 0.05);
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }

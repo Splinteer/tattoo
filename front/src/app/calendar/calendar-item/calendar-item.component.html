@@ -12,7 +12,7 @@
   <div *ngIf="!selectionActive()" translate>
     {{ "CALENDAR.EVENT_TYPE." + event.event_type }}
   </div>
-  <div>
+  <div class="time">
     <span *ngIf="showDate">
       {{ event.start_time | date : "shortDate" }}
       {{ "AVAILABILITY.from_hour" | translate | lowercase }}

@@ -50,11 +50,11 @@
 >
   <div class="modal">
     <div class="header">
+      <h1 translate>CALENDAR.add_event</h1>
       <button (click)="isOpen.set(false)">
         <i class="fa-regular fa-times"></i>
       </button>
     </div>
-    <h1 translate>CALENDAR.add_event</h1>
     <app-calendar-form-event
       [day]="day"
       (close)="isOpen.set(false)"

@@ -12,6 +12,7 @@ import {
   TransformStringToBoolean,
   TransformStringToNumber,
 } from '@app/common/custom-transformers';
+import { ProjectType } from 'src/project/project.service';
 
 export class BookingDTO {
   @IsString()
@@ -26,7 +27,7 @@ export class BookingDTO {
   @IsNotEmpty({
     each: true,
   })
-  types: string[];
+  types: ProjectType[];
 
   @TransformStringToBoolean()
   @IsBoolean()

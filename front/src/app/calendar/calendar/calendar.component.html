@@ -1,24 +1,32 @@
 <nav>
-  <button (click)="previous()" title="Previous">
-    <i class="fa-regular fa-chevron-left"></i>
-  </button>
-
   <div class="month">{{ current.toJSDate() | date : "MMMM	yyyy" }}</div>
 
-  <button (click)="next()" title="Next">
-    <i class="fa-regular fa-chevron-right"></i>
-  </button>
+  <div class="button-group">
+    <button (click)="previous()" title="Previous">
+      <i class="fa-regular fa-chevron-left"></i>
+    </button>
+
+    <button (click)="showToday()" title="Show today" translate>
+      CALENDAR.today
+    </button>
+
+    <button (click)="next()" title="Next">
+      <i class="fa-regular fa-chevron-right"></i>
+    </button>
+  </div>
 </nav>
 
 <div class="calendar weekdays">
-  <div class="week" *ngFor="let day of days.slice(0, 7); let dayIndex = index">
+  <div
+    class="weekday"
+    *ngFor="let day of days.slice(0, 7); let dayIndex = index"
+  >
     {{ day.toJSDate() | date : "EE" }}
   </div>
 </div>
 <div class="calendar">
   <app-calendar-day
     *ngFor="let day of days; let dayIndex = index"
-    class="day"
     [day]="day"
     [today]="today"
     [class.not-active-month]="current.month !== day.month"

@@ -33,6 +33,16 @@ export function slideDown(
   ]);
 }
 
+export function slideLeft(
+  timing: string | number = 300
+): AnimationTriggerMetadata {
+  return trigger('slideLeft', [
+    state('in', style({ width: '100%' })),
+    transition('void => *', [style({ width: '0' }), animate(timing)]),
+    transition('* => void', [animate(timing, style({ width: '0' }))]),
+  ]);
+}
+
 export function backInDown(
   timing: string | number = 200
 ): AnimationTriggerMetadata {

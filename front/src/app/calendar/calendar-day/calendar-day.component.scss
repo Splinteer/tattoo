@@ -1,10 +1,10 @@
 :host {
   display: flex;
   flex-direction: column;
-  background-color: var(--text-color-light);
-  padding: var(--space-100);
+  background-color: var(--bg-primary);
+  padding: var(--space-short);
   min-width: 0;
-  gap: var(--space-200);
+  gap: var(--space-middle);
   font-size: 0.9rem;
 }
 
@@ -13,7 +13,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-100);
+  gap: var(--space-short);
 }
 
 .day-header {
@@ -27,7 +27,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-100);
+  gap: var(--space-short);
 }
 
 .day-number {
@@ -40,7 +40,7 @@
   height: 25px;
 
   &.active {
-    background-color: var(--primary-color);
+    background-color: var(--material-control-selection-focus);
     color: var(--text-color-light);
   }
 }
@@ -52,7 +52,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-200);
+  gap: var(--space-middle);
   height: 100%;
 
   .all-day {
@@ -61,20 +61,24 @@
 }
 
 .modal {
-  padding: var(--space-400);
-
   .header {
     display: flex;
-    gap: var(--space-400);
-    justify-content: flex-end;
+    gap: var(--space-short);
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--material-control-title-bar);
+    padding: var(--space-middle);
 
     button {
-      color: var(--gray-800);
+      color: var(--label-secondary);
     }
   }
 
+  app-calendar-form-event {
+    padding: var(--space-middle);
+  }
+
   h1 {
-    margin-bottom: var(--space-200);
     font-weight: bold;
     font-size: 1.2rem;
   }

@@ -11,6 +11,7 @@ import {
   toObservable,
   toSignal,
 } from '@angular/core/rxjs-interop';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpService } from '@app/@core/http/http.service';
 import { Credentials } from '@app/auth/credentials.service';
 import { Project } from '@app/project/project.service';
@@ -18,7 +19,16 @@ import { AvatarCustomer } from '@app/shared/avatar/avatar.component';
 import { ResponsiveService } from '@app/shared/responsive/responsive.service';
 import { environment } from '@env/environment';
 import { DateTime } from 'luxon';
-import { Observable, Subject, concatMap, of, skipWhile, tap } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  concatMap,
+  filter,
+  map,
+  of,
+  skipWhile,
+  tap,
+} from 'rxjs';
 
 export type Attachment = string;
 
@@ -57,8 +67,8 @@ export type ReactiveChat = {
   last_message: string;
   is_read: boolean;
   avatar: AvatarCustomer;
-  messages?: WritableSignal<Message[]>;
-  project?: Project;
+  messages: WritableSignal<Message[]>;
+  project: WritableSignal<Project | null>;
   is_fully_loaded?: true;
 };
 
@@ -70,8 +80,14 @@ export class ChatService {
 
   private readonly responsiveService = inject(ResponsiveService);
 
-  private readonly showDetailsPanelByDefault = toSignal(
-    this.responsiveService.isLargeDesktop$
+  readonly #router = inject(Router);
+
+  readonly #route = inject(ActivatedRoute);
+
+  readonly test = this.#route.params.subscribe(console.log);
+
+  private readonly showDetailsPanelByDefault = computed(
+    () => !this.responsiveService.isMobile()
   );
 
   public readonly synced = signal(false);
@@ -93,16 +109,27 @@ export class ChatService {
     .pipe(
       takeUntilDestroyed(),
       tap(() => this.showDetailsPanel.set(this.showDetailsPanelByDefault())),
+      filter((activeChat): activeChat is ReactiveChat => !!activeChat),
       tap((activeChat) => {
-        if (!activeChat || activeChat.messages) {
-          return;
+        if (!activeChat.is_fully_loaded) {
+          this.queueLoadMoreMessages(activeChat);
         }
 
-        this.queueLoadMoreMessages(activeChat);
-        // this.loadMoreMessages(activeChat).subscribe();
+        this.#router.navigate([
+          '/chat',
+          activeChat.id,
+          this.chatToUrl(activeChat),
+        ]);
       })
     )
     .subscribe();
+
+  chatToUrl(chat: ReactiveChat) {
+    return `${chat.contact_name.replaceAll(
+      ' ',
+      '-'
+    )}-${chat.project_name.replaceAll(' ', '-')}`;
+  }
 
   private lastLoadedChatDate = DateTime.local();
 
@@ -138,11 +165,9 @@ export class ChatService {
       .pipe(
         tap(() => {
           chat.is_read = true;
-          if (chat.messages) {
-            chat.messages.update((messages) =>
-              messages.map((message) => ({ ...message, is_read: true }))
-            );
-          }
+          chat.messages.update((messages) =>
+            messages.map((message) => ({ ...message, is_read: true }))
+          );
         })
       );
   }
@@ -152,7 +177,8 @@ export class ChatService {
       ...chat,
       creation_date: DateTime.fromISO(chat.creation_date),
       last_update: DateTime.fromISO(chat.last_update),
-      messages: chat.messages ? signal(chat.messages) : undefined,
+      messages: signal(chat.messages ?? []),
+      project: signal<Project | null>(null),
     };
   }
 
@@ -189,15 +215,38 @@ export class ChatService {
           );
 
           if (!this.activeChatSignal()) {
-            this.setActiveChat(formatedNewChats[0], false);
+            const { id } = this.getUrlParams();
+            if (id) {
+              const urlChat = this.loadedChatsSignal().find(
+                (chat) => chat.id === id
+              );
+              if (urlChat) {
+                this.setActiveChat(urlChat, false);
+              } else {
+                this.loadChat(id).subscribe((chat) => {
+                  this.setActiveChat(chat, false);
+                });
+              }
+            } else {
+              this.setActiveChat(formatedNewChats[0], false);
+            }
           }
         })
       );
   }
 
+  private getUrlParams() {
+    let route = this.#router.routerState.root;
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+
+    return route.snapshot.params;
+  }
+
   private loadChat(chatId: string) {
     return this.http.get<Chat>(`/chat/shop/${chatId}`).pipe(
-      tap((chat) => {
+      map((chat) => {
         const formatedNewChat = this.formatToReactiveChat(chat);
         let chats: ReactiveChat[] = [];
         this.loadedChatsSignal.update((currentChats) => {
@@ -206,10 +255,14 @@ export class ChatService {
           return chats;
         });
 
+        console.log(chats, formatedNewChat);
+
         const lastChat = chats.at(-1);
         if (lastChat) {
           this.lastLoadedChatDate = lastChat.last_update;
         }
+
+        return formatedNewChat;
       })
     );
   }
@@ -228,7 +281,7 @@ export class ChatService {
   }
 
   private loadMessagesForChat(chat: ReactiveChat) {
-    const messages = chat.messages && chat.messages();
+    const messages = chat.messages();
 
     const date = (
       messages?.length
@@ -263,17 +316,15 @@ export class ChatService {
     }
 
     this.loadedChatsSignal.update((chats) => {
-      if (!chat.messages) {
-        chat.messages = signal<Message[]>(messages);
-      } else {
-        chat.messages.update((currentMessages) => {
-          return isNew
-            ? [...messages, ...(currentMessages ?? [])]
-            : [...(currentMessages ?? []), ...messages];
-        });
-      }
+      let registeredMessages: Message[] = [];
+      chat.messages.update((currentMessages) => {
+        registeredMessages = isNew
+          ? [...messages, ...(currentMessages ?? [])]
+          : [...(currentMessages ?? []), ...messages];
 
-      const registeredMessages = chat.messages();
+        return registeredMessages;
+      });
+
       chat.last_update =
         DateTime.fromISO(registeredMessages[0].creation_date) ||
         chat.last_update;
@@ -293,10 +344,6 @@ export class ChatService {
     this.http
       .post<Message>(`/chat/${chat.id}/message`, formData)
       .subscribe((message) => {
-        if (!chat.messages) {
-          chat.messages = signal<Message[]>([]);
-        }
-
         chat.messages.update((currentMessages) => [
           ...(currentMessages ?? []),
           message,

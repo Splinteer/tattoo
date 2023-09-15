@@ -31,11 +31,11 @@ import { ChatService, ReactiveChat } from '@app/chat/chat.service';
       :host {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--space-400);
+        gap: var(--space-middle);
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid var(--gray-400);
-        padding: var(--space-200);
+        padding: var(--space-short);
+        background: var(--material-control-title-bar);
       }
 
       button {

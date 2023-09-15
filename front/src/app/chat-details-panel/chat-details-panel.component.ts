@@ -8,7 +8,14 @@ import { ProjectService } from '@app/project/project.service';
 import { ImagePreviewService } from '@app/shared/image-preview.service';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { filter, skipWhile, switchMap, takeUntil, takeWhile, tap } from 'rxjs';
+import {
+  combineLatest,
+  skipWhile,
+  switchMap,
+  of,
+  tap,
+  distinctUntilChanged,
+} from 'rxjs';
 
 @Component({
   imports: [
@@ -32,11 +39,18 @@ export class ChatDetailsPanelComponent extends ResponsiveComponent {
   readonly #checkIfProjectLoaded = toObservable(this.chat)
     .pipe(
       takeUntilDestroyed(),
-      filter((c): c is ReactiveChat => !!c),
-      takeWhile((c) => !c.project),
-      switchMap((chat) => this.#projectService.get(chat?.project_id)),
-      tap((project) => {
-        this.chat.update((chat) => (chat ? { ...chat, project } : null));
+      distinctUntilChanged(),
+      skipWhile((c): c is ReactiveChat => !c || !!c.project()),
+      switchMap((chat) =>
+        combineLatest({
+          chat: of(chat),
+          project: this.#projectService.get(chat!.project_id),
+        })
+      ),
+      tap(({ chat, project }) => {
+        if (chat) {
+          chat.project.set(project);
+        }
       })
     )
     .subscribe();
@@ -45,15 +59,15 @@ export class ChatDetailsPanelComponent extends ResponsiveComponent {
 
   temp = {
     flashs: {
-      icon: 'fa-solid fa-sparkles',
+      icon: 'fa-regular fa-sparkles',
       text: 'BOOKING.types.flashs',
     },
     custom: {
-      icon: 'fa-solid fa-plus',
+      icon: 'fa-regular fa-plus',
       text: 'BOOKING.types.custom',
     },
     adjustment: {
-      icon: 'fa-solid fa-circle-dashed',
+      icon: 'fa-regular fa-circle-dashed',
       text: 'BOOKING.types.adjustment',
     },
   };

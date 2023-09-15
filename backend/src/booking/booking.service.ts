@@ -2,10 +2,11 @@ import { DbService } from '@app/common/db/db.service';
 import { StorageService } from '@app/common/storage/storage.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { PoolClient } from 'pg';
+import { ProjectType } from 'src/project/project.service';
 
 export interface CreateBookingInput {
   name: string;
-  types: string[];
+  types: ProjectType[];
   is_first_tattoo: boolean;
   is_cover_up: boolean;
   is_post_operation_or_over_scar: boolean;
@@ -21,7 +22,7 @@ type Project = {
   customer_id: string;
   shop_id: string;
   name: string;
-  types: string[]; // Assuming project_type is represented as string in TypeScript
+  types: ProjectType[];
   is_first_tattoo: boolean;
   is_cover_up: boolean;
   is_post_operation_or_over_scar: boolean;

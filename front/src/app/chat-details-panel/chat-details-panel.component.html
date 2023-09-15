@@ -1,61 +1,68 @@
 <ng-container *ngIf="chat() as chat">
-  <ng-container *ngIf="chat.project as project">
-    <div class="details">
-      <div class="header">
-        <h2>Projet</h2>
-        <button (click)="close()" *ngIf="isMobile()">
-          <i class="fa-regular fa-times-circle"></i>
-        </button>
-      </div>
+  <ng-container *ngIf="chat.project() as project">
+    <div class="header">
+      <h2>Projet</h2>
+      <button (click)="close()" *ngIf="isMobile()">
+        <i class="fa-regular fa-times-circle"></i>
+      </button>
+    </div>
 
-      <div class="detail" *ngFor="let type of project.types">
-        {{ temp[type].text | translate }}
-        <i class="type-icon" [ngClass]="temp[type].icon"></i>
-      </div>
+    <div class="content">
+      <div class="box">
+        <ng-container *ngFor="let type of project.types">
+          <div class="detail">
+            {{ temp[type].text | translate }}
+            <i class="type-icon" [ngClass]="temp[type].icon"></i>
+          </div>
+          <hr />
+        </ng-container>
 
-      <div class="detail" *ngIf="project.is_first_tattoo">
-        <div class="name">Premier tatouage</div>
-        <i class="fa-solid fa-stars"></i>
-      </div>
+        <ng-container *ngIf="project.is_first_tattoo">
+          <div class="detail">
+            <div class="name">Premier tatouage</div>
+            <i class="fa-solid fa-stars"></i>
+          </div>
+          <hr />
+        </ng-container>
 
-      <div class="detail" *ngIf="project.is_cover_up">
-        <div class="name">Recouvrement</div>
-        <i class="fa-solid fa-star-half-stroke"></i>
-      </div>
+        <ng-container *ngIf="project.is_cover_up">
+          <div class="detail">
+            <div class="name">Recouvrement</div>
+            <i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+          <hr />
+        </ng-container>
 
-      <div class="detail" *ngIf="project.is_post_operation_or_over_scar">
-        <div class="name">Post opé</div>
-        <i class="fa-solid fa-bandage"></i>
-      </div>
+        <ng-container *ngIf="project.is_post_operation_or_over_scar">
+          <div class="detail">
+            <div class="name">Post opé</div>
+            <i class="fa-solid fa-bandage"></i>
+          </div>
+          <hr />
+        </ng-container>
 
-      <div class="detail">
-        <div class="name">Zone</div>
-        <div class="text-bold">{{ project.zone }}</div>
-      </div>
-
-      <div class="detail">
-        <div class="name">Taille (lxh)</div>
-        <div class="text-bold">
-          {{ project.width_cm }}x{{ project.height_cm }}
+        <div class="detail">
+          <div class="name">Zone</div>
+          <div class="text-bold">{{ project.zone }}</div>
         </div>
-      </div>
+        <hr />
 
-      <ng-container *ngIf="project.appointments">
-        <h3>Rendez-vous</h3>
-        <div class="details">
-          <app-calendar-item
-            *ngFor="let event of project.appointments"
-            [event]="event"
-            date
-          ></app-calendar-item>
-          <ng-container *ngIf="project.customer_availability">
-            <h4>Disponibilités</h4>
-            <div class="details">
-              {{ project.customer_availability }}
+        <div class="detail">
+          <div class="name">Taille (lxh)</div>
+          <div class="text-bold">
+            {{ project.width_cm }}x{{ project.height_cm }}
+          </div>
+        </div>
+
+        <ng-container *ngIf="project.additional_information">
+          <hr />
+          <div class="detail">
+            <div class="name break-lines text-center">
+              {{ project.additional_information }}
             </div>
-          </ng-container>
-        </div>
-      </ng-container>
+          </div>
+        </ng-container>
+      </div>
 
       <ng-container *ngIf="project.illustrations">
         <h3>Illustrations</h3>
@@ -67,6 +74,24 @@
           >
             <img [src]="src" />
           </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="project.appointments">
+        <h3>Rendez-vous</h3>
+        <div class="events">
+          <app-calendar-item
+            *ngFor="let event of project.appointments"
+            [event]="event"
+            date
+          ></app-calendar-item>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="project.customer_availability">
+        <h3>Disponibilités</h3>
+        <div class="box">
+          {{ project.customer_availability }}
         </div>
       </ng-container>
 
@@ -90,6 +115,7 @@
             class="media"
             *ngFor="let flash of project.flashs"
             [flash]="flash"
+            hideAvailability
           >
           </app-flash-item>
         </div>

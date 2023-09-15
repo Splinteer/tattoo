@@ -29,6 +29,13 @@ const routes: Routes = [
     path: 'chat',
     loadComponent: () =>
       import('./chat/chat.component').then((mod) => mod.ChatComponent),
+    children: [
+      {
+        path: ':id/:details',
+        loadComponent: () =>
+          import('./chat/chat.component').then((mod) => mod.ChatComponent),
+      },
+    ],
   },
 ];
 

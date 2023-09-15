@@ -83,7 +83,7 @@ export class CalendarViewComponent implements ControlValueAccessor, OnDestroy {
 
   @Input({ transform: booleanAttribute }) showToggle = false;
 
-  public minimumDate: DateTime = DateTime.local().plus({ day: 10 });
+  public minimumDate: DateTime = DateTime.local();
 
   public readonly calendarSelection = inject(CalendarSelectionService);
   private readonly calendarService = inject(CalendarService);

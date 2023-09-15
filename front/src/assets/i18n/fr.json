@@ -47,7 +47,8 @@
       "month": "Mois",
       "day": "Jour"
     },
-    "add_event": "Ajouter un évènement"
+    "add_event": "Ajouter un évènement",
+    "today": "Aujourd'hui"
   },
 
   "CHAT": {

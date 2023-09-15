@@ -46,6 +46,7 @@ export class ChatService {
           m.is_read
         FROM message m
         WHERE chat_id = c.id
+        AND content <> ''
         GROUP BY m.id
         ORDER BY creation_date DESC
         LIMIT 1

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  booleanAttribute,
   inject,
 } from '@angular/core';
 import { Flash } from '../flash.service';
@@ -23,7 +24,7 @@ export class FlashItemComponent {
 
   @Input() clickable = true;
 
-  @Input() hideAvailability = false;
+  @Input({ transform: booleanAttribute }) hideAvailability = false;
 
   public readonly publicBucket = environment.public_bucket;
 
