@@ -10,8 +10,8 @@
       {{ chat.contact_name }}
     </div>
     <div class="project-name">{{ chat.project_name }}</div>
-    <div class="last-message" *ngIf="chat.last_message">
-      {{ chat.last_message }}
+    <div class="last-message" *ngIf="chat.last_event">
+      {{ chat.last_event }}
     </div>
   </div>
   <div class="indicators">

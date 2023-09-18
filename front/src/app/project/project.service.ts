@@ -1,7 +1,10 @@
 import { Injectable, inject } from '@angular/core';
+import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
 import { CalendarEvent } from '@app/calendar/calendar.service';
+import { ChatService, ReactiveChat } from '@app/chat/chat.service';
 import { Flash } from '@app/flash/flash.service';
+import { distinctUntilChanged, switchMap, of, tap, filter } from 'rxjs';
 
 export type ProjectType = 'flashs' | 'custom' | 'adjustment';
 
@@ -36,6 +39,24 @@ export type Project = {
 })
 export class ProjectService {
   readonly #http = inject(HttpService);
+
+  readonly #chatService = inject(ChatService);
+
+  public readonly chat = this.#chatService.activeChatSignal;
+
+  readonly projectLoader = toObservable(this.chat).pipe(
+    distinctUntilChanged(),
+    filter((c): c is ReactiveChat => !!c),
+    switchMap((chat) => {
+      if (chat.project()) {
+        return of(chat.project() as Project);
+      }
+
+      return this.get(chat!.project_id).pipe(
+        tap((project) => chat.project.set(project))
+      );
+    })
+  );
 
   get(projectId: string) {
     return this.#http.get<Project>(`/project/${projectId}`);

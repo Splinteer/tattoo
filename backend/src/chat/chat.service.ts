@@ -23,38 +23,31 @@ export class ChatService {
           p.name as project_name,
           p.shop_id,
           c.creation_date AS creation_date,
-          COALESCE(m.creation_date, c.creation_date) AS last_update,
+          COALESCE(ce.creation_date, c.creation_date) AS last_update,
           CONCAT_WS(' ', customer.firstname, customer.lastname) as contact_name,
           json_build_object(
             'id', customer.id,
             'got_profile_picture', customer.got_profile_picture,
             'profile_picture_version', customer.profile_picture_version
           ) as avatar,
-          m.content as last_message,
-          m.id IS NULL OR m.sender_id <> customer.id OR m.is_read as is_read
+          ce.content as last_event,
+          ce.id IS NULL OR ce.sender_id <> customer.id OR ce.is_read as is_read
       FROM chat c
 
       INNER JOIN project p ON p.id = c.project_id
       INNER JOIN customer ON customer.id = p.customer_id
       LEFT JOIN LATERAL(
-        SELECT
-          m.id,
-          m.chat_id,
-          m.content,
-          m.creation_date,
-          m.sender_id,
-          m.is_read
-        FROM message m
+        SELECT *
+        FROM chat_event ce
         WHERE chat_id = c.id
-        AND content <> ''
-        GROUP BY m.id
+        AND type = 'message'
         ORDER BY creation_date DESC
         LIMIT 1
-      ) AS m ON c.id = m.chat_id
+      ) AS ce ON c.id = ce.chat_id
 
       WHERE p.shop_id=$1
       AND c.last_update < $2
-      GROUP BY c.id, customer.id, p.shop_id, p.name, m.id, m.sender_id, m.is_read, m.content, m.creation_date
+      GROUP BY c.id, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.content, ce.creation_date
       ORDER BY last_update DESC
       LIMIT 10
     `;
@@ -75,36 +68,30 @@ export class ChatService {
           p.name as project_name,
           p.shop_id,
           c.creation_date AS creation_date,
-          COALESCE(m.creation_date, c.creation_date) AS last_update,
+          COALESCE(ce.creation_date, c.creation_date) AS last_update,
           CONCAT_WS(' ', customer.firstname, customer.lastname) as contact_name,
           json_build_object(
             'id', customer.id,
             'got_profile_picture', customer.got_profile_picture,
             'profile_picture_version', customer.profile_picture_version
           ) as avatar,
-          m.content as last_message,
-          m.id IS NULL OR m.sender_id <> customer.id OR m.is_read as is_read
+          ce.content as last_event,
+          ce.id IS NULL OR ce.sender_id <> customer.id OR ce.is_read as is_read
       FROM chat c
 
       INNER JOIN project p ON p.id = c.project_id
       INNER JOIN customer ON customer.id = p.customer_id
       LEFT JOIN LATERAL(
-        SELECT
-          m.id,
-          m.chat_id,
-          m.content,
-          m.creation_date,
-          m.sender_id,
-          m.is_read
-        FROM message m
+        SELECT *
+        FROM chat_event ce
         WHERE chat_id = c.id
-        GROUP BY m.id
+        AND type = 'message'
         ORDER BY creation_date DESC
         LIMIT 1
-      ) AS m ON c.id = m.chat_id
+      ) AS ce ON c.id = ce.chat_id
 
       WHERE c.id = $1
-      GROUP BY c.id, customer.id, p.shop_id, p.name, m.id, m.sender_id, m.is_read, m.content, m.creation_date
+      GROUP BY c.id, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.content, ce.creation_date
     `;
 
     const { rows: chats } = await this.db.query(query, [chatId]);
@@ -131,13 +118,5 @@ export class ChatService {
     ]);
 
     return can_access;
-  }
-
-  async markChatAsRead(chatId: string, date: string) {
-    const query = `--sql
-      UPDATE message SET is_read=TRUE WHERE chat_id=$1 AND creation_date <= $2;
-    `;
-
-    await this.db.query(query, [chatId, date]);
   }
 }

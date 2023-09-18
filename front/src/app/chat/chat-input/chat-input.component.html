@@ -25,12 +25,12 @@
   </button>
   <div class="input-container">
     <textarea
+      (keydown.enter)="addMessage($event)"
       (input)="adjustTextareaHeight($event)"
       rows="1"
       [(ngModel)]="newMessage"
       type="text"
       placeholder="Aa"
-      (keyup.enter)="addMessage()"
     ></textarea>
 
     <button

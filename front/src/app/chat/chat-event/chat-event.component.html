@@ -1,0 +1,23 @@
+<div class="message">
+  <app-chat-event-attachments
+    *ngIf="event.type === 'media' && event.content"
+    [attachments]="event.content"
+    [isMine]="event.is_sender"
+  ></app-chat-event-attachments>
+
+  <app-chat-event-message
+    *ngIf="event.type === 'message'"
+    [isMine]="event.is_sender"
+  >
+    {{ event.content }}
+  </app-chat-event-message>
+
+  <ng-container *ngIf="event.type === 'project_created'"> </ng-container>
+
+  <app-chat-event-project-new
+    *ngIf="event.type === 'project_created'"
+    [event]="event"
+  ></app-chat-event-project-new>
+</div>
+
+<span class="message-time">{{ event.creation_date | date : "shortTime" }}</span>

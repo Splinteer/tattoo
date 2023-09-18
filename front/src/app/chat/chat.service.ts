@@ -30,16 +30,27 @@ import {
   tap,
 } from 'rxjs';
 
-export type Attachment = string;
+export enum ChatEventType {
+  project_created = 'project_created',
+  project_cancelled = 'project_cancelled',
+  project_rejected = 'project_rejected',
+  project_completed = 'project_completed',
+  message = 'message',
+  media = 'media',
+  appointment_new = 'appointment_new',
+  appointment_accepted = 'appointment_accepted',
+  deposit_request = 'deposit_request',
+  deposit_paid = 'deposit_paid',
+}
 
-export type Message = {
+export type ChatEvent = {
   id: string;
   chat_id: string;
   creation_date: string;
   is_sender: boolean;
-  content: string;
+  type: ChatEventType;
+  content?: string;
   is_read: boolean;
-  attachments: Attachment[];
 };
 
 export type Chat = {
@@ -50,10 +61,10 @@ export type Chat = {
   creation_date: string;
   last_update: string;
   contact_name: string;
-  last_message: string;
+  last_event: string;
   is_read: boolean;
   avatar: AvatarCustomer;
-  messages?: Message[];
+  events?: ChatEvent[];
 };
 
 export type ReactiveChat = {
@@ -64,10 +75,10 @@ export type ReactiveChat = {
   creation_date: DateTime;
   last_update: DateTime;
   contact_name: string;
-  last_message: string;
+  last_event: string;
   is_read: boolean;
   avatar: AvatarCustomer;
-  messages: WritableSignal<Message[]>;
+  events: WritableSignal<ChatEvent[]>;
   project: WritableSignal<Project | null>;
   is_fully_loaded?: true;
 };
@@ -112,7 +123,7 @@ export class ChatService {
       filter((activeChat): activeChat is ReactiveChat => !!activeChat),
       tap((activeChat) => {
         if (!activeChat.is_fully_loaded) {
-          this.queueLoadMoreMessages(activeChat);
+          this.queueLoadMoreEvents(activeChat);
         }
 
         this.#router.navigate([
@@ -165,8 +176,8 @@ export class ChatService {
       .pipe(
         tap(() => {
           chat.is_read = true;
-          chat.messages.update((messages) =>
-            messages.map((message) => ({ ...message, is_read: true }))
+          chat.events.update((event) =>
+            event.map((event) => ({ ...event, is_read: true }))
           );
         })
       );
@@ -177,7 +188,7 @@ export class ChatService {
       ...chat,
       creation_date: DateTime.fromISO(chat.creation_date),
       last_update: DateTime.fromISO(chat.last_update),
-      messages: signal(chat.messages ?? []),
+      events: signal(chat.events ?? []),
       project: signal<Project | null>(null),
     };
   }
@@ -272,20 +283,20 @@ export class ChatService {
   readonly #listenLoads = this.#loadRequests
     .pipe(
       skipWhile((chat) => !!chat.is_fully_loaded),
-      concatMap((chat: ReactiveChat) => this.loadMessagesForChat(chat))
+      concatMap((chat: ReactiveChat) => this.loadEventsForChat(chat))
     )
     .subscribe();
 
-  public queueLoadMoreMessages(chat: ReactiveChat) {
+  public queueLoadMoreEvents(chat: ReactiveChat) {
     this.#loadRequests.next(chat);
   }
 
-  private loadMessagesForChat(chat: ReactiveChat) {
-    const messages = chat.messages();
+  private loadEventsForChat(chat: ReactiveChat) {
+    const events = chat.events();
 
     const date = (
-      messages?.length
-        ? DateTime.fromISO(messages.at(-1)?.creation_date as string).toISO()
+      events?.length
+        ? DateTime.fromISO(events.at(-1)?.creation_date as string).toISO()
         : DateTime.local().toISO()
     ) as string;
 
@@ -293,47 +304,46 @@ export class ChatService {
     queryParams = queryParams.append('date', date);
 
     return this.http
-      .get<Message[]>(`/chat/${chat.id}/messages`, {
+      .get<ChatEvent[]>(`/chat/${chat.id}/events`, {
         params: queryParams,
       })
       .pipe(
-        tap((newMessages) => {
-          this.addMessagesToChat(chat, newMessages);
-          if (!newMessages.length) {
+        tap((newEvents) => {
+          this.addEventsToChat(chat, newEvents);
+          if (!newEvents.length) {
             chat.is_fully_loaded = true;
           }
         })
       );
   }
 
-  private addMessagesToChat(
+  private addEventsToChat(
     chat: ReactiveChat,
-    messages: Message[],
+    events: ChatEvent[],
     isNew = false
   ) {
-    if (!messages.length) {
+    if (!events.length) {
       return;
     }
 
     this.loadedChatsSignal.update((chats) => {
-      let registeredMessages: Message[] = [];
-      chat.messages.update((currentMessages) => {
-        registeredMessages = isNew
-          ? [...messages, ...(currentMessages ?? [])]
-          : [...(currentMessages ?? []), ...messages];
+      let registeredEvents: ChatEvent[] = [];
+      chat.events.update((currentEvents) => {
+        registeredEvents = isNew
+          ? [...events, ...(currentEvents ?? [])]
+          : [...(currentEvents ?? []), ...events];
 
-        return registeredMessages;
+        return registeredEvents;
       });
 
       chat.last_update =
-        DateTime.fromISO(registeredMessages[0].creation_date) ||
-        chat.last_update;
+        DateTime.fromISO(registeredEvents[0].creation_date) || chat.last_update;
 
       return chats;
     });
   }
 
-  addMessage(chat: ReactiveChat, content: string, attachments: File[]) {
+  addEvent(chat: ReactiveChat, content: string, attachments: File[]) {
     const formData = new FormData();
 
     formData.append('content', content);
@@ -342,11 +352,11 @@ export class ChatService {
     });
 
     this.http
-      .post<Message>(`/chat/${chat.id}/message`, formData)
-      .subscribe((message) => {
-        chat.messages.update((currentMessages) => [
-          ...(currentMessages ?? []),
-          message,
+      .post<ChatEvent[]>(`/chat/${chat.id}/event`, formData)
+      .subscribe((newEvents) => {
+        chat.events.update((currentEvents) => [
+          ...newEvents,
+          ...(currentEvents ?? []),
         ]);
       });
   }
@@ -360,20 +370,20 @@ export class ChatService {
       source.addEventListener('open', () => this.synced.set(true));
 
       source.addEventListener('message', ({ data }) => {
-        const newMessage = JSON.parse(data) as Message;
-        if (!newMessage) {
+        const newEvent = JSON.parse(data) as ChatEvent;
+        if (!newEvent) {
           return;
         }
 
         const loadedChats = this.loadedChatsSignal();
 
-        const chat = loadedChats.find((c) => c.id === newMessage.chat_id);
+        const chat = loadedChats.find((c) => c.id === newEvent.chat_id);
         if (!chat) {
-          this.loadChat(newMessage.chat_id).subscribe();
+          this.loadChat(newEvent.chat_id).subscribe();
           return;
         }
 
-        this.addMessagesToChat(chat, [newMessage], true);
+        this.addEventsToChat(chat, [newEvent], true);
       });
 
       source.addEventListener('error', (error) => {

@@ -24,14 +24,18 @@ import { Observable } from 'rxjs';
 import { ChatNotificationService } from './chat-notification/chat-notification.service';
 import { Request } from 'express';
 import { StorageService } from '@app/common/storage/storage.service';
-import { Message, MessageService } from './message/message.service';
+import {
+  ChatEvent,
+  ChatEventService,
+  ChatEventType,
+} from './chat-event/chat-event.service';
 
 @Controller('chat')
 export class ChatController {
   constructor(
     private readonly chatService: ChatService,
     private readonly chatNotificationService: ChatNotificationService,
-    private readonly messageService: MessageService,
+    private readonly chatEventService: ChatEventService,
     @Inject('public') private readonly publicStorage: StorageService,
   ) {}
 
@@ -53,7 +57,7 @@ export class ChatController {
     @Query('date') date: string,
     @Body('chatId') chatId: string,
   ) {
-    return this.chatService.markChatAsRead(chatId, date);
+    return this.chatEventService.markAsRead(chatId, date);
   }
 
   @Get('shop')
@@ -84,15 +88,15 @@ export class ChatController {
     return this.chatService.getShopChat(chatId);
   }
 
-  @Get(':chatId/messages')
+  @Get(':chatId/events')
   @UseGuards(new AuthGuard())
   @UseInterceptors(FilesInterceptor('attachments'))
-  async getMessages(
+  async getEvents(
     @Param('chatId') chatId: string,
     @Credentials()
     credentials: ICredentials,
     @Query('date') date: string,
-  ): Promise<Message[]> {
+  ): Promise<ChatEvent[]> {
     const canAccessChat = await this.chatService.checkChatAccess(
       credentials,
       chatId,
@@ -101,37 +105,33 @@ export class ChatController {
       throw new NotFoundException();
     }
 
-    const messages = await this.messageService.getMessages(
+    const events = await this.chatEventService.getEvents(
       credentials.id,
       chatId,
       date,
     );
 
     return Promise.all(
-      messages.map(async (message) => {
-        if (message.attachments.length) {
-          message.attachments = await Promise.all(
-            message.attachments.map((attachment) =>
-              this.publicStorage.getSignedUrl(attachment),
-            ),
-          );
+      events.map(async (event) => {
+        if (event.type === ChatEventType.media) {
+          event.content = await this.publicStorage.getSignedUrl(event.content);
         }
 
-        return message;
+        return event;
       }),
     );
   }
 
-  @Post(':chatId/message')
+  @Post(':chatId/event')
   @UseGuards(new AuthGuard())
   @UseInterceptors(FilesInterceptor('attachments'))
-  async addMessage(
+  async addEvent(
     @Param('chatId') chatId: string,
     @Credentials()
     credentials: ICredentials,
     @Body('content') content: string,
     @UploadedFiles() files?: Array<Express.Multer.File>,
-  ): Promise<Message> {
+  ): Promise<ChatEvent[]> {
     const canAccessChat = await this.chatService.checkChatAccess(
       credentials,
       chatId,
@@ -140,55 +140,44 @@ export class ChatController {
       throw new NotFoundException();
     }
 
-    const message = await this.messageService.addMessage(
-      chatId,
-      credentials.id,
-      content,
-    );
-
-    let attachments: string[] = [];
+    const events: ChatEvent[] = [];
     if (files?.length) {
-      const addedAttachments = await this.messageService.addAttachments(
-        message.id,
-        message.chat_id,
+      let attachments = await this.chatEventService.addMediaEvents(
+        chatId,
+        credentials.id,
         files,
       );
 
       attachments = await Promise.all(
-        addedAttachments.map((attachment) =>
-          this.publicStorage.getSignedUrl(attachment.image_url),
-        ),
+        attachments.map(async (attachment) => {
+          this.chatEventService
+            .sendEventToUser(attachment.id)
+            .catch(console.error);
+
+          attachment.content = await this.publicStorage.getSignedUrl(
+            attachment.content,
+          );
+
+          return attachment;
+        }),
       );
     }
 
-    this.messageService.sendMessageToUser(message.id).catch(console.error);
+    if (content.length) {
+      const event = await this.chatEventService.addEvent(
+        chatId,
+        credentials.id,
+        ChatEventType.message,
+        content,
+      );
 
-    return {
-      ...message,
-      is_sender: true,
-      attachments,
-    };
+      events.push(event);
+
+      this.chatEventService.sendEventToUser(event.id).catch(console.error);
+    }
+
+    return events.map((event) => ({ ...event, is_sender: true }));
   }
-
-  // @Get('message/:messageId/:attachmentId')
-  // @UseGuards(new AuthGuard())
-  // async getAttachmentData(
-  //   @Credentials()
-  //   credentials: ICredentials,
-  //   @Param('messageId') messageId: string,
-  //   @Param('attachmentId') attachmentId: string,
-  // ) {
-  //   const attachment = await this.chatService.getAttachment(
-  //     messageId,
-  //     attachmentId,
-  //   );
-
-  //   const signelUrl = await this.publicStorage.getSignedUrl(
-  //     attachment.image_url,
-  //   );
-
-  //   return { url: signelUrl };
-  // }
 
   @Sse('sync')
   @UseGuards(new AuthGuard())

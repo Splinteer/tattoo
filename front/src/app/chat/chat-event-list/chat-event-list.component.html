@@ -1,0 +1,40 @@
+<app-infinite-scroll
+  (loadMore)="loadEvents()"
+  [fullyLoaded]="chat.is_fully_loaded ?? false"
+  reverse
+>
+  <ng-container *ngIf="chat.events() as events">
+    <div
+      *ngFor="
+        let event of chat.events();
+        let index = index;
+        let isFirst = first;
+        let isLast = last
+      "
+    >
+      <div
+        class="day"
+        *ngIf="
+          isLast ||
+          (event.creation_date | date : 'mediumDate') !==
+            (events[index + 1].creation_date | date : 'mediumDate')
+        "
+      >
+        {{ event.creation_date | date : "mediumDate" }}
+      </div>
+      <app-chat-event [event]="event"></app-chat-event>
+      <div
+        class="read-indicator"
+        *ngIf="
+          chat.shop_id === credentials()?.shop_id &&
+          event.is_sender &&
+          event.is_read &&
+          (isFirst || !events[index - 1].is_read)
+        "
+        translate
+      >
+        CHAT.read
+      </div>
+    </div>
+  </ng-container>
+</app-infinite-scroll>

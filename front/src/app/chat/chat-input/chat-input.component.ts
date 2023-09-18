@@ -95,22 +95,26 @@ export class ChatInputComponent {
     this.newMessage += emoji.native;
   }
 
-  addMessage() {
+  addMessage(event?: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+
     const chat = this.chat();
     const attachments = this.#attachments$();
     if ((!this.newMessage.length && !attachments.length) || !chat) {
       return;
     }
 
-    this.chatService.addMessage(chat, this.newMessage, attachments);
+    this.chatService.addEvent(chat, this.newMessage, attachments);
     this.newMessage = '';
     this.fileSizeError = false;
     this.fileTypeError = false;
     this.#attachments$.set([]);
   }
 
-  adjustTextareaHeight(event: any): void {
-    const textarea = event.target;
+  adjustTextareaHeight(event: Event): void {
+    const textarea = event.target as HTMLElement;
     this.renderer.setStyle(textarea, 'height', 'auto');
     this.renderer.setStyle(textarea, 'height', textarea.scrollHeight + 'px');
   }

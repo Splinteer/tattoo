@@ -65,11 +65,11 @@ export class ProjectService {
       ),
 
       project_medias AS (
-      	SELECT image_url, c.project_id
-      	FROM message_attachment ma
-      	INNER JOIN message m ON m.id=ma.message_id
-		    INNER JOIN chat c ON c.id=m.chat_id
+      	SELECT content as image_url, c.project_id
+      	FROM chat_event ce
+		    INNER JOIN chat c ON c.id=ce.chat_id
         WHERE c.project_id = $1
+        AND ce.type = 'media'
 		  )
 
       SELECT

@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: var(--space-middle);
+
+  &.mine {
+    flex-direction: row-reverse;
+  }
+
+  &.theirs {
+    justify-content: flex-start;
+  }
+}
+
+.message {
+  max-width: 70%;
+}
+
+.message-time {
+  font-size: var(--text-xs);
+  color: var(--label-tertiary);
+}

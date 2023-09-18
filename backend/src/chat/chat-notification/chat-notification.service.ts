@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { Subject } from 'rxjs';
-import { Message } from '../message/message.service';
+import { ChatEvent } from '../chat-event/chat-event.service';
 
 @Injectable()
 export class ChatNotificationService {
@@ -28,10 +28,10 @@ export class ChatNotificationService {
     return !!this.clients.get(userId);
   }
 
-  sendMessageToUser(userId: string, message: Message) {
+  sendMessageToUser(userId: string, event: ChatEvent) {
     const clientSubject = this.clients.get(userId);
     if (clientSubject) {
-      clientSubject.next(JSON.stringify(message));
+      clientSubject.next(JSON.stringify(event));
     }
   }
 }
