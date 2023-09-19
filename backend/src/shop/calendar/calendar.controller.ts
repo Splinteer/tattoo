@@ -15,6 +15,7 @@ import {
 import { ShopService } from '../shop.service';
 import { GoogleCalendarService } from './google-calendar/google-calendar.service';
 import { DateTime } from 'luxon';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 // TODO Auth
 @Controller('calendar')
@@ -117,5 +118,10 @@ export class CalendarController {
     this.googleCalendar
       .deleteEvent(calendarId, event.id.replaceAll('-', ''))
       .subscribe();
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async deletePastUnconfirmedAppointments() {
+    await this.calendarService.deletePastUnconfirmedAppointments();
   }
 }
