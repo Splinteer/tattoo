@@ -4,8 +4,10 @@
     "edit": "Modifier",
     "update": "Mettre à jour",
     "cancel": "Annuler",
+    "yes": "Oui",
+    "no": "Non",
     "CONFIRM": {
-      "title": "Confirmez",
+      "title": "Êtes-vous sûr.e ?",
       "confirm": "Je confirme"
     },
     "DAY": {

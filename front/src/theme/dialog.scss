@@ -1,0 +1,9 @@
+.ios-backdrop {
+  background-color: var(--bg-backdrop);
+}
+
+.cdk-overlay-pane.ios-panel {
+  background-color: transparent;
+  border-radius: none;
+  box-shadow: none;
+}
