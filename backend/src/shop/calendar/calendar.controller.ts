@@ -121,7 +121,8 @@ export class CalendarController {
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  async deletePastUnconfirmedAppointments() {
+  async deletePastAppointments() {
     await this.calendarService.deletePastUnconfirmedAppointments();
+    await this.calendarService.deletePastAvailability();
   }
 }

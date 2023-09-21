@@ -1,4 +1,4 @@
-<div
+<button
   class="container"
   [class.active]="activeChat()?.id === chat.id"
   [class.unread]="!chat.is_read"
@@ -20,4 +20,4 @@
       {{ chat.last_update | timeAgo : "short" | async }}
     </div>
   </div>
-</div>
+</button>

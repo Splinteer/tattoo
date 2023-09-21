@@ -243,8 +243,14 @@ export class CalendarService {
   }
 
   public async deletePastUnconfirmedAppointments() {
-    await this.db.query<LinkedDateRange>(
+    await this.db.query(
       'DELETE FROM appointment WHERE is_confirmed IS FALSE AND start_date < NOW()',
+    );
+  }
+
+  public async deletePastAvailability() {
+    await this.db.query(
+      'DELETE FROM availability WHERE start_date_time < NOW()',
     );
   }
 }

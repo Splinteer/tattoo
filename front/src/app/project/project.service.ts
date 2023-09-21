@@ -21,8 +21,6 @@ export type Project = {
   height_cm: number;
   width_cm: number;
   additional_information?: string;
-  is_drawing_done: boolean;
-  is_drawing_approved: boolean;
   is_paid: boolean;
   customer_availability?: string;
   customer_rating?: number;

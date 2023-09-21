@@ -17,3 +17,98 @@
 .text-bold {
   font-weight: bold;
 }
+
+// iOS
+
+.large-title {
+  font-size: var(--large-title-size);
+  line-height: var(--large-title-line-height);
+
+  &.emphasized {
+    font-weight: var(--large-title-emphasized-weight);
+  }
+}
+
+.title1 {
+  font-size: var(--title1-size);
+  line-height: var(--title1-line-height);
+
+  &.emphasized {
+    font-weight: var(--title1-emphasized-weight);
+  }
+}
+
+.title2 {
+  font-size: var(--title2-size);
+  line-height: var(--title2-line-height);
+
+  &.emphasized {
+    font-weight: var(--title2-emphasized-weight);
+  }
+}
+
+.title3 {
+  font-size: var(--title3-size);
+  line-height: var(--title3-line-height);
+
+  &.emphasized {
+    font-weight: var(--title3-emphasized-weight);
+  }
+}
+
+.headline {
+  font-size: var(--headline-size);
+  line-height: var(--headline-line-height);
+  font-weight: var(--headline-weight);
+
+  .italic {
+    font-style: italic;
+  }
+}
+
+.subheadline {
+  font-size: var(--subheadline-size);
+  line-height: var(--subheadline-line-height);
+
+  &.emphasized {
+    font-weight: var(--subheadline-emphasized-weight);
+  }
+
+  .italic {
+    font-style: italic;
+  }
+}
+
+.footnote {
+  font-size: var(--footnote-size);
+  line-height: var(--footnote-line-height);
+
+  &.emphasized {
+    font-weight: var(--footnote-emphasized-weight);
+  }
+
+  .italic {
+    font-style: italic;
+  }
+}
+
+.body {
+}
+
+.emphasized {
+  font-weight: var(--body-emphasized-weight);
+}
+
+.italic {
+  font-style: italic;
+}
+
+html,
+body {
+  font-size: var(--body-size);
+  line-height: var(--body-line-height);
+  letter-spacing: -0.4px;
+  color: var(--label-primary);
+}
+
+// Fin iOS

@@ -19,8 +19,6 @@ export type Project = {
   height_cm: number;
   width_cm: number;
   additional_information?: string;
-  is_drawing_done: boolean;
-  is_drawing_approved: boolean;
   is_paid: boolean;
   customer_availability?: string;
   customer_rating?: number;
@@ -86,8 +84,6 @@ export class ProjectService {
           p.width_cm,
           p.additional_information,
           P.customer_availability,
-          p.is_drawing_done,
-          p.is_drawing_approved,
           p.is_paid,
           p.customer_rating,
           p.shop_rating,

@@ -129,8 +129,6 @@ CREATE TABLE
         height_cm integer NOT NULL,
         width_cm integer NOT NULL,
         additional_information text,
-        is_drawing_done boolean NOT NULL DEFAULT false,
-        is_drawing_approved boolean NOT NULL DEFAULT false,
         is_paid boolean NOT NULL DEFAULT false,
         customer_availability varchar,
         customer_rating integer,
@@ -182,6 +180,7 @@ CREATE TABLE
         creation_date timestamp(3) NOT NULL DEFAULT NOW(),
         start_date timestamp(3) NOT NULL,
         end_date timestamp(3),
+        created_by_shop boolean NOT NULL DEFAULT false,
         is_confirmed boolean NOT NULL DEFAULT false,
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
     );
@@ -195,24 +194,31 @@ CREATE TABLE
         CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
     );
 
+CREATE TYPE
+    public.chat_event_type AS ENUM (
+        'project_created',
+        'project_cancelled',
+        'project_rejected',
+        'project_completed',
+        'message',
+        'media',
+        'appointment_new',
+        'appointment_accepted',
+        'deposit_request',
+        'deposit_paid',
+    );
+
 CREATE TABLE
-    IF NOT EXISTS public.message (
+    IF NOT EXISTS chat_event (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         chat_id uuid NOT NULL,
         creation_date timestamp(3) NOT NULL DEFAULT NOW(),
         sender_id uuid NOT NULL,
-        content text NOT NULL,
+        type chat_event_type NOT NULL,
+        content text DEFAULT NULL,
         is_read boolean NOT NULL DEFAULT false,
         CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) REFERENCES public.chat (id),
         CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES public.customer (id)
-    );
-
-CREATE TABLE
-    IF NOT EXISTS public.message_attachment(
-        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-        message_id uuid NOT NULL,
-        image_url varchar(255) NOT NULL,
-        CONSTRAINT fk_message_id FOREIGN KEY (message_id) REFERENCES public.message (id)
     );
 
 CREATE TABLE
