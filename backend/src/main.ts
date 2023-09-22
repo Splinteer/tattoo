@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import supertokens from 'supertokens-node';
 import { SupertokensExceptionFilter } from './auth/auth.filter';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +19,11 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
 
   app.useGlobalFilters(new SupertokensExceptionFilter());
 

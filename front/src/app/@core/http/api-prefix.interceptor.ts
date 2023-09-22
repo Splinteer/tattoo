@@ -24,7 +24,11 @@ export class ApiPrefixInterceptor implements HttpInterceptor {
       !/^(http|https):/i.test(request.url) &&
       !request.url.startsWith('/assets')
     ) {
-      let url: string = environment.serverUrl + request.url;
+      let url: string = environment.serverUrl;
+      if (!request.url.startsWith('/v2')) {
+        url += '/v1';
+      }
+      url += request.url;
 
       request = request.clone({ url });
     }
