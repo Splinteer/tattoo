@@ -3,6 +3,7 @@
   [fullyLoaded]="chat.is_fully_loaded ?? false"
   reverse
 >
+  <app-chat-shortcuts></app-chat-shortcuts>
   <ng-container *ngIf="chat.events() as events">
     <div
       *ngFor="

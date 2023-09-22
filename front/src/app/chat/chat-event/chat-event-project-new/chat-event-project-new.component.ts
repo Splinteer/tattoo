@@ -20,18 +20,26 @@ import {
 } from 'rxjs';
 import { ChatEventMessageComponent } from '../chat-event-message/chat-event-message.component';
 import { ChatEventAttachmentsComponent } from '../chat-event-attachments/chat-event-attachments.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat-event-project-new',
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
     ChatEventMessageComponent,
     ChatEventAttachmentsComponent,
   ],
   template: `
-    <ng-container *ngIf="project$ | async as project">
+    <ng-container *ngIf="projectSignal() as project">
       <app-chat-event-message [isMine]="event.is_sender">
+        Nouveau projet:
+        <ng-container *ngFor="let type of project.types; let isLast = last">
+          {{ 'BOOKING.types.' + type | translate }}{{ !isLast ? ',' : '' }}
+        </ng-container>
+
+        <br />
         Zone: {{ project.zone }}<br />
         Taille: {{ project.width_cm }}x{{ project.height_cm }}<br />
         Description:<br />
@@ -63,7 +71,7 @@ export class ChatEventProjectNewComponent {
 
   readonly #imagePreviewService = inject(ImagePreviewService);
 
-  readonly project$ = this.#projectService.projectLoader;
+  readonly projectSignal = this.#projectService.project;
 
   openModalPreview(src?: string) {
     if (src) {

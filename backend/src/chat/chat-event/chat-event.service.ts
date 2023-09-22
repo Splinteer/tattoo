@@ -38,7 +38,7 @@ export class ChatEventService {
     senderId: string,
     type: ChatEventType,
     content?: string,
-  ): Promise<ChatEvent> {
+  ): Promise<Omit<ChatEvent, 'is_sender'>> {
     const query = `--sql
       INSERT INTO chat_event(chat_id, sender_id, type, content) VALUES ($1, $2, $3, $4) RETURNING *;
     `;
@@ -59,7 +59,7 @@ export class ChatEventService {
     chatId: string,
     senderId: string,
     attachments: Express.Multer.File[],
-  ): Promise<ChatEvent[]> {
+  ): Promise<Omit<ChatEvent, 'is_sender'>[]> {
     return Promise.all(
       attachments.map(async (attachment) => {
         const attachmentId = DbService.getUUID();

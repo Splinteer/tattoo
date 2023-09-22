@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
   inject,
@@ -31,12 +32,13 @@ import { minDateValidator } from '@app/shared/custom-validators';
     ReactiveFormsModule,
     TranslateModule,
     ToggleComponent,
+    TranslateModule,
   ],
   templateUrl: './calendar-form-event.component.html',
   styleUrls: ['./calendar-form-event.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarFormEventComponent implements OnInit {
+export class CalendarFormEventComponent implements OnChanges {
   private readonly calendarService = inject(CalendarService);
 
   @Input() day?: DateTime;
@@ -47,7 +49,7 @@ export class CalendarFormEventComponent implements OnInit {
 
   public readonly today = DateTime.now();
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.setFormValue();
   }
 

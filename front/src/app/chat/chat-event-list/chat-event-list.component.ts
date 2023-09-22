@@ -10,6 +10,7 @@ import { InfiniteScrollComponent } from '@app/shared/infinite-scroll/infinite-sc
 import { TranslateModule } from '@ngx-translate/core';
 import { CredentialsService } from '@app/auth/credentials.service';
 import { ChatEventComponent } from '../chat-event/chat-event.component';
+import { ChatShortcutsComponent } from '../chat-shortcuts/chat-shortcuts.component';
 
 @Component({
   selector: 'app-chat-event-list',
@@ -19,6 +20,7 @@ import { ChatEventComponent } from '../chat-event/chat-event.component';
     InfiniteScrollComponent,
     TranslateModule,
     ChatEventComponent,
+    ChatShortcutsComponent,
   ],
   // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chat-event-list.component.html',

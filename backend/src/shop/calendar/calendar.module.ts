@@ -5,10 +5,13 @@ import { CommonModule } from '@app/common';
 import { ShopService } from '../shop.service';
 import { GoogleCalendarService } from './google-calendar/google-calendar.service';
 import { HttpModule } from '@nestjs/axios';
+import { ChatModule } from 'src/chat/chat.module';
+import { AppointmentController } from './appointment/appointment.controller';
+import { AppointmentService } from './appointment/appointment.service';
 
 @Module({
-  imports: [CommonModule, HttpModule],
-  controllers: [CalendarController],
-  providers: [CalendarService, ShopService, GoogleCalendarService],
+  imports: [CommonModule, HttpModule, ChatModule],
+  controllers: [CalendarController, AppointmentController],
+  providers: [CalendarService, ShopService, GoogleCalendarService, AppointmentService],
 })
 export class CalendarModule {}

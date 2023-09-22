@@ -3,17 +3,21 @@
   type="button"
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
-  class="container"
-  [class.selection]="selectionActive()"
+  class="container footnote"
+  [class.selection]="selectionActive() === 'selection'"
   [class.selected]="selected()"
+  [class.centered]="hideTitle"
   [ngClass]="event.event_type"
   [@slideDown]
 >
-  <div *ngIf="!selectionActive()" translate>
+  <div *ngIf="selectionActive() !== 'selection' && !hideTitle" translate>
     {{ "CALENDAR.EVENT_TYPE." + event.event_type }}
   </div>
   <div class="time">
     <span *ngIf="showDate">
+      <ng-container *ngIf="hideTitle">
+        {{ "AVAILABILITY.the_day" | translate }}
+      </ng-container>
       {{ event.start_time | date : "shortDate" }}
       {{ "AVAILABILITY.from_hour" | translate | lowercase }}
     </span>

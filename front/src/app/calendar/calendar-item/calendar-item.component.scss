@@ -28,6 +28,10 @@
   transition: background-color 0.2s ease-in, color 0.2s ease-in;
   overflow: hidden;
 
+  &.centered {
+    justify-content: center;
+  }
+
   &.paid_Appointment {
     background-color: var(--nyanza);
     &:hover {
@@ -38,6 +42,12 @@
     background-color: var(--pale-purple);
     &:hover {
       background-color: var(--pale-purple-hover);
+    }
+  }
+  &.proposal {
+    background-color: var(--teal);
+    &:hover {
+      background-color: var(--teal);
     }
   }
   &.Appointment {
@@ -61,14 +71,14 @@
 
   &.selection {
     justify-content: center;
+  }
 
-    &.selected {
-      background-color: var(--primary-color);
-      color: white;
+  &.selected {
+    background-color: var(--primary-color);
+    color: white;
 
-      &:hover {
-        background-color: var(--primary-color-dark);
-      }
+    &:hover {
+      background-color: var(--primary-color-dark);
     }
   }
 }

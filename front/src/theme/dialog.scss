@@ -7,3 +7,74 @@
   border-radius: none;
   box-shadow: none;
 }
+
+.cdk-overlay-pane.ios-panel-plain {
+  border-radius: var(--base-border-radius);
+  background-color: var(--bg-primary);
+  box-shadow: none;
+}
+
+.cdk-overlay-pane .ios-dialog {
+  width: min(80vw, 300px);
+}
+
+.ios-dialog {
+  display: block;
+  border-radius: var(--base-border-radius);
+  background-color: var(--material-regular);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-short);
+    padding: var(--space-middle);
+    text-align: center;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid var(--separator-non-opaque);
+    gap: 1px;
+
+    &.vertical {
+      flex-direction: column;
+
+      button {
+        border-width: 0;
+        border-bottom-width: 1px;
+      }
+    }
+
+    button {
+      text-align: center;
+      flex-grow: 1;
+      width: 100%;
+      border-style: solid;
+      border-color: var(--separator-non-opaque);
+      outline: none;
+
+      border-width: 0;
+      border-right-width: 1px;
+
+      padding: var(--space-middle);
+      color: var(--blue);
+
+      &:last-of-type {
+        border-width: 0;
+      }
+
+      &.danger {
+        color: var(--red);
+      }
+
+      &:hover,
+      &:focus-visible {
+        background-color: var(--material-thick);
+      }
+    }
+  }
+}

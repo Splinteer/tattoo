@@ -21,6 +21,7 @@ import { ProjectService } from '@app/project/project.service';
 import { ChatEventProjectNewComponent } from './chat-event-project-new/chat-event-project-new.component';
 import { ChatEventMessageComponent } from './chat-event-message/chat-event-message.component';
 import { ChatEventAttachmentsComponent } from './chat-event-attachments/chat-event-attachments.component';
+import { ChatEventAppointmentNewComponent } from './chat-event-appointment-new/chat-event-appointment-new.component';
 
 @Component({
   selector: 'app-chat-event',
@@ -30,6 +31,7 @@ import { ChatEventAttachmentsComponent } from './chat-event-attachments/chat-eve
     ChatEventMessageComponent,
     ChatEventAttachmentsComponent,
     ChatEventProjectNewComponent,
+    ChatEventAppointmentNewComponent,
   ],
   templateUrl: './chat-event.component.html',
   styleUrls: ['./chat-event.component.scss'],

@@ -1,9 +1,10 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
 import { CalendarEvent } from '@app/calendar/calendar.service';
 import { ChatService, ReactiveChat } from '@app/chat/chat.service';
 import { Flash } from '@app/flash/flash.service';
+import { ConfirmDialogService } from '@app/shared/confirm-dialog/confirm-dialog.service';
 import { distinctUntilChanged, switchMap, of, tap, filter } from 'rxjs';
 
 export type ProjectType = 'flashs' | 'custom' | 'adjustment';
@@ -22,6 +23,7 @@ export type Project = {
   width_cm: number;
   additional_information?: string;
   is_paid: boolean;
+  planned_date: string;
   customer_availability?: string;
   customer_rating?: number;
   shop_rating?: number;
@@ -42,21 +44,53 @@ export class ProjectService {
 
   public readonly chat = this.#chatService.activeChatSignal;
 
-  readonly projectLoader = toObservable(this.chat).pipe(
-    distinctUntilChanged(),
-    filter((c): c is ReactiveChat => !!c),
-    switchMap((chat) => {
-      if (chat.project()) {
-        return of(chat.project() as Project);
-      }
+  readonly project = computed(() => {
+    const chat = this.chat();
+    if (!chat) {
+      return null;
+    }
 
-      return this.get(chat!.project_id).pipe(
-        tap((project) => chat.project.set(project))
-      );
-    })
-  );
+    const project = chat.project();
+    if (!project) {
+      this.get(chat!.project_id)
+        .pipe(tap((project) => chat.project.set(project)))
+        .subscribe();
+      return null;
+    }
+
+    return chat.project();
+  });
+
+  reload() {
+    const chat = this.chat();
+    if (!chat || !chat.project) {
+      return;
+    }
+
+    chat.project.set(null);
+  }
 
   get(projectId: string) {
     return this.#http.get<Project>(`/project/${projectId}`);
+  }
+
+  todo(projectId: string) {
+    // return this.#http
+    //   .patch<void>(`/project/${projectId}`, { is_drawing_done: true })
+    //   .pipe(
+    //     tap(() => {
+    //       const chat = this.chat();
+    //       if (chat) {
+    //         chat.project.update(
+    //           (project) =>
+    //             project && {
+    //               ...project,
+    //               is_drawing_done: true,
+    //             }
+    //         );
+    //       }
+    //     })
+    //   )
+    //   .subscribe();
   }
 }

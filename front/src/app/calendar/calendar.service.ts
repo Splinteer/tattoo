@@ -1,14 +1,23 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import {
+  Injectable,
+  WritableSignal,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { HttpService } from '@app/@core/http/http.service';
 import { DateTime } from 'luxon';
 import { CalendarSelectionService } from './calendar-selection.service';
+import { ChatEvent, ChatService } from '@app/chat/chat.service';
+import { Project } from '@app/project/project.service';
 
 type EmptyObj = Record<PropertyKey, never>;
 
 export type AppointmentType =
   | 'Appointment'
   | 'paid_Appointment'
-  | 'confirmed_Appointment';
+  | 'confirmed_Appointment'
+  | 'proposal';
 
 export type EventType = AppointmentType | 'Availability' | 'Unavailability';
 
@@ -63,6 +72,8 @@ export class CalendarService {
 
   private readonly selectionService = inject(CalendarSelectionService);
 
+  private readonly chatService = inject(ChatService);
+
   // Signal Definitions
   public readonly loadedEventsSignal = signal<LoadedEvents>({});
 
@@ -116,7 +127,7 @@ export class CalendarService {
         (result: CalendarEventGroupedByDay, currentDay) => {
           const dateOfCurrentDay = DateTime.fromISO(currentDay);
           if (dateOfCurrentDay >= startDate && dateOfCurrentDay <= endDate) {
-            if (isSelection) {
+            if (isSelection === 'selection') {
               result[currentDay] = allEventsForShop[currentDay].map(
                 (eventsByTimeRange) =>
                   eventsByTimeRange.filter(
@@ -199,6 +210,28 @@ export class CalendarService {
         this.loadedEventsSignal.update((events) =>
           this.addToObject(events, { ...event, id: createdEvent.id })
         );
+      });
+  }
+
+  public addProposal(partialEvent: {
+    start_time: string;
+    end_time: string;
+    projectId: string;
+  }) {
+    this.http
+      .post<{ proposal: AppointmentEvent; event: ChatEvent }>(
+        `/calendar/proposal`,
+        partialEvent
+      )
+      .subscribe(({ proposal, event }) => {
+        this.loadedEventsSignal.update((events) =>
+          this.addToObject(events, proposal)
+        );
+
+        const chat = this.chatService.activeChatSignal();
+        if (chat && chat.id === event.chat_id) {
+          this.chatService.addEventsToChat(chat, [event], true);
+        }
       });
   }
 
@@ -298,6 +331,69 @@ export class CalendarService {
               ...events,
             },
           };
+        })
+      );
+  }
+
+  public confirmAppointment(appointment: BaseCalendarEvent) {
+    const chat = this.chatService.activeChatSignal();
+    const projectSignal = chat ? chat.project : null;
+    if (!projectSignal) {
+      return null;
+    }
+
+    return this.http
+      .get<CalendarEventGroupedByDay>(
+        '/appointment/' + appointment.id + '/accept'
+      )
+      .subscribe(() =>
+        projectSignal.update((project) => {
+          if (!project) {
+            return null;
+          }
+
+          const found = project.appointments?.find(
+            (a) => a.id === appointment.id
+          );
+          if (found) {
+            project.planned_date = found.start_time;
+            project.appointments = [
+              {
+                ...found,
+                event_type: 'confirmed_Appointment',
+              },
+            ];
+          } else {
+            project.appointments = [];
+          }
+
+          return project;
+        })
+      );
+  }
+
+  public rejectAppointment(appointment: BaseCalendarEvent) {
+    const chat = this.chatService.activeChatSignal();
+    const projectSignal = chat ? chat.project : null;
+    if (!projectSignal) {
+      return null;
+    }
+
+    return this.http
+      .get<CalendarEventGroupedByDay>(
+        '/appointment/' + appointment.id + '/reject'
+      )
+      .subscribe(() =>
+        projectSignal.update((project) => {
+          if (!project) {
+            return null;
+          }
+
+          project.appointments = project.appointments?.filter(
+            (appointment) => appointment.id !== appointment.id
+          );
+
+          return project;
         })
       );
   }

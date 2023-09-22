@@ -95,8 +95,6 @@ export class ChatService {
 
   readonly #route = inject(ActivatedRoute);
 
-  readonly test = this.#route.params.subscribe(console.log);
-
   private readonly showDetailsPanelByDefault = computed(
     () => !this.responsiveService.isMobile()
   );
@@ -266,8 +264,6 @@ export class ChatService {
           return chats;
         });
 
-        console.log(chats, formatedNewChat);
-
         const lastChat = chats.at(-1);
         if (lastChat) {
           this.lastLoadedChatDate = lastChat.last_update;
@@ -317,11 +313,7 @@ export class ChatService {
       );
   }
 
-  private addEventsToChat(
-    chat: ReactiveChat,
-    events: ChatEvent[],
-    isNew = false
-  ) {
+  addEventsToChat(chat: ReactiveChat, events: ChatEvent[], isNew = false) {
     if (!events.length) {
       return;
     }
@@ -362,6 +354,10 @@ export class ChatService {
   }
 
   createEventSource(tryCount = 1) {
+    if (tryCount > 5) {
+      return;
+    }
+
     try {
       const source = new EventSource(`${environment.serverUrl}/chat/sync`, {
         withCredentials: true,
@@ -390,18 +386,17 @@ export class ChatService {
         this.synced.set(false);
         if (source.readyState === EventSource.CLOSED) {
           setTimeout(() => {
-            this.createEventSource();
+            this.createEventSource(tryCount + 1);
           }, 5000); // 5 seconds delay
-        } else {
-          console.error('EventSource failed:', error);
+          return;
         }
+
+        console.error('EventSource failed:', error);
       });
     } catch (error) {
-      if (tryCount <= 5) {
-        setTimeout(() => {
-          this.createEventSource(tryCount + 1);
-        }, 5000); // 5 seconds delay
-      }
+      setTimeout(() => {
+        this.createEventSource(tryCount + 1);
+      }, 5000); // 5 seconds delay
     }
   }
 }

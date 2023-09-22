@@ -39,16 +39,25 @@
   "CALENDAR": {
     "EVENT_TYPE": {
       "Appointment": "Demande",
+      "proposal": "Proposition",
       "confirmed_Appointment": "Rendez-vous",
       "paid_Appointment": "Payé",
       "Availability": "Disponible",
       "Unavailability": "Indisponible"
     },
+
     "UNIT": {
       "week": "Semaine",
       "month": "Mois",
       "day": "Jour"
     },
+
+    "PROPOSAL": {
+      "title": "Proposer un créneau",
+      "select_event": "Cliquez sur un événement pour utiliser ses valeurs ci-dessous",
+      "propose": "Proposer le créneau"
+    },
+
     "add_event": "Ajouter un évènement",
     "today": "Aujourd'hui"
   },

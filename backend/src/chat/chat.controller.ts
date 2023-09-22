@@ -140,7 +140,7 @@ export class ChatController {
       throw new NotFoundException();
     }
 
-    const events: ChatEvent[] = [];
+    const events: Omit<ChatEvent, 'is_sender'>[] = [];
     if (files?.length) {
       let attachments = await this.chatEventService.addMediaEvents(
         chatId,

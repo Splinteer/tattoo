@@ -30,18 +30,18 @@ type Project = {
   height_cm: number;
   width_cm: number;
   additional_information?: string; // Optional since it can be NULL
-  is_drawing_done: boolean;
-  is_drawing_approved: boolean;
   is_paid: boolean;
   customer_rating?: number; // Optional since it can be NULL
   shop_rating?: number; // Optional since it can be NULL
 };
 
-type Appointment = {
+export type Appointment = {
+  id: string;
   project_id: string;
   creation_date: Date;
   start_date: Date;
   end_date: Date;
+  created_by_shop: boolean;
   is_confirmed: boolean;
 };
 

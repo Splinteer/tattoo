@@ -18,6 +18,11 @@
     *ngIf="event.type === 'project_created'"
     [event]="event"
   ></app-chat-event-project-new>
+
+  <app-chat-event-appointment-new
+    *ngIf="event.type === 'appointment_new'"
+    [event]="event"
+  ></app-chat-event-appointment-new>
 </div>
 
 <span class="message-time">{{ event.creation_date | date : "shortTime" }}</span>

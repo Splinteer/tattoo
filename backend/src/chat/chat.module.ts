@@ -10,5 +10,6 @@ import { ChatEventService } from './chat-event/chat-event.service';
   imports: [CommonModule, AuthModule],
   controllers: [ChatController],
   providers: [ChatService, ChatNotificationService, ChatEventService],
+  exports: [ChatService, ChatEventService],
 })
 export class ChatModule {}

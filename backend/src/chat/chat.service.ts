@@ -119,4 +119,17 @@ export class ChatService {
 
     return can_access;
   }
+
+  async getChatByProject(projectId: string) {
+    const query = `--sql
+      SELECT * FROM chat c
+      WHERE c.project_id=$1
+    `;
+
+    const {
+      rows: [chat],
+    } = await this.db.query<{ id: string }>(query, [projectId]);
+
+    return chat;
+  }
 }

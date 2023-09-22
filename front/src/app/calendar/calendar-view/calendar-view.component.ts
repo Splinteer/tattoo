@@ -83,6 +83,8 @@ export class CalendarViewComponent implements ControlValueAccessor, OnDestroy {
 
   @Input({ transform: booleanAttribute }) showToggle = false;
 
+  @Input({ transform: booleanAttribute }) proposal = false;
+
   public minimumDate: DateTime = DateTime.local();
 
   public readonly calendarSelection = inject(CalendarSelectionService);
@@ -101,7 +103,9 @@ export class CalendarViewComponent implements ControlValueAccessor, OnDestroy {
     if (!this.#isUsedInForm) {
       this.#isUsedInForm = true;
       this.calendarService.selectShop(this.shopUrl);
-      this.calendarSelection.setEditMode(true);
+      this.calendarSelection.setEditMode(
+        this.proposal ? 'proposal' : 'selection'
+      );
       this.calendarService
         .getMinimumAvailabilityDate(this.shopUrl)
         .subscribe((value) => {

@@ -41,6 +41,8 @@ export class CalendarItemComponent implements OnInit {
 
   @Input({ required: true }) event!: CalendarEvent;
 
+  @Input({ transform: booleanAttribute }) hideTitle = false;
+
   @Input({ transform: booleanAttribute, alias: 'date' }) showDate = false;
 
   public isOpen = false;

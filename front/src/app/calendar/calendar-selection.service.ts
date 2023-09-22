@@ -2,11 +2,15 @@ import { Injectable, computed, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { map, shareReplay, switchMap, tap } from 'rxjs';
 
+type CalendarFilter = 'proposal' | 'selection';
+
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarSelectionService {
-  isActive = signal(false);
+  limit: number | false = false;
+
+  isActive = signal<CalendarFilter | false>(false);
 
   selectionObject = signal<{ [eventId: string]: true }>({});
   selectionObject$ = toObservable(this.selectionObject).pipe(shareReplay());
@@ -19,10 +23,19 @@ export class CalendarSelectionService {
   );
 
   add(eventId: string) {
-    this.selectionObject.update((events) => ({
-      ...events,
-      [eventId]: true,
-    }));
+    this.selectionObject.update((events) => {
+      if (
+        this.limit === Object.keys(events).length &&
+        Object.keys(events).length
+      ) {
+        delete events[Object.keys(events).at(-1) as string];
+      }
+
+      return {
+        ...events,
+        [eventId]: true,
+      };
+    });
   }
 
   remove(eventId: string) {
@@ -34,20 +47,22 @@ export class CalendarSelectionService {
   }
 
   toggle(eventId: string) {
-    this.selectionObject.update((events) => {
-      eventId in events ? delete events[eventId] : (events[eventId] = true);
-
-      return events;
-    });
+    const events = this.selectionObject();
+    if (eventId in events) {
+      this.remove(eventId);
+    } else {
+      this.add(eventId);
+    }
   }
 
   reset() {
-    console.log('reset');
     this.selectionObject.set({});
   }
 
-  setEditMode(value: boolean) {
+  setEditMode(value: CalendarFilter | false) {
     this.isActive.set(value);
+
+    this.limit = value === 'proposal' ? 1 : false;
   }
 
   set(value: string[]) {

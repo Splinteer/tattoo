@@ -4,13 +4,13 @@ import {
   Availability,
   LinkedDateRange,
 } from '../availability/availability.service';
-
-type EmptyObj = Record<PropertyKey, never>;
+import { Appointment } from 'src/booking/booking.service';
 
 export type AppointmentType =
   | 'Appointment'
   | 'paid_Appointment'
-  | 'confirmed_Appointment';
+  | 'confirmed_Appointment'
+  | 'proposal';
 
 export type EventType = AppointmentType | 'Availability' | 'Unavailability';
 
@@ -20,14 +20,14 @@ export type BaseCalendarEvent = {
   start_time: Date;
   end_time: Date;
   event_type: EventType;
-  properties: EmptyObj;
+  properties: { random?: string }; // fake empty object
 };
 
 export type AppointmentEvent = BaseCalendarEvent & {
   event_type: AppointmentType;
   properties: {
     project_id: string;
-    is_paid: string;
+    is_paid: boolean;
   };
 };
 
@@ -64,6 +64,7 @@ export class CalendarService {
               CASE
                 WHEN p.is_paid IS TRUE THEN 'paid_Appointment'
                   WHEN is_confirmed IS TRUE THEN 'confirmed_Appointment'
+                  WHEN created_by_shop IS TRUE THEN 'proposal'
                   ELSE 'Appointment'
               END AS event_type,
               json_build_object('project_id', p.id, 'is_paid', p.is_paid) AS properties
@@ -208,6 +209,7 @@ export class CalendarService {
       'DELETE FROM availability WHERE id=$1 RETURNING *',
       [id],
     );
+
     return rows[0];
   }
 
@@ -252,5 +254,31 @@ export class CalendarService {
     await this.db.query(
       'DELETE FROM availability WHERE start_date_time < NOW()',
     );
+  }
+
+  public async addProposal(
+    shop_url: string,
+    projectId: string,
+    startTime: string,
+    endTime: string,
+  ): Promise<AppointmentEvent> {
+    const {
+      rows: [appointment],
+    } = await this.db.query<Appointment>(
+      'INSERT INTO appointment (project_id, start_date, end_date, created_by_shop) VALUES ($1, $2, $3, TRUE) RETURNING *',
+      [projectId, startTime, endTime],
+    );
+
+    return {
+      id: appointment.id,
+      shop_url,
+      event_type: 'proposal',
+      start_time: appointment.start_date,
+      end_time: appointment.end_date,
+      properties: {
+        project_id: projectId,
+        is_paid: false,
+      },
+    };
   }
 }

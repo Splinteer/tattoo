@@ -1,11 +1,14 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CalendarEvent, CalendarService, EventType } from './calendar.service';
 import {
@@ -14,13 +17,22 @@ import {
 } from '../availability/availability.service';
 import { ShopService } from '../shop.service';
 import { GoogleCalendarService } from './google-calendar/google-calendar.service';
-import { DateTime } from 'luxon';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { Credentials } from 'src/auth/session/session.decorator';
+import { Credentials as ICredentials } from 'src/auth/credentials/credentials.service';
+import {
+  ChatEventService,
+  ChatEventType,
+} from 'src/chat/chat-event/chat-event.service';
+import { ChatService } from 'src/chat/chat.service';
 
 // TODO Auth
 @Controller('calendar')
 export class CalendarController {
   constructor(
+    private readonly chatService: ChatService,
+    private readonly chatEventService: ChatEventService,
     private readonly calendarService: CalendarService,
     private readonly shopService: ShopService,
     private readonly googleCalendar: GoogleCalendarService,
@@ -40,11 +52,59 @@ export class CalendarController {
     return this.calendarService.getEvents(shopUrl, startDate, endDate);
   }
 
+  @Post('proposal')
+  @UseGuards(new AuthGuard())
+  async addProposal(
+    @Credentials()
+    credentials: ICredentials,
+    @Body()
+    body: {
+      start_time: string;
+      end_time: string;
+      projectId: string;
+    },
+  ) {
+    const { id: chatId } = await this.chatService.getChatByProject(
+      body.projectId,
+    );
+
+    if (!chatId) {
+      throw new BadRequestException();
+    }
+
+    const canAccess = await this.chatService.checkChatAccess(
+      credentials,
+      chatId,
+    );
+
+    if (!canAccess) {
+      throw new ForbiddenException();
+    }
+
+    const proposal = await this.calendarService.addProposal(
+      credentials.shop_url,
+      body.projectId,
+      body.start_time,
+      body.end_time,
+    );
+
+    const event = await this.chatEventService.addEvent(
+      chatId,
+      credentials.id,
+      ChatEventType.appointment_new,
+      proposal.id,
+    );
+
+    this.chatEventService.sendEventToUser(event.id).catch(console.error);
+
+    return { proposal, event: { ...event, is_sender: true } };
+  }
+
   @Post(':type/add')
   async addEvent(
     @Param('type') type: EventType,
     @Body() body: Omit<CalendarEvent, 'id'>,
-  ) {
+  ): Promise<LinkedDateRange | (Availability & LinkedDateRange)> {
     const shop = await this.shopService.getByUrl(body.shop_url);
 
     let event: (Availability & LinkedDateRange) | LinkedDateRange;

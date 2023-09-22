@@ -3,6 +3,7 @@ import { StorageService } from '@app/common/storage/storage.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { Flash } from 'src/flash/flash.service';
 import { AppointmentEvent } from 'src/shop/calendar/calendar.service';
+import { ProjectPatchBodyDTO } from './project.dto';
 
 export type ProjectType = 'flashs' | 'custom' | 'adjustment';
 
@@ -20,6 +21,7 @@ export type Project = {
   width_cm: number;
   additional_information?: string;
   is_paid: boolean;
+  planned_date?: string;
   customer_availability?: string;
   customer_rating?: number;
   shop_rating?: number;
@@ -68,7 +70,14 @@ export class ProjectService {
 		    INNER JOIN chat c ON c.id=ce.chat_id
         WHERE c.project_id = $1
         AND ce.type = 'media'
-		  )
+		  ),
+
+      confirmed_appointment AS (
+        SELECT start_date AS planned_date
+        FROM appointment
+        WHERE project_id = $1 AND is_confirmed = true
+        LIMIT 1
+      )
 
       SELECT
           p.id,
@@ -85,6 +94,7 @@ export class ProjectService {
           p.additional_information,
           P.customer_availability,
           p.is_paid,
+          (SELECT planned_date FROM confirmed_appointment) AS planned_date,
           p.customer_rating,
           p.shop_rating,
           jsonb_agg(DISTINCT pf) FILTER (WHERE pf.id IS NOT NULL) AS flashs,
@@ -120,6 +130,7 @@ export class ProjectService {
           CASE
             WHEN p.is_paid IS TRUE THEN 'paid_Appointment'
               WHEN is_confirmed IS TRUE THEN 'confirmed_Appointment'
+              WHEN created_by_shop IS TRUE THEN 'proposal'
               ELSE 'Appointment'
           END AS event_type,
           json_build_object('project_id', p.id, 'is_paid', p.is_paid) AS properties
@@ -169,5 +180,27 @@ export class ProjectService {
     }
 
     return project;
+  }
+
+  async update(projectId: string, fields: ProjectPatchBodyDTO) {
+    if (Object.keys(fields).length === 0) {
+      return;
+    }
+
+    const setClauses: string[] = [];
+    const values: any[] = [projectId];
+
+    for (const [key, value] of Object.entries(fields)) {
+      values.push(value);
+      setClauses.push(`${key} = $${values.length}`);
+    }
+
+    const updateQuery = `
+      UPDATE public.project
+      SET ${setClauses.join(', ')}
+      WHERE id = $1
+    `;
+
+    await this.db.query(updateQuery, values);
   }
 }

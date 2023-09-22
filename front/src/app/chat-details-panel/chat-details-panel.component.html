@@ -57,7 +57,7 @@
         <ng-container *ngIf="project.additional_information">
           <hr />
           <div class="detail">
-            <div class="name break-lines text-center">
+            <div class="name break-lines text-center footnote">
               {{ project.additional_information }}
             </div>
           </div>
@@ -90,7 +90,7 @@
 
       <ng-container *ngIf="project.customer_availability">
         <h3>Disponibilités</h3>
-        <div class="box">
+        <div class="box footnote">
           {{ project.customer_availability }}
         </div>
       </ng-container>

@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.text-left {
+  text-align: left;
+}
+
 .text-light {
   color: var(--gray-800);
 }
@@ -92,7 +96,17 @@
   }
 }
 
-.body {
+.caption1 {
+  font-size: var(--caption1-size);
+  line-height: var(--caption1-line-height);
+
+  &.emphasized {
+    font-weight: var(--caption1-emphasized-weight);
+  }
+
+  .italic {
+    font-style: italic;
+  }
 }
 
 .emphasized {
