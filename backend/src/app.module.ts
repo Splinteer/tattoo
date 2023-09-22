@@ -1,16 +1,16 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { CustomerModule } from './customer/customer.module';
-import { ShopModule } from './shop/shop.module';
-import { AuthMiddleware } from './auth/auth.middleware';
-import { FlashModule } from './flash/flash.module';
-import { GalleryModule } from './gallery/gallery.module';
+import { AuthModule } from './v1/auth/auth.module';
+import { CustomerModule } from './v1/customer/customer.module';
+import { ShopModule } from './v1/shop/shop.module';
+import { AuthMiddleware } from './v1/auth/auth.middleware';
+import { FlashModule } from './v1/flash/flash.module';
+import { GalleryModule } from './v1/gallery/gallery.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { BookingModule } from './booking/booking.module';
-import { ChatModule } from './chat/chat.module';
-import { ProjectModule } from './project/project.module';
+import { BookingModule } from './v1/booking/booking.module';
+import { ChatModule } from './v1/chat/chat.module';
+import { ProjectModule } from './v1/project/project.module';
 
 @Module({
   imports: [
