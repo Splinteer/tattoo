@@ -1,6 +1,4 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './v1/auth/auth.module';
 import { CustomerModule } from './v1/customer/customer.module';
 import { ShopModule } from './v1/shop/shop.module';
@@ -11,6 +9,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { BookingModule } from './v1/booking/booking.module';
 import { ChatModule } from './v1/chat/chat.module';
 import { ProjectModule } from './v1/project/project.module';
+import { AppointmentModule } from './v2/appointment/appointment.module';
 
 @Module({
   imports: [
@@ -34,9 +33,8 @@ import { ProjectModule } from './v1/project/project.module';
     BookingModule,
     ChatModule,
     ProjectModule,
+    AppointmentModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
