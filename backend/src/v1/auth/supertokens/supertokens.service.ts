@@ -1,5 +1,10 @@
 import Dashboard from 'supertokens-node/recipe/dashboard';
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import EmailVerification from 'supertokens-node/recipe/emailverification';
@@ -136,6 +141,14 @@ export class SupertokensService {
           },
         }),
         Session.init({
+          errorHandlers: {
+            onUnauthorised: async (message, req, res) => {
+              throw new UnauthorizedException();
+            },
+            onInvalidClaim: async (message, req, res) => {
+              throw new ForbiddenException();
+            },
+          },
           jwt: {
             enable: true,
           },
