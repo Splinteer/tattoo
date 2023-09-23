@@ -30,6 +30,7 @@ async function bootstrap() {
     .setTitle('Artesa.io API')
     .setDescription('This is the API for the Artesa.io app')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('openapi', app, document);
