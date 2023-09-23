@@ -13,6 +13,7 @@ import {
   UploadedFiles,
   UseGuards,
   UseInterceptors,
+  CacheTTL,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Credentials } from 'src/v1/auth/session/session.decorator';
@@ -40,6 +41,7 @@ export class ChatController {
   ) {}
 
   @Get()
+  @CacheTTL(1 * 60 * 1000)
   @UseGuards(new AuthGuard())
   async getCustomerChats(
     @Credentials()
@@ -71,6 +73,7 @@ export class ChatController {
   }
 
   @Get('shop/:chatId')
+  @CacheTTL(60 * 1000) // 1 minute
   @UseGuards(new ShopGuard())
   async getShopChat(
     @Credentials()
@@ -89,6 +92,7 @@ export class ChatController {
   }
 
   @Get(':chatId/events')
+  @CacheTTL(60 * 1000) // 1 minute
   @UseGuards(new AuthGuard())
   @UseInterceptors(FilesInterceptor('attachments'))
   async getEvents(

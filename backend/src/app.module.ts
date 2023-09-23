@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import {
+  CacheInterceptor,
+  CacheModule,
+  MiddlewareConsumer,
+  Module,
+} from '@nestjs/common';
 import { AuthModule } from './v1/auth/auth.module';
 import { CustomerModule } from './v1/customer/customer.module';
 import { ShopModule } from './v1/shop/shop.module';
@@ -10,10 +15,18 @@ import { BookingModule } from './v1/booking/booking.module';
 import { ChatModule } from './v1/chat/chat.module';
 import { ProjectModule } from './v1/project/project.module';
 import { AppointmentModule } from './v2/appointment/appointment.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+
+const fiveMinutesInMs = 5 * 60 * 1000;
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: fiveMinutesInMs,
+      max: 1000,
+    }),
     AuthModule.forRoot({
       connectionURI: 'http://localhost:3567',
       // apiKey: <API_KEY(if configured)>,
@@ -34,6 +47,12 @@ import { AppointmentModule } from './v2/appointment/appointment.module';
     ChatModule,
     ProjectModule,
     AppointmentModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
   ],
 })
 export class AppModule {
