@@ -1,15 +1,12 @@
 import { Injectable, computed, inject } from '@angular/core';
-import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpService } from '@app/@core/http/http.service';
-import { CalendarEvent } from '@app/calendar/calendar.service';
-import { ChatService, ReactiveChat } from '@app/chat/chat.service';
+import { ChatService } from '@app/chat/chat.service';
 import { Flash } from '@app/flash/flash.service';
-import { ConfirmDialogService } from '@app/shared/confirm-dialog/confirm-dialog.service';
-import { distinctUntilChanged, switchMap, of, tap, filter } from 'rxjs';
+import { tap } from 'rxjs';
 
 export type ProjectType = 'flashs' | 'custom' | 'adjustment';
 
-export type Project = {
+export type ProjectV1 = {
   id: string;
   customer_id: string;
   shop_id: string;
@@ -33,6 +30,49 @@ export type Project = {
   locations?: string[];
   appointments?: CalendarEvent[];
 };
+
+// Temp TODO move to appointment service
+export enum AppointmentStatus {
+  PAID = 'appointment_paid',
+  CONFIRMED = 'appointment_confirmed',
+  PROPOSAL = 'appointment_proposal',
+  UNCONFIRMED = 'appointment_unconfirmed',
+}
+
+export type CalendarEvent = {
+  id: string;
+  projectId: string;
+  type: AppointmentStatus;
+  shopUrl: string;
+  startTime: string;
+  endTime: string;
+};
+
+export type Project = {
+  id: string;
+  flashs: Flash[];
+  customerId: string;
+  shopId: string;
+  name: string;
+  types: ProjectType[];
+  isFirstTattoo: boolean;
+  isCoverUp: boolean;
+  isPostOperationOrOverScar: boolean;
+  zone: string;
+  heightCm: number;
+  widthCm: number;
+  additionalInformation?: string;
+  isPaid: boolean;
+  plannedDate: string;
+  customerAvailability?: string;
+  customerRating?: number;
+  shopRating?: number;
+
+  illustrations?: string[];
+  locations?: string[];
+  attachments?: string[];
+  appointments?: CalendarEvent[];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -71,7 +111,8 @@ export class ProjectService {
   }
 
   get(projectId: string) {
-    return this.#http.get<Project>(`/project/${projectId}`);
+    return this.#http.get<Project>(`/v2/projects/${projectId}`);
+    // return this.#http.get<ProjectWithFlashAndAppointments>(`/project/${projectId}`);
   }
 
   todo(projectId: string) {

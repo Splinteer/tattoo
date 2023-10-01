@@ -17,7 +17,7 @@
     }}
   </div>
   <img
-    [src]="publicBucket + flash.image_url + '?v=' + flash.image_version"
+    [src]="publicBucket + (flash.image_url || flash.imageUrl) + '?v=' + (flash.image_version || flash.imageVersion)"
     [alt]="flash.name"
   />
 </div>

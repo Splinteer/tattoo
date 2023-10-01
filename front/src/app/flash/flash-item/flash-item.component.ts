@@ -20,7 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./flash-item.component.scss'],
 })
 export class FlashItemComponent {
-  @Input() flash!: Flash;
+  @Input() flash!: Flash | any;
 
   @Input() clickable = true;
 

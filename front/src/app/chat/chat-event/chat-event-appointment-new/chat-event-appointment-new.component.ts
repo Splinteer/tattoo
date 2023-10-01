@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatEvent } from '@app/chat/chat.service';
-import { Project, ProjectService } from '@app/project/project.service';
+import { ProjectV1, ProjectService } from '@app/project/project.service';
 import { CalendarItemComponent } from '@app/calendar/calendar-item/calendar-item.component';
 import { CalendarService } from '@app/calendar/calendar.service';
 
@@ -21,7 +21,7 @@ import { CalendarService } from '@app/calendar/calendar.service';
       <div class="content">
         <div class="headline" translate>
           {{
-            vm.appointment && vm.appointment.event_type === 'proposal'
+            vm.appointment && vm.appointment.type === 'appointment_proposal'
               ? 'Nouveau créneau proposé'
               : 'Créneau proposé'
           }}
@@ -37,7 +37,7 @@ import { CalendarService } from '@app/calendar/calendar.service';
 
       <div
         class="buttons"
-        *ngIf="vm.appointment && vm.appointment.event_type === 'proposal'"
+        *ngIf="vm.appointment && vm.appointment.type === 'appointment_proposal'"
       >
         <button (click)="reject()" class="danger" translate>Rejeter</button>
         <button (click)="accept()" class="emphasized" translate>

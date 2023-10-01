@@ -4,9 +4,16 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
+  JoinTable,
+  ManyToMany,
 } from 'typeorm';
-import { CustomerSchema } from './customer.entity';
-import { ShopSchema } from './shop.entity';
+import { CustomerSchema } from '../../entitiees/customer.entity';
+import { ShopSchema } from '../../entitiees/shop.entity';
+import { ProjectFlashSchema } from './project-flash/project-flash.entity';
+import { AppointmentSchema } from '../appointment/appointment.entity';
+import { FlashSchema } from '../flash/flash.entity';
+import { ProjectAttachmentSchema } from './project-attachment.entity';
 
 export enum ProjectType {
   FLASHS = 'flashs',
@@ -18,6 +25,26 @@ export enum ProjectType {
 export class ProjectSchema {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToMany(() => ProjectAttachmentSchema, (attachment) => attachment.project)
+  attachments: ProjectAttachmentSchema[];
+
+  @ManyToMany(() => FlashSchema, (flash) => flash.projects)
+  @JoinTable({
+    name: 'project_flash',
+    joinColumn: {
+      name: 'project_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'flash_id',
+      referencedColumnName: 'id',
+    },
+  })
+  flashs: FlashSchema[];
+
+  @OneToMany(() => AppointmentSchema, (appointments) => appointments.project)
+  appointments: AppointmentSchema[];
 
   @ManyToOne(() => CustomerSchema)
   @JoinColumn({ name: 'customer_id' })
@@ -63,7 +90,7 @@ export class ProjectSchema {
     nullable: true,
     name: 'additional_information',
   })
-  additionalInformation: string;
+  additionalInformation?: string;
 
   @Column({ name: 'is_paid', default: false })
   isPaid: boolean;
@@ -74,11 +101,11 @@ export class ProjectSchema {
     nullable: true,
     name: 'customer_availability',
   })
-  customerAvailability: string;
+  customerAvailability?: string;
 
   @Column({ nullable: true, name: 'customer_rating' })
-  customerRating: number;
+  customerRating?: number;
 
   @Column({ nullable: true, name: 'shop_rating' })
-  shopRating: number;
+  shopRating?: number;
 }

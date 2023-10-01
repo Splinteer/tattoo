@@ -36,7 +36,7 @@ export class AppointmentController {
     @Credentials()
     credentials: ICredentials,
   ) {
-    return this.appointmentService.getAll(credentials.id);
+    return this.appointmentService.getCalendarEventsByCustomer(credentials.id);
   }
 
   @ApiOkResponse({ description: 'Delete an appointment' })

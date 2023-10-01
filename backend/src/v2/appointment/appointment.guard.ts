@@ -40,7 +40,7 @@ export class AppointmentGuard implements CanActivate {
     user: ICredentials,
     appointmentId: string,
   ): Promise<boolean> {
-    const appointment = await this.appointmentService.findOne(appointmentId);
+    const appointment = await this.appointmentService.getById(appointmentId);
     if (!appointment) {
       throw new UnauthorizedException('Appointment not found');
     }

@@ -38,6 +38,11 @@
 
   "CALENDAR": {
     "EVENT_TYPE": {
+      "appointment_paid": "Payé",
+      "appointment_confirmed": "Rendez-vous",
+      "appointment_proposal": "Proposition",
+      "appointment_unconfirmed": "Demande",
+
       "Appointment": "Demande",
       "proposal": "Proposition",
       "confirmed_Appointment": "Rendez-vous",

@@ -39,7 +39,7 @@ export class CalendarItemComponent implements OnInit {
 
   public readonly selectionActive = this.calendarSelection.isActive;
 
-  @Input({ required: true }) event!: CalendarEvent;
+  @Input({ required: true }) event!: CalendarEvent | any;
 
   @Input({ transform: booleanAttribute }) hideTitle = false;
 

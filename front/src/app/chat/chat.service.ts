@@ -9,18 +9,15 @@ import {
 import {
   takeUntilDestroyed,
   toObservable,
-  toSignal,
 } from '@angular/core/rxjs-interop';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpService } from '@app/@core/http/http.service';
-import { Credentials } from '@app/auth/credentials.service';
 import { Project } from '@app/project/project.service';
 import { AvatarCustomer } from '@app/shared/avatar/avatar.component';
 import { ResponsiveService } from '@app/shared/responsive/responsive.service';
 import { environment } from '@env/environment';
 import { DateTime } from 'luxon';
 import {
-  Observable,
   Subject,
   concatMap,
   filter,

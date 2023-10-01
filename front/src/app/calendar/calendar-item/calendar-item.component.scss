@@ -32,25 +32,25 @@
     justify-content: center;
   }
 
-  &.paid_Appointment {
+  &.paid_Appointment, &.appointment_paid {
     background-color: var(--nyanza);
     &:hover {
       background-color: var(--nyanza-hover);
     }
   }
-  &.confirmed_Appointment {
+  &.confirmed_Appointment, &.appointment_confirmed {
     background-color: var(--pale-purple);
     &:hover {
       background-color: var(--pale-purple-hover);
     }
   }
-  &.proposal {
+  &.proposal, &.appointment_proposal {
     background-color: var(--teal);
     &:hover {
       background-color: var(--teal);
     }
   }
-  &.Appointment {
+  &.Appointment, &.appointment_unconfirmed {
     background-color: var(--papaya-whip);
     &:hover {
       background-color: var(--papaya-whip-hover);

@@ -9,7 +9,8 @@ import { HttpService } from '@app/@core/http/http.service';
 import { DateTime } from 'luxon';
 import { CalendarSelectionService } from './calendar-selection.service';
 import { ChatEvent, ChatService } from '@app/chat/chat.service';
-import { Project } from '@app/project/project.service';
+import { AppointmentStatus, ProjectV1 } from '@app/project/project.service';
+import { CalendarEvent as CalendarEventV2 } from '@app/project/project.service'
 
 type EmptyObj = Record<PropertyKey, never>;
 
@@ -335,7 +336,7 @@ export class CalendarService {
       );
   }
 
-  public confirmAppointment(appointment: BaseCalendarEvent) {
+  public confirmAppointment(appointment: BaseCalendarEvent | CalendarEventV2) {
     const chat = this.chatService.activeChatSignal();
     const projectSignal = chat ? chat.project : null;
     if (!projectSignal) {
@@ -356,11 +357,11 @@ export class CalendarService {
             (a) => a.id === appointment.id
           );
           if (found) {
-            project.planned_date = found.start_time;
+            project.plannedDate = found.startTime;
             project.appointments = [
               {
                 ...found,
-                event_type: 'confirmed_Appointment',
+                type: AppointmentStatus.CONFIRMED,
               },
             ];
           } else {
@@ -372,7 +373,7 @@ export class CalendarService {
       );
   }
 
-  public rejectAppointment(appointment: BaseCalendarEvent) {
+  public rejectAppointment(appointment: BaseCalendarEvent | CalendarEventV2) {
     const chat = this.chatService.activeChatSignal();
     const projectSignal = chat ? chat.project : null;
     if (!projectSignal) {

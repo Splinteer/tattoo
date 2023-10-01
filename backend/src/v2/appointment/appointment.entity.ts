@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { ProjectSchema } from '../../entitiees/project.entity';
+import { ProjectSchema } from '../project/project.entity';
 
 @Entity('appointment')
 export class AppointmentSchema {
@@ -16,7 +16,7 @@ export class AppointmentSchema {
   @JoinColumn({ name: 'project_id' })
   project: ProjectSchema;
 
-  @JoinColumn({ name: 'project_id' })
+  @Column({ name: 'project_id', type: 'uuid' })
   projectId: string;
 
   @Column({

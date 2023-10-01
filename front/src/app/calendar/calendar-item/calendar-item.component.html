@@ -7,18 +7,18 @@
   [class.selection]="selectionActive() === 'selection'"
   [class.selected]="selected()"
   [class.centered]="hideTitle"
-  [ngClass]="event.event_type"
+  [ngClass]="event.event_type || event.type"
   [@slideDown]
 >
   <div *ngIf="selectionActive() !== 'selection' && !hideTitle" translate>
-    {{ "CALENDAR.EVENT_TYPE." + event.event_type }}
+    {{ "CALENDAR.EVENT_TYPE." + (event.event_type || event.type) }}
   </div>
   <div class="time">
     <span *ngIf="showDate">
       <ng-container *ngIf="hideTitle">
         {{ "AVAILABILITY.the_day" | translate }}
       </ng-container>
-      {{ event.start_time | date : "shortDate" }}
+      {{ (event.start_time || event.startTime) | date : "shortDate" }}
       {{ "AVAILABILITY.from_hour" | translate | lowercase }}
     </span>
     <div
@@ -28,9 +28,9 @@
       AVAILABILITY.all_day
     </div>
     <ng-template #range>
-      {{ event.start_time | shortTime }}
+      {{ (event.start_time || event.startTime) | shortTime }}
       {{ showDate ? ("AVAILABILITY.to_hour" | translate | lowercase) : "-" }}
-      {{ event.end_time | shortTime : showDate }}
+      {{ (event.end_time || event.endTime) | shortTime : showDate }}
     </ng-template>
   </div>
 </button>

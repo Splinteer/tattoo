@@ -1,16 +1,21 @@
+import { ShopSchema } from 'src/entitiees/shop.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
 } from 'typeorm';
-import { ShopSchema } from './shop.entity';
+import { ProjectSchema } from '../project/project.entity';
 
 @Entity('flash')
-export class Flash {
+export class FlashSchema {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @ManyToMany(() => ProjectSchema, (project) => project.flashs)
+  projects: ProjectSchema[];
 
   @ManyToOne(() => ShopSchema)
   @JoinColumn({ name: 'shop_id' })
@@ -26,13 +31,13 @@ export class Flash {
   })
   creationDate: Date;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar', length: 255 })
   description: string;
 
-  @Column({ name: 'image_url' })
+  @Column({ name: 'image_url', type: 'varchar', length: 255 })
   imageUrl: string;
 
   @Column({ name: 'image_version', default: 0 })

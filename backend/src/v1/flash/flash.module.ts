@@ -8,5 +8,6 @@ import { AuthModule } from 'src/v1/auth/auth.module';
   imports: [CommonModule, AuthModule],
   controllers: [FlashController],
   providers: [FlashService],
+  exports: [FlashService],
 })
 export class FlashModule {}

@@ -8,14 +8,16 @@ import { AuthModule } from './v1/auth/auth.module';
 import { CustomerModule } from './v1/customer/customer.module';
 import { ShopModule } from './v1/shop/shop.module';
 import { AuthMiddleware } from './v1/auth/auth.middleware';
-import { FlashModule } from './v1/flash/flash.module';
+import { FlashModule as FlashModuleV1 } from './v1/flash/flash.module';
 import { GalleryModule } from './v1/gallery/gallery.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BookingModule } from './v1/booking/booking.module';
 import { ChatModule } from './v1/chat/chat.module';
-import { ProjectModule } from './v1/project/project.module';
+import { ProjectModule as ProjectModuleV1 } from './v1/project/project.module';
 import { AppointmentModule } from './v2/appointment/appointment.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ProjectModule } from './v2/project/project.module';
+import { FlashModule } from './v2/flash/flash.module';
 
 const fiveMinutesInMs = 5 * 60 * 1000;
 
@@ -41,12 +43,14 @@ const fiveMinutesInMs = 5 * 60 * 1000;
     }),
     CustomerModule,
     ShopModule,
-    FlashModule,
+    FlashModuleV1,
     GalleryModule,
     BookingModule,
     ChatModule,
-    ProjectModule,
+    ProjectModuleV1,
     AppointmentModule,
+    FlashModule,
+    ProjectModule,
   ],
   providers: [
     {

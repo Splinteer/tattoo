@@ -2,22 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnInit,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChatEvent, ChatService, ReactiveChat } from '@app/chat/chat.service';
+import { ChatEvent,  } from '@app/chat/chat.service';
 import { ImagePreviewService } from '@app/shared/image-preview.service';
-import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProjectService } from '@app/project/project.service';
-import {
-  distinctUntilChanged,
-  skipWhile,
-  switchMap,
-  combineLatest,
-  of,
-  tap,
-} from 'rxjs';
 import { ChatEventMessageComponent } from '../chat-event-message/chat-event-message.component';
 import { ChatEventAttachmentsComponent } from '../chat-event-attachments/chat-event-attachments.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -41,9 +31,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <br />
         Zone: {{ project.zone }}<br />
-        Taille: {{ project.width_cm }}x{{ project.height_cm }}<br />
+        Taille: {{ project.widthCm }}x{{ project.heightCm }}<br />
         Description:<br />
-        {{ project.additional_information }}"
+        {{ project.additionalInformation }}"
       </app-chat-event-message>
 
       <app-chat-event-attachments

@@ -17,7 +17,7 @@
           <hr />
         </ng-container>
 
-        <ng-container *ngIf="project.is_first_tattoo">
+        <ng-container *ngIf="project.isFirstTattoo">
           <div class="detail">
             <div class="name">Premier tatouage</div>
             <i class="fa-solid fa-stars"></i>
@@ -25,7 +25,7 @@
           <hr />
         </ng-container>
 
-        <ng-container *ngIf="project.is_cover_up">
+        <ng-container *ngIf="project.isCoverUp">
           <div class="detail">
             <div class="name">Recouvrement</div>
             <i class="fa-solid fa-star-half-stroke"></i>
@@ -33,7 +33,7 @@
           <hr />
         </ng-container>
 
-        <ng-container *ngIf="project.is_post_operation_or_over_scar">
+        <ng-container *ngIf="project.isPostOperationOrOverScar">
           <div class="detail">
             <div class="name">Post opé</div>
             <i class="fa-solid fa-bandage"></i>
@@ -50,15 +50,15 @@
         <div class="detail">
           <div class="name">Taille (lxh)</div>
           <div class="text-bold">
-            {{ project.width_cm }}x{{ project.height_cm }}
+            {{ project.widthCm }}x{{ project.heightCm }}
           </div>
         </div>
 
-        <ng-container *ngIf="project.additional_information">
+        <ng-container *ngIf="project.additionalInformation">
           <hr />
           <div class="detail">
             <div class="name break-lines text-center footnote">
-              {{ project.additional_information }}
+              {{ project.additionalInformation }}
             </div>
           </div>
         </ng-container>
@@ -88,10 +88,10 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="project.customer_availability">
+      <ng-container *ngIf="project.customerAvailability">
         <h3>Disponibilités</h3>
         <div class="box footnote">
-          {{ project.customer_availability }}
+          {{ project.customerAvailability }}
         </div>
       </ng-container>
 

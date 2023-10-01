@@ -26,7 +26,7 @@ import { DateTime } from 'luxon';
 import { minDateValidator } from '@app/shared/custom-validators';
 import { tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Project, ProjectService } from '@app/project/project.service';
+import { ProjectV1, ProjectService } from '@app/project/project.service';
 
 @Component({
   selector: 'app-calendar-proposal',

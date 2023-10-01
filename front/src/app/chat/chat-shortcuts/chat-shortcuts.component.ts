@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Project, ProjectService } from '@app/project/project.service';
+import { ProjectV1, ProjectService } from '@app/project/project.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { CalendarProposalComponent } from '@app/calendar/calendar-proposal/calendar-proposal.component';
 
@@ -10,20 +10,20 @@ import { CalendarProposalComponent } from '@app/calendar/calendar-proposal/calen
   imports: [CommonModule],
   template: `
     <ng-container *ngIf="projectSignal() as project">
-      <ng-container *ngIf="!project.planned_date">
+      <ng-container *ngIf="!project.plannedDate">
         <button (click)="proposal()">Proposer un rdv</button>
       </ng-container>
 
       <ng-container
         *ngIf="
-          project.planned_date && project.is_paid && !project.customer_rating
+          project.plannedDate && project.isPaid && !project.customerRating
         "
       >
         <button>Noter l'artiste</button>
       </ng-container>
 
       <ng-container
-        *ngIf="project.planned_date && project.is_paid && !project.shop_rating"
+        *ngIf="project.plannedDate && project.isPaid && !project.shopRating"
       >
         <button>Noter le client</button>
       </ng-container>
