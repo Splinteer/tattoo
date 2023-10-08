@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  WritableSignal,
   computed,
   inject,
 } from '@angular/core';
@@ -65,13 +64,12 @@ export class ChatEventAppointmentNewComponent {
     }
 
     const project = this.projectSignal();
-    console.log({ project });
     if (!project) {
       return null;
     }
 
     const found = project.appointments?.find(
-      (appointment) => appointment.id === this.event.property.appointmentId
+      (appointment) => appointment.id === this.event.property.appointmentId,
     );
     if (!found && !this.projectRealoaded) {
       this.projectRealoaded = true;

@@ -11,6 +11,8 @@ import {
   ChatEventMessageSchema,
 } from './event/entity/event-types.entity';
 import { CommonModule } from '@app/common';
+import { ChatNotificationService } from './chat-notification/chat-notification.service';
+import { ChatController } from './chat.controller';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { CommonModule } from '@app/common';
       ChatEventMessageSchema,
     ]),
   ],
-  controllers: [EventController],
-  providers: [ChatService, EventService],
+  controllers: [EventController, ChatController],
+  providers: [ChatService, EventService, ChatNotificationService],
 })
 export class ChatModule {}

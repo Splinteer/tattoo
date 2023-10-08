@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   inject,
 } from '@angular/core';
@@ -81,14 +80,13 @@ export class CalendarFormEventComponent implements OnChanges {
     ?.valueChanges.pipe(
       takeUntilDestroyed(),
       tap((value) => {
-        console.log(value);
         if (value) {
           this.form?.patchValue({
             startTime: '00:00',
             endTime: '23:59',
           });
         }
-      })
+      }),
     )
     .subscribe();
 
@@ -112,19 +110,19 @@ export class CalendarFormEventComponent implements OnChanges {
   }
 
   public submit() {
-    if (this.form?.invalid) {
+    if (!this.form || this.form?.invalid) {
       return;
     }
 
-    const { date, startTime, endTime } = this.form?.getRawValue();
+    const { date, startTime, endTime } = this.form.getRawValue();
 
     const start_time = DateTime.fromFormat(
       `${date} ${startTime}`,
-      'yyyy-MM-dd H:mm'
+      'yyyy-MM-dd H:mm',
     ).toISO() as string;
     const end_time = DateTime.fromFormat(
       `${date} ${endTime}`,
-      'yyyy-MM-dd H:mm'
+      'yyyy-MM-dd H:mm',
     ).toISO() as string;
 
     if (this.event) {
@@ -134,13 +132,13 @@ export class CalendarFormEventComponent implements OnChanges {
           start_time,
           end_time,
         },
-        this.event.start_time
+        this.event.start_time,
       );
     } else {
       this.calendarService.add({
         start_time,
         end_time,
-        event_type: this.form?.get('type')?.getRawValue(),
+        event_type: this.form.get('type')?.getRawValue(),
       });
     }
 

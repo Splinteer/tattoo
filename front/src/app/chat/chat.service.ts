@@ -6,10 +6,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {
-  takeUntilDestroyed,
-  toObservable,
-} from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpService } from '@app/@core/http/http.service';
 import { Project } from '@app/project/project.service';
@@ -17,15 +14,7 @@ import { AvatarCustomer } from '@app/shared/avatar/avatar.component';
 import { ResponsiveService } from '@app/shared/responsive/responsive.service';
 import { environment } from '@env/environment';
 import { DateTime } from 'luxon';
-import {
-  Subject,
-  concatMap,
-  filter,
-  map,
-  of,
-  skipWhile,
-  tap,
-} from 'rxjs';
+import { Subject, concatMap, filter, map, of, skipWhile, tap } from 'rxjs';
 import { ChatEvent } from './chat-event/chat-event.type';
 
 export type Chat = {
@@ -71,8 +60,7 @@ export class ChatService {
   readonly #route = inject(ActivatedRoute);
 
   private readonly showDetailsPanelByDefault = computed(
-    // () => !this.responsiveService.isMobile()
-    () => false
+    () => !this.responsiveService.isMobile(),
   );
 
   public readonly synced = signal(false);
@@ -105,14 +93,14 @@ export class ChatService {
           activeChat.id,
           this.chatToUrl(activeChat),
         ]);
-      })
+      }),
     )
     .subscribe();
 
   chatToUrl(chat: ReactiveChat) {
     return `${chat.contact_name.replaceAll(
       ' ',
-      '-'
+      '-',
     )}-${chat.project_name.replaceAll(' ', '-')}`;
   }
 
@@ -136,7 +124,7 @@ export class ChatService {
     let queryParams = new HttpParams();
     queryParams = queryParams.append(
       'date',
-      chat.last_update.toISO() as string
+      chat.last_update.toISO() as string,
     );
 
     return this.http
@@ -145,15 +133,15 @@ export class ChatService {
         { chatId: chat.id },
         {
           params: queryParams,
-        }
+        },
       )
       .pipe(
         tap(() => {
           chat.is_read = true;
           chat.events.update((event) =>
-            event.map((event) => ({ ...event, is_read: true }))
+            event.map((event) => ({ ...event, is_read: true })),
           );
-        })
+        }),
       );
   }
 
@@ -175,7 +163,7 @@ export class ChatService {
     let queryParams = new HttpParams();
     queryParams = queryParams.append(
       'date',
-      this.lastLoadedChatDate.toISO() as string
+      this.lastLoadedChatDate.toISO() as string,
     );
 
     return this.http
@@ -196,14 +184,14 @@ export class ChatService {
           ]);
 
           this.lastLoadedChatDate = DateTime.fromISO(
-            (newChats.at(-1) as Chat).last_update
+            (newChats.at(-1) as Chat).last_update,
           );
 
           if (!this.activeChatSignal()) {
             const { id } = this.getUrlParams();
             if (id) {
               const urlChat = this.loadedChatsSignal().find(
-                (chat) => chat.id === id
+                (chat) => chat.id === id,
               );
               if (urlChat) {
                 this.setActiveChat(urlChat, false);
@@ -216,7 +204,7 @@ export class ChatService {
               this.setActiveChat(formatedNewChats[0], false);
             }
           }
-        })
+        }),
       );
   }
 
@@ -246,7 +234,7 @@ export class ChatService {
         }
 
         return formatedNewChat;
-      })
+      }),
     );
   }
 
@@ -255,7 +243,7 @@ export class ChatService {
   readonly #listenLoads = this.#loadRequests
     .pipe(
       skipWhile((chat) => !!chat.is_fully_loaded),
-      concatMap((chat: ReactiveChat) => this.loadEventsForChat(chat))
+      concatMap((chat: ReactiveChat) => this.loadEventsForChat(chat)),
     )
     .subscribe();
 
@@ -285,7 +273,7 @@ export class ChatService {
           if (!newEvents.length) {
             chat.is_fully_loaded = true;
           }
-        })
+        }),
       );
   }
 
@@ -320,7 +308,7 @@ export class ChatService {
     });
 
     this.http
-      .post<ChatEvent[]>(`/chat/${chat.id}/event`, formData)
+      .post<ChatEvent[]>(`/v2/chats/${chat.id}/events`, formData)
       .subscribe((newEvents) => {
         chat.events.update((currentEvents) => [
           ...newEvents,
@@ -335,9 +323,12 @@ export class ChatService {
     }
 
     try {
-      const source = new EventSource(`${environment.serverUrl}/v1/chat/sync`, {
-        withCredentials: true,
-      });
+      const source = new EventSource(
+        `${environment.serverUrl}/v2/chats/events`,
+        {
+          withCredentials: true,
+        },
+      );
 
       source.addEventListener('open', () => this.synced.set(true));
 
