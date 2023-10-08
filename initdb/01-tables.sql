@@ -228,14 +228,16 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS chat_event_media (
-        event_id uuid PRIMARY KEY,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        event_id uuid,
         url text NOT NULL,
         CONSTRAINT fk_event_id FOREIGN KEY (event_id) REFERENCES chat_event (id)
     );
 
 CREATE TABLE
     IF NOT EXISTS chat_event_appointment_new (
-        event_id uuid PRIMARY KEY,
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        event_id uuid,
         appointment_id uuid NOT NULL,
         CONSTRAINT fk_event_id FOREIGN KEY (event_id) REFERENCES chat_event (id),
         CONSTRAINT fk_appointment_id FOREIGN KEY (appointment_id) REFERENCES public.appointment (id)

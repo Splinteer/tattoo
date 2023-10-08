@@ -22,25 +22,25 @@ export type ChatEventBase = {
   isRead: boolean;
 };
 
-export type ChatEventMessage =  ChatEventBase & {
+export type ChatEventMessage = ChatEventBase & {
   type: ChatEventType.MESSAGE;
   property: {
-  text: string;
-  }
+    text: string;
+  };
 };
 
-export type ChatEventMedia =  ChatEventBase & {
+export type ChatEventMedia = ChatEventBase & {
   type: ChatEventType.MEDIA;
   property: {
-  url: string;
-  }
+    urls: string[];
+  };
 };
 
-export type ChatEventAppointmentNew =  ChatEventBase & {
+export type ChatEventAppointmentNew = ChatEventBase & {
   type: ChatEventType.APPOINTMENT_NEW;
   property: {
     appointmentId: string;
-  }
+  };
 };
 
 export type SimpleChatEvent = ChatEventBase & {

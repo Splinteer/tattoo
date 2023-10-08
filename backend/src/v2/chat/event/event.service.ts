@@ -22,7 +22,7 @@ export type ChatEventMessage = ChatEventBase & {
 export type ChatEventMedia = ChatEventBase & {
   type: ChatEventType.MEDIA;
   property: {
-    url: string;
+    urls: string[];
   };
 };
 
@@ -88,11 +88,11 @@ export class EventService {
       .select([
         'chat_event.*',
         "CASE WHEN chat_event.type = 'message' THEN message.content ELSE null END as content",
-        "CASE WHEN chat_event.type = 'media' THEN media.url ELSE null END as url",
+        "CASE WHEN chat_event.type = 'media' THEN ARRAY_AGG(media.url) ELSE null END as urls",
         "CASE WHEN chat_event.type = 'appointment_new' THEN appointment.appointment_id ELSE null END as appointment_id",
       ])
       .orderBy('chat_event.creation_date', 'DESC')
-
+      .groupBy('chat_event.id, message.content, appointment.appointment_id')
       .limit(10)
       .getRawMany();
 
@@ -114,7 +114,9 @@ export class EventService {
 
         if (result.type === 'media') {
           const property = {
-            url: await this.publicStorage.getSignedUrl(result.url),
+            urls: await Promise.all(
+              result.urls.map((url) => this.publicStorage.getSignedUrl(url)),
+            ),
           };
           return { ...baseEvent, type: ChatEventType.MEDIA, property };
         }
@@ -128,7 +130,10 @@ export class EventService {
           };
         }
 
-        return { ...baseEvent, type: result.type as ChatEventType };
+        return {
+          ...baseEvent,
+          type: result.type as ChatEventType.PROJECT_CREATED,
+        };
       }),
     );
   }

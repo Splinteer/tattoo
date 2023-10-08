@@ -1,7 +1,7 @@
 <div class="message">
   <app-chat-event-attachments
     *ngIf="event.type === 'media'"
-    [attachments]="event.property.url"
+    [attachments]="event.property.urls"
     [isMine]="event.isSender"
   ></app-chat-event-attachments>
 

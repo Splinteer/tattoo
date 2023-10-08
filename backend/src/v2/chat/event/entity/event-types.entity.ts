@@ -1,4 +1,12 @@
-import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm';
 import { ChatEventSchema } from '../event.entity';
 
 // ChatEventMessage Entity
@@ -17,27 +25,32 @@ export class ChatEventMessageSchema {
 
 @Entity('chat_event_media')
 export class ChatEventMediaSchema {
-  @PrimaryColumn({ name: 'event_id', type: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'event_id', type: 'uuid' })
   eventId: string;
 
   @Column({ type: 'text' })
   url: string;
 
-  @OneToOne(() => ChatEventSchema)
+  @ManyToOne(() => ChatEventSchema)
   @JoinColumn({ name: 'event_id' })
   event: ChatEventSchema;
 }
 
-// ChatEventAppointmentNew Entity
 @Entity('chat_event_appointment_new')
 export class ChatEventAppointmentNewSchema {
-  @PrimaryColumn({ name: 'event_id', type: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'event_id', type: 'uuid' })
   eventId: string;
 
   @Column({ name: 'appointment_id', type: 'uuid' })
   appointmentId: string;
 
-  @OneToOne(() => ChatEventSchema)
+  @ManyToOne(() => ChatEventSchema)
   @JoinColumn({ name: 'event_id' })
   event: ChatEventSchema;
 }
