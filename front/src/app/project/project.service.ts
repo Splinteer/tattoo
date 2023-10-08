@@ -4,33 +4,6 @@ import { ChatService } from '@app/chat/chat.service';
 import { Flash } from '@app/flash/flash.service';
 import { tap } from 'rxjs';
 
-export type ProjectType = 'flashs' | 'custom' | 'adjustment';
-
-export type ProjectV1 = {
-  id: string;
-  customer_id: string;
-  shop_id: string;
-  name: string;
-  types: ProjectType[];
-  is_first_tattoo: boolean;
-  is_cover_up: boolean;
-  is_post_operation_or_over_scar: boolean;
-  zone: string;
-  height_cm: number;
-  width_cm: number;
-  additional_information?: string;
-  is_paid: boolean;
-  planned_date: string;
-  customer_availability?: string;
-  customer_rating?: number;
-  shop_rating?: number;
-  flashs?: Flash[];
-  attachments?: string[];
-  illustrations?: string[];
-  locations?: string[];
-  appointments?: CalendarEvent[];
-};
-
 // Temp TODO move to appointment service
 export enum AppointmentStatus {
   PAID = 'appointment_paid',
@@ -47,6 +20,8 @@ export type CalendarEvent = {
   startTime: string;
   endTime: string;
 };
+
+export type ProjectType = 'flashs' | 'custom' | 'adjustment';
 
 export type Project = {
   id: string;
@@ -112,7 +87,6 @@ export class ProjectService {
 
   get(projectId: string) {
     return this.#http.get<Project>(`/v2/projects/${projectId}`);
-    // return this.#http.get<ProjectWithFlashAndAppointments>(`/project/${projectId}`);
   }
 
   todo(projectId: string) {

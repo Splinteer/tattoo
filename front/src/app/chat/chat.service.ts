@@ -26,29 +26,7 @@ import {
   skipWhile,
   tap,
 } from 'rxjs';
-
-export enum ChatEventType {
-  project_created = 'project_created',
-  project_cancelled = 'project_cancelled',
-  project_rejected = 'project_rejected',
-  project_completed = 'project_completed',
-  message = 'message',
-  media = 'media',
-  appointment_new = 'appointment_new',
-  appointment_accepted = 'appointment_accepted',
-  deposit_request = 'deposit_request',
-  deposit_paid = 'deposit_paid',
-}
-
-export type ChatEvent = {
-  id: string;
-  chat_id: string;
-  creation_date: string;
-  is_sender: boolean;
-  type: ChatEventType;
-  content?: string;
-  is_read: boolean;
-};
+import { ChatEvent } from './chat-event/chat-event.type';
 
 export type Chat = {
   id: string;
@@ -93,7 +71,8 @@ export class ChatService {
   readonly #route = inject(ActivatedRoute);
 
   private readonly showDetailsPanelByDefault = computed(
-    () => !this.responsiveService.isMobile()
+    // () => !this.responsiveService.isMobile()
+    () => false
   );
 
   public readonly synced = signal(false);
@@ -289,7 +268,7 @@ export class ChatService {
 
     const date = (
       events?.length
-        ? DateTime.fromISO(events.at(-1)?.creation_date as string).toISO()
+        ? DateTime.fromISO(events.at(-1)?.creationDate as string).toISO()
         : DateTime.local().toISO()
     ) as string;
 
@@ -297,7 +276,7 @@ export class ChatService {
     queryParams = queryParams.append('date', date);
 
     return this.http
-      .get<ChatEvent[]>(`/chat/${chat.id}/events`, {
+      .get<ChatEvent[]>(`/v2/chats/${chat.id}/events`, {
         params: queryParams,
       })
       .pipe(
@@ -326,7 +305,7 @@ export class ChatService {
       });
 
       chat.last_update =
-        DateTime.fromISO(registeredEvents[0].creation_date) || chat.last_update;
+        DateTime.fromISO(registeredEvents[0].creationDate) || chat.last_update;
 
       return chats;
     });
@@ -356,7 +335,7 @@ export class ChatService {
     }
 
     try {
-      const source = new EventSource(`${environment.serverUrl}/chat/sync`, {
+      const source = new EventSource(`${environment.serverUrl}/v1/chat/sync`, {
         withCredentials: true,
       });
 
@@ -370,9 +349,9 @@ export class ChatService {
 
         const loadedChats = this.loadedChatsSignal();
 
-        const chat = loadedChats.find((c) => c.id === newEvent.chat_id);
+        const chat = loadedChats.find((c) => c.id === newEvent.chatId);
         if (!chat) {
-          this.loadChat(newEvent.chat_id).subscribe();
+          this.loadChat(newEvent.chatId).subscribe();
           return;
         }
 

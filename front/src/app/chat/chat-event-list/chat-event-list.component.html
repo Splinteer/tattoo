@@ -17,20 +17,20 @@
         class="day"
         *ngIf="
           isLast ||
-          (event.creation_date | date : 'mediumDate') !==
-            (events[index + 1].creation_date | date : 'mediumDate')
+          (event.creationDate | date : 'mediumDate') !==
+            (events[index + 1].creationDate | date : 'mediumDate')
         "
       >
-        {{ event.creation_date | date : "mediumDate" }}
+        {{ event.creationDate | date : "mediumDate" }}
       </div>
       <app-chat-event [event]="event"></app-chat-event>
       <div
         class="read-indicator"
         *ngIf="
           chat.shop_id === credentials()?.shop_id &&
-          event.is_sender &&
-          event.is_read &&
-          (isFirst || !events[index - 1].is_read)
+          event.isSender &&
+          event.isRead &&
+          (isFirst || !events[index - 1].isRead)
         "
         translate
       >

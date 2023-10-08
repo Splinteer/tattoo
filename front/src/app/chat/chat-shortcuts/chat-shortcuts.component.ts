@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectV1, ProjectService } from '@app/project/project.service';
+import { ProjectService } from '@app/project/project.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { CalendarProposalComponent } from '@app/calendar/calendar-proposal/calendar-proposal.component';
 

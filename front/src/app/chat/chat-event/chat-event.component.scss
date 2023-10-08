@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-middle);
+  font-size: var(--subheadline-size);
+  line-height: var(--subheadline-line-height);
 
   &.mine {
     flex-direction: row-reverse;

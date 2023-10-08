@@ -7,10 +7,10 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChatEvent } from '@app/chat/chat.service';
-import { ProjectV1, ProjectService } from '@app/project/project.service';
+import { ProjectService } from '@app/project/project.service';
 import { CalendarItemComponent } from '@app/calendar/calendar-item/calendar-item.component';
 import { CalendarService } from '@app/calendar/calendar.service';
+import { ChatEventAppointmentNew } from '../chat-event.type';
 
 @Component({
   selector: 'app-chat-event-appointment-new',
@@ -53,14 +53,14 @@ export class ChatEventAppointmentNewComponent {
 
   readonly #projectService = inject(ProjectService);
 
-  @Input({ required: true }) event!: ChatEvent;
+  @Input({ required: true }) event!: ChatEventAppointmentNew;
 
   readonly projectSignal = this.#projectService.project;
 
   projectRealoaded = false;
 
   appointmentSignal = computed(() => {
-    if (!this.event.content) {
+    if (!this.event.property.appointmentId) {
       return null;
     }
 
@@ -71,9 +71,8 @@ export class ChatEventAppointmentNewComponent {
     }
 
     const found = project.appointments?.find(
-      (appointment) => appointment.id === this.event.content
+      (appointment) => appointment.id === this.event.property.appointmentId
     );
-    console.log(this.event.content);
     if (!found && !this.projectRealoaded) {
       this.projectRealoaded = true;
       // this.#projectService.reload();

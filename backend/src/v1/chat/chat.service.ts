@@ -18,7 +18,7 @@ export class ChatService {
   async getShopChats(shopId: string, last_fetched_date: string) {
     const query = `--sql
       SELECT
-          c.id AS id,
+          c.project_id AS id,
           c.project_id,
           p.name as project_name,
           p.shop_id,
@@ -30,7 +30,7 @@ export class ChatService {
             'got_profile_picture', customer.got_profile_picture,
             'profile_picture_version', customer.profile_picture_version
           ) as avatar,
-          ce.content as last_event,
+          'hello' as last_event, --TEMP TODO
           ce.id IS NULL OR ce.sender_id <> customer.id OR ce.is_read as is_read
       FROM chat c
 
@@ -39,15 +39,15 @@ export class ChatService {
       LEFT JOIN LATERAL(
         SELECT *
         FROM chat_event ce
-        WHERE chat_id = c.id
+        WHERE chat_id = c.project_id
         AND type = 'message'
         ORDER BY creation_date DESC
         LIMIT 1
-      ) AS ce ON c.id = ce.chat_id
+      ) AS ce ON c.project_id = ce.chat_id
 
       WHERE p.shop_id=$1
       AND c.last_update < $2
-      GROUP BY c.id, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.content, ce.creation_date
+      GROUP BY c.project_id, c.creation_date, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.creation_date
       ORDER BY last_update DESC
       LIMIT 10
     `;
@@ -63,7 +63,7 @@ export class ChatService {
   async getShopChat(chatId: string) {
     const query = `--sql
       SELECT
-          c.id AS id,
+          c.project_id AS id,
           c.project_id,
           p.name as project_name,
           p.shop_id,
@@ -84,14 +84,14 @@ export class ChatService {
       LEFT JOIN LATERAL(
         SELECT *
         FROM chat_event ce
-        WHERE chat_id = c.id
+        WHERE chat_id = c.project_id
         AND type = 'message'
         ORDER BY creation_date DESC
         LIMIT 1
-      ) AS ce ON c.id = ce.chat_id
+      ) AS ce ON c.project_id = ce.chat_id
 
-      WHERE c.id = $1
-      GROUP BY c.id, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.content, ce.creation_date
+      WHERE c.project_id = $1
+      GROUP BY c.project_id, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.content, ce.creation_date
     `;
 
     const { rows: chats } = await this.db.query(query, [chatId]);
@@ -106,7 +106,7 @@ export class ChatService {
     const query = `--sql
       SELECT p.customer_id=$1 OR p.shop_id=$2 as can_access FROM chat c
       INNER JOIN project p ON p.id=c.project_id
-      WHERE c.id=$3
+      WHERE c.project_id=$3
     `;
 
     const {

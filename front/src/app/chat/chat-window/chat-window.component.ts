@@ -39,6 +39,10 @@ import { ChatHeaderComponent } from '@app/chat-header/chat-header.component';
         overflow-y: hidden;
       }
 
+      app-chat-event-list {
+        flex-grow: 1;
+      }
+
       app-chat-input {
         margin-top: auto;
         margin-bottom: var(--space-300);

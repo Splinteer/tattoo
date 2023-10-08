@@ -5,9 +5,7 @@ import {
   Storage,
 } from '@google-cloud/storage';
 import { HttpService } from '@nestjs/axios';
-import { Module, Provider } from '@nestjs/common';
 import * as path from 'path';
-import { from, lastValueFrom, map, switchMap } from 'rxjs';
 
 export class StorageService {
   #bucket: Bucket;

@@ -8,9 +8,10 @@ import {
 import { HttpService } from '@app/@core/http/http.service';
 import { DateTime } from 'luxon';
 import { CalendarSelectionService } from './calendar-selection.service';
-import { ChatEvent, ChatService } from '@app/chat/chat.service';
-import { AppointmentStatus, ProjectV1 } from '@app/project/project.service';
+import { ChatService } from '@app/chat/chat.service';
+import { AppointmentStatus } from '@app/project/project.service';
 import { CalendarEvent as CalendarEventV2 } from '@app/project/project.service'
+import { ChatEvent } from '@app/chat/chat-event/chat-event.type';
 
 type EmptyObj = Record<PropertyKey, never>;
 
@@ -230,7 +231,7 @@ export class CalendarService {
         );
 
         const chat = this.chatService.activeChatSignal();
-        if (chat && chat.id === event.chat_id) {
+        if (chat && chat.id === event.chatId) {
           this.chatService.addEventsToChat(chat, [event], true);
         }
       });
