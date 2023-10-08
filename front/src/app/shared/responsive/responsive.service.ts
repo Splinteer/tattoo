@@ -1,17 +1,10 @@
 import {
-  HostListener,
   Injectable,
   RendererFactory2,
+  computed,
   inject,
+  signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  map,
-  of,
-  switchMap,
-} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -32,35 +25,28 @@ export class ResponsiveService {
 
   private readonly rendered2 = this.rendererFactory.createRenderer(null, null);
 
-  public readonly screenHeight$ = new BehaviorSubject<number>(
-    window.innerHeight
-  );
+  public readonly screenHeight = signal(window.innerHeight);
 
-  public readonly screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
+  public readonly screenWidth = signal(window.innerWidth);
 
   private readonly onResizeListener$ = this.rendered2.listen(
     'window',
     'resize',
     () => {
-      this.screenHeight$.next(window.innerHeight);
-      this.screenWidth$.next(window.innerWidth);
-    }
+      this.screenHeight.set(window.innerHeight);
+      this.screenWidth.set(window.innerWidth);
+    },
   );
 
-  public readonly isMobile$ = this.screenWidth$.asObservable().pipe(
-    switchMap((width) => of(width < this.breakpoints.tabletSmall)),
-    distinctUntilChanged()
+  readonly isMobile = computed<boolean>(
+    () => this.screenWidth() < this.breakpoints.tabletSmall,
   );
 
-  readonly isMobile = toSignal(this.isMobile$);
-
-  public readonly isTabletOrLess$ = this.screenWidth$.asObservable().pipe(
-    switchMap((width) => of(width < this.breakpoints.tabletSmall)),
-    distinctUntilChanged()
+  readonly isTabletOrLess = computed<boolean>(
+    () => this.screenWidth() < this.breakpoints.tabletSmall,
   );
 
-  public readonly isLargeDesktop$ = this.screenWidth$.asObservable().pipe(
-    switchMap((width) => of(width >= this.breakpoints.desktopMedium)),
-    distinctUntilChanged()
+  readonly isLaptopOrLess = computed<boolean>(
+    () => this.screenWidth() < this.breakpoints.laptopSmall,
   );
 }

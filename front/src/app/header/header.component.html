@@ -1,4 +1,4 @@
-<header class="mobile" *ngIf="isMobile$ | async; else isDesktop">
+<header class="mobile" *ngIf="isMobile(); else isDesktop">
   <ng-container *ngTemplateOutlet="searchBar"></ng-container>
   <ng-container *ngTemplateOutlet="profile"></ng-container>
 </header>

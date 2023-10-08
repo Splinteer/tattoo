@@ -60,7 +60,7 @@ export class ChatService {
   readonly #route = inject(ActivatedRoute);
 
   private readonly showDetailsPanelByDefault = computed(
-    () => !this.responsiveService.isMobile(),
+    () => !this.responsiveService.isLaptopOrLess(),
   );
 
   public readonly synced = signal(false);
