@@ -1,16 +1,8 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { Component, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { Gallery, GalleryService } from '../gallery.service';
 import {
   BehaviorSubject,
   Observable,
-  Subject,
   combineLatest,
   debounceTime,
   scan,
@@ -20,6 +12,7 @@ import {
   tap,
 } from 'rxjs';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-gallery-list',
@@ -52,11 +45,11 @@ export class GalleryListComponent
 
   private initObservable(): void {
     this.gallery$ = combineLatest({
-      isMobile: this.isMobile$,
+      isMobile: toObservable(this.isMobile),
       fetchMore: this.fetchMore,
       windowHeight: this.screenHeight$.pipe(
         takeWhile(() => !this.allDataLoaded),
-        debounceTime(1000)
+        debounceTime(1000),
       ),
     }).pipe(
       switchMap(({ isMobile }) =>
@@ -64,7 +57,7 @@ export class GalleryListComponent
           ? this.galleryService.getByShop(
               this.shop,
               this.lastDate,
-              isMobile ? 9 : 8
+              isMobile ? 9 : 8,
             )
           : this.galleryService.getMine(this.lastDate, isMobile ? 9 : 8)
         ).pipe(
@@ -78,8 +71,8 @@ export class GalleryListComponent
                 }
               }
             });
-          })
-        )
+          }),
+        ),
       ),
       scan((acc, newPage) => {
         if (newPage.length === 0) {
@@ -90,7 +83,7 @@ export class GalleryListComponent
         return [...acc, ...newPage];
       }),
       takeWhile(() => !this.allDataLoaded),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 

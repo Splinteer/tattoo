@@ -1,18 +1,8 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { Component, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { Flash, FlashService } from '../flash.service';
 import {
   BehaviorSubject,
   Observable,
-  Subject,
   combineLatest,
   debounceTime,
   scan,
@@ -21,8 +11,8 @@ import {
   takeWhile,
   tap,
 } from 'rxjs';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ResponsiveComponent } from '@app/shared/responsive/responsive.component';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-flash-list',
@@ -57,11 +47,11 @@ export class FlashListComponent
 
   private initObservable() {
     this.flashs$ = combineLatest({
-      isMobile: this.isMobile$,
+      isMobile: toObservable(this.isMobile),
       fetchMore: this.fetchMore,
       windowHeight: this.screenHeight$.pipe(
         takeWhile(() => !this.allDataLoaded),
-        debounceTime(1000)
+        debounceTime(1000),
       ),
     }).pipe(
       switchMap(({ isMobile }) =>
@@ -70,12 +60,12 @@ export class FlashListComponent
               this.shop,
               this.lastDate,
               this.available,
-              isMobile ? 9 : 8
+              isMobile ? 9 : 8,
             )
           : this.flashService.getMine(
               this.lastDate,
               this.available,
-              isMobile ? 9 : 8
+              isMobile ? 9 : 8,
             )
         ).pipe(
           tap((flashs) => {
@@ -88,8 +78,8 @@ export class FlashListComponent
                 }
               }
             });
-          })
-        )
+          }),
+        ),
       ),
       scan((acc, newPage) => {
         if (newPage.length === 0) {
@@ -100,7 +90,7 @@ export class FlashListComponent
         return [...acc, ...newPage];
       }),
       takeWhile(() => !this.allDataLoaded),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
