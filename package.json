@@ -9,12 +9,29 @@
     "start:backend": "cd backend && npm run start:dev",
     "start:dependencies": "docker compose up tattoo_db tattoo_supertokens -d",
     "start": "npm-run-all --parallel start:dependencies start:frontend start:backend",
-    "offline": "npm-run-all --parallel start:dependencies start:frontend-offline start:backend"
+    "offline": "npm-run-all --parallel start:dependencies start:frontend-offline start:backend",
+    "lint": "eslint --quiet --fix",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "npm run lint",
+      "prettier --write"
+    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "npm-run-all": "^4.1.5"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3"
   }
 }
