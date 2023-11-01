@@ -18,7 +18,6 @@ import { AppointmentModule } from './v2/appointment/appointment.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ProjectModule } from './v2/project/project.module';
 import { FlashModule } from './v2/flash/flash.module';
-import { ChatModule } from './v2/chat/chat.module';
 
 const fiveMinutesInMs = 5 * 60 * 1000;
 
@@ -53,7 +52,6 @@ const fiveMinutesInMs = 5 * 60 * 1000;
     AppointmentModule,
     FlashModule,
     ProjectModule,
-    ChatModule,
   ],
   providers: [
     {

@@ -10,10 +10,10 @@ import {
 } from 'typeorm';
 import { CustomerSchema } from '../../entitiees/customer.entity';
 import { ShopSchema } from '../../entitiees/shop.entity';
-import { ProjectFlashSchema } from './project-flash/project-flash.entity';
 import { AppointmentSchema } from '../appointment/appointment.entity';
 import { FlashSchema } from '../flash/flash.entity';
 import { ProjectAttachmentSchema } from './project-attachment.entity';
+import { ChatEventSchema } from './event/event.entity';
 
 export enum ProjectType {
   FLASHS = 'flashs',
@@ -59,6 +59,20 @@ export class ProjectSchema {
 
   @Column({ name: 'shop_id', type: 'uuid' })
   shopId: string;
+
+  @Column({
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+  })
+  createdAt: Date;
+
+  @Column({
+    name: 'updated_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(3)',
+  })
+  updatedAt: Date;
 
   @Column({ type: 'varchar', length: 255 })
   name: string;
@@ -108,4 +122,7 @@ export class ProjectSchema {
 
   @Column({ nullable: true, name: 'shop_rating' })
   shopRating?: number;
+
+  @OneToMany(() => ChatEventSchema, (chatEvent) => chatEvent.project)
+  events: ChatEventSchema[];
 }

@@ -1,14 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject,
-} from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../chat.service';
 import { ChatInputComponent } from '../chat-input/chat-input.component';
 import { ChatEventListComponent } from '../chat-event-list/chat-event-list.component';
-import { AvatarComponent } from '@app/shared/avatar/avatar.component';
 import { ChatHeaderComponent } from '@app/chat-header/chat-header.component';
 
 @Component({

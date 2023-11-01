@@ -29,7 +29,7 @@
       "@shared/*": ["src/app/shared/*"],
       "@env/*": ["src/environments/*"]
     },
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

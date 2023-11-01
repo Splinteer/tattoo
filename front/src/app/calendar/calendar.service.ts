@@ -1,27 +1,23 @@
-import {
-  Injectable,
-  WritableSignal,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpService } from '@app/@core/http/http.service';
 import { DateTime } from 'luxon';
 import { CalendarSelectionService } from './calendar-selection.service';
 import { ChatService } from '@app/chat/chat.service';
 import { AppointmentStatus } from '@app/project/project.service';
-import { CalendarEvent as CalendarEventV2 } from '@app/project/project.service'
+import { CalendarEvent as CalendarEventV2 } from '@app/project/project.service';
 import { ChatEvent } from '@app/chat/chat-event/chat-event.type';
 
-type EmptyObj = Record<PropertyKey, never>;
+export enum AppointmentType {
+  APPOINTMENT = 'Appointment',
+  PAID_APPOINTMENT = 'paid_Appointment',
+  CONFIRMED_APPOINTMENT = 'confirmed_Appointment',
+  PROPOSAL = 'proposal',
+}
 
-export type AppointmentType =
-  | 'Appointment'
-  | 'paid_Appointment'
-  | 'confirmed_Appointment'
-  | 'proposal';
-
-export type EventType = AppointmentType | 'Availability' | 'Unavailability';
+export enum EventType {
+  AVAILABILITY = 'Availability',
+  UNAVAILABILITY = 'Unavailability',
+}
 
 export type BaseCalendarEvent = {
   id: string;
@@ -29,14 +25,13 @@ export type BaseCalendarEvent = {
   start_time: string;
   end_time: string;
   event_type: EventType;
-  properties?: EmptyObj;
 };
 
-export type AppointmentEvent = BaseCalendarEvent & {
+export type AppointmentEvent = Omit<BaseCalendarEvent, 'event_type'> & {
   event_type: AppointmentType;
   properties: {
     project_id: string;
-    is_paid: string;
+    is_paid: boolean;
   };
 };
 
@@ -111,7 +106,8 @@ export class CalendarService {
       }
       const isSelection = this.selectionService.isActive();
 
-      let [startDate, endDate] = selectedDateRange;
+      let [startDate] = selectedDateRange;
+      const [, endDate] = selectedDateRange;
       if (isSelection) {
         startDate = DateTime.local().startOf('day');
       }
@@ -119,7 +115,7 @@ export class CalendarService {
         this.fetchEvents(
           selectedShopUrl,
           startDate.toFormat('yyyy-MM-dd'),
-          endDate.toFormat('yyyy-MM-dd')
+          endDate.toFormat('yyyy-MM-dd'),
         );
       }
 
@@ -133,8 +129,8 @@ export class CalendarService {
               result[currentDay] = allEventsForShop[currentDay].map(
                 (eventsByTimeRange) =>
                   eventsByTimeRange.filter(
-                    (event) => event.event_type === 'Availability'
-                  )
+                    (event) => event.event_type === 'Availability',
+                  ),
               );
             } else {
               result[currentDay] = allEventsForShop[currentDay];
@@ -143,9 +139,9 @@ export class CalendarService {
 
           return result;
         },
-        {}
+        {},
       );
-    }
+    },
   );
 
   public selectShop(shopId: string) {
@@ -159,7 +155,7 @@ export class CalendarService {
   public areEventsLoadedForRange(
     selectedShopId: string,
     startDate: DateTime,
-    endDate: DateTime
+    endDate: DateTime,
   ): boolean {
     const shopEvents = this.loadedEventsSignal()[selectedShopId];
 
@@ -183,7 +179,7 @@ export class CalendarService {
 
   public getMinimumAvailabilityDate(shopUrl: string) {
     return this.http.get<string | null>(
-      '/calendar/' + shopUrl + '/min-availability-date'
+      '/calendar/' + shopUrl + '/min-availability-date',
     );
   }
 
@@ -201,33 +197,39 @@ export class CalendarService {
     const event: Omit<CalendarEvent, 'id'> = {
       ...partialEvent,
       shop_url: shopUrl,
+      event_type: partialEvent.event_type as EventType,
     };
 
     this.http
       .post<(Availability & LinkedDateRange) | LinkedDateRange>(
         `/calendar/${event.event_type}/add`,
-        event
+        event,
       )
       .subscribe((createdEvent) => {
         this.loadedEventsSignal.update((events) =>
-          this.addToObject(events, { ...event, id: createdEvent.id })
+          this.addToObject(events, {
+            id: createdEvent.id,
+            start_time: event.start_time,
+            end_time: event.end_time,
+            shop_url: event.shop_url,
+            event_type: event.event_type as EventType,
+          }),
         );
       });
   }
 
-  public addProposal(partialEvent: {
-    start_time: string;
-    end_time: string;
-    projectId: string;
-  }) {
+  public addProposals(
+    projectId: string,
+    proposals: { start_time: string; end_time: string }[],
+  ) {
     this.http
       .post<{ proposal: AppointmentEvent; event: ChatEvent }>(
-        `/calendar/proposal`,
-        partialEvent
+        `/v2/projects/${projectId}/appointments/proposals`,
+        { proposals },
       )
       .subscribe(({ proposal, event }) => {
         this.loadedEventsSignal.update((events) =>
-          this.addToObject(events, proposal)
+          this.addToObject(events, proposal),
         );
 
         const chat = this.chatService.activeChatSignal();
@@ -257,7 +259,7 @@ export class CalendarService {
       .delete(`/calendar/${event.event_type}/${event.id}`)
       .subscribe(() => {
         this.loadedEventsSignal.update((events) =>
-          this.removeFromObject(events, event)
+          this.removeFromObject(events, event),
         );
       });
   }
@@ -277,8 +279,8 @@ export class CalendarService {
     const timeInterval = events[event.shop_url][date].find((interval) =>
       interval.some(
         (e) =>
-          e.start_time === event.start_time && e.end_time === event.end_time
-      )
+          e.start_time === event.start_time && e.end_time === event.end_time,
+      ),
     );
 
     if (timeInterval) {
@@ -333,7 +335,7 @@ export class CalendarService {
               ...events,
             },
           };
-        })
+        }),
       );
   }
 
@@ -346,7 +348,7 @@ export class CalendarService {
 
     return this.http
       .get<CalendarEventGroupedByDay>(
-        '/appointment/' + appointment.id + '/accept'
+        '/appointment/' + appointment.id + '/accept',
       )
       .subscribe(() =>
         projectSignal.update((project) => {
@@ -355,7 +357,7 @@ export class CalendarService {
           }
 
           const found = project.appointments?.find(
-            (a) => a.id === appointment.id
+            (a) => a.id === appointment.id,
           );
           if (found) {
             project.plannedDate = found.startTime;
@@ -370,7 +372,7 @@ export class CalendarService {
           }
 
           return project;
-        })
+        }),
       );
   }
 
@@ -383,7 +385,7 @@ export class CalendarService {
 
     return this.http
       .get<CalendarEventGroupedByDay>(
-        '/appointment/' + appointment.id + '/reject'
+        '/appointment/' + appointment.id + '/reject',
       )
       .subscribe(() =>
         projectSignal.update((project) => {
@@ -392,11 +394,11 @@ export class CalendarService {
           }
 
           project.appointments = project.appointments?.filter(
-            (appointment) => appointment.id !== appointment.id
+            (appointment) => appointment.id !== appointment.id,
           );
 
           return project;
-        })
+        }),
       );
   }
 }

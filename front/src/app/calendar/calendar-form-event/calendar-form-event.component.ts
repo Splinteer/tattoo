@@ -53,7 +53,7 @@ export class CalendarFormEventComponent implements OnChanges {
   }
 
   public form?: FormGroup = new FormGroup({
-    type: new FormControl<EventType>('Availability', {
+    type: new FormControl<EventType>(EventType.UNAVAILABILITY, {
       validators: [Validators.required],
       nonNullable: true,
     }),

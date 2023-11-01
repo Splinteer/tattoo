@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { Subject } from 'rxjs';
-import { ChatEvent } from '../event/event.service';
+import { ChatEvent } from '../event.service';
 
 @Injectable()
-export class ChatNotificationService {
+export class EventNotificationService {
   private clients: Map<string, Subject<any>> = new Map();
 
   addClient(id: string, req: Request) {

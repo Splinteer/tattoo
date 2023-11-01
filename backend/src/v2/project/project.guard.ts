@@ -11,9 +11,10 @@ import { Credentials as ICredentials } from 'src/v1/auth/credentials/credentials
 import { getSession } from 'supertokens-node/recipe/session';
 import { validate as validateUUID } from 'uuid';
 import { Request } from 'express';
+import { ProjectRole } from './project.interface';
 
 interface RequestWithProjectRole extends Request {
-  projectRole: string;
+  projectRole: ProjectRole;
 }
 
 @Injectable()

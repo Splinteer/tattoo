@@ -264,7 +264,7 @@ export class ChatService {
     queryParams = queryParams.append('date', date);
 
     return this.http
-      .get<ChatEvent[]>(`/v2/chats/${chat.id}/events`, {
+      .get<ChatEvent[]>(`/v2/projects/${chat.id}/events`, {
         params: queryParams,
       })
       .pipe(
@@ -308,7 +308,7 @@ export class ChatService {
     });
 
     this.http
-      .post<ChatEvent[]>(`/v2/chats/${chat.id}/events`, formData)
+      .post<ChatEvent[]>(`/v2/projects/${chat.id}/events`, formData)
       .subscribe((newEvents) => {
         chat.events.update((currentEvents) => [
           ...newEvents,
@@ -324,7 +324,7 @@ export class ChatService {
 
     try {
       const source = new EventSource(
-        `${environment.serverUrl}/v2/chats/events`,
+        `${environment.serverUrl}/v2/projects/events/sync`,
         {
           withCredentials: true,
         },

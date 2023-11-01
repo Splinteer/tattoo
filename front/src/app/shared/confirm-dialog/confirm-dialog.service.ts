@@ -4,30 +4,34 @@ import {
   ActionDialogComponent,
   ActionDialogData,
 } from './confirm-dialog.component';
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
+import { Optional } from '../global.types';
 
+const defaultOptions = {
+  title: 'COMMON.CONFIRM.title',
+  buttons: [
+    {
+      text: 'COMMON.cancel',
+      value: false,
+    },
+    {
+      text: 'COMMON.yes',
+      isDanger: true,
+      value: true,
+    },
+  ],
+};
 @Injectable({
   providedIn: 'root',
 })
 export class ConfirmDialogService {
   readonly #dialog = inject(Dialog);
 
-  open(
-    options: ActionDialogData = {
-      title: 'COMMON.CONFIRM.title',
-      buttons: [
-        {
-          text: 'COMMON.cancel',
-          value: false,
-        },
-        {
-          text: 'COMMON.yes',
-          isDanger: true,
-          value: true,
-        },
-      ],
+  open(options: Optional<ActionDialogData, 'buttons'> = defaultOptions) {
+    if (!options.buttons) {
+      options.buttons = defaultOptions.buttons;
     }
-  ) {
+
     const dialog = this.#dialog.open(ActionDialogComponent, {
       backdropClass: 'ios-backdrop',
       panelClass: 'ios-panel',
@@ -35,7 +39,7 @@ export class ConfirmDialogService {
     });
 
     return dialog.closed.pipe(
-      map((value) => (value === undefined ? false : value))
+      map((value) => (value === undefined ? false : value)),
     );
   }
 }
