@@ -4,15 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StorageService } from '@app/common/storage/storage.service';
 import {
+  ChatEventAppointmentNewSchema,
   ChatEventMediaSchema,
   ChatEventMessageSchema,
 } from './entity/event-types.entity';
 import { DbService } from '@app/common/db/db.service';
-import { ChatNotificationService } from '../chat-notification/chat-notification.service';
+import { EventNotificationService } from './notification/notification.service';
 
 export type ChatEventBase = {
   id: string;
-  chatId: string;
+  projectId: string;
   creationDate: Date;
   isSender: boolean;
   isRead: boolean;
@@ -35,7 +36,7 @@ export type ChatEventMedia = ChatEventBase & {
 export type ChatEventAppointmentNew = ChatEventBase & {
   type: ChatEventType.APPOINTMENT_NEW;
   property: {
-    appointmentId: string;
+    appointmentIds: string[];
   };
 };
 
@@ -53,26 +54,34 @@ export type ChatEvent =
 export class EventService {
   constructor(
     @InjectRepository(ChatEventSchema)
-    private chatEventRepository: Repository<ChatEventSchema>,
-    private readonly chatNotificationService: ChatNotificationService,
+    private eventRepository: Repository<ChatEventSchema>,
+    @InjectRepository(ChatEventMessageSchema)
+    private eventMessageRepository: Repository<ChatEventMessageSchema>,
+    @InjectRepository(ChatEventMediaSchema)
+    private eventMediaRepository: Repository<ChatEventMediaSchema>,
+    @InjectRepository(ChatEventAppointmentNewSchema)
+    private readonly eventAppointmentNewRepository: Repository<ChatEventAppointmentNewSchema>,
+    private readonly eventNotificationService: EventNotificationService,
     @Inject('public') private readonly publicStorage: StorageService,
   ) {}
 
   async getAll(
     customerId: string,
     {
-      chatId,
+      projectId,
       date,
       shopId,
       eventId = null,
+      eventIds = null,
     }: {
-      chatId?: string;
+      projectId?: string;
       date?: string;
       shopId?: string;
       eventId?: string;
+      eventIds?: string[];
     },
   ): Promise<ChatEvent[]> {
-    let query = this.chatEventRepository
+    let query = this.eventRepository
       .createQueryBuilder('chat_event')
       .leftJoinAndSelect(
         'chat_event_message',
@@ -85,19 +94,23 @@ export class EventService {
         "media.event_id = chat_event.id AND chat_event.type = 'media'",
       )
       .leftJoinAndSelect(
-        'chat_event_appointment_new',
         'appointment',
-        "appointment.event_id = chat_event.id AND chat_event.type = 'appointment_new'",
+        'appointment_new',
+        "appointment_new.event_id = chat_event.id AND chat_event.type = 'appointment_new'",
       );
 
-    if (eventId) {
+    if (eventIds) {
+      query = query.andWhere('chat_event.id = ANY():eventIds)', { eventIds });
+    } else if (eventId) {
       query = query.andWhere('chat_event.id = :eventId', { eventId });
     } else {
-      if (!chatId) {
+      if (!projectId) {
         throw new BadRequestException('Chat id is required');
       }
 
-      query = query.andWhere('chat_event.chat_id = :chatId', { chatId });
+      query = query.andWhere('chat_event.project_id = :projectId', {
+        projectId,
+      });
     }
 
     if (date) {
@@ -109,10 +122,13 @@ export class EventService {
         'chat_event.*',
         "CASE WHEN chat_event.type = 'message' THEN message.content ELSE null END as content",
         "CASE WHEN chat_event.type = 'media' THEN ARRAY_AGG(media.url) ELSE null END as urls",
-        "CASE WHEN chat_event.type = 'appointment_new' THEN appointment.appointment_id ELSE null END as appointment_id",
+        `CASE WHEN chat_event.type = 'appointment_new'
+          THEN COALESCE(ARRAY_AGG(appointment_new.id) FILTER (WHERE appointment_new.id IS NOT NULL), ARRAY[]::UUID[])
+          ELSE null
+        END as appointments`,
       ])
       .orderBy('chat_event.creation_date', 'DESC')
-      .groupBy('chat_event.id, message.content, appointment.appointment_id')
+      .groupBy('chat_event.id, message.content')
       .limit(10)
       .getRawMany();
 
@@ -120,7 +136,7 @@ export class EventService {
       events.map(async (event) => {
         const baseEvent = {
           id: event.id,
-          chatId: event.chat_id,
+          projectId: event.chat_id,
           creationDate: event.creation_date,
           isSender: event.sender_id === customerId || event.shop_id === shopId,
           isRead: event.is_read,
@@ -141,7 +157,7 @@ export class EventService {
         }
 
         if (event.type === 'appointment_new') {
-          const property = { appointmentId: event.appointment_id };
+          const property = { appointmentIds: event.appointments };
           return {
             ...baseEvent,
             type: ChatEventType.APPOINTMENT_NEW,
@@ -163,25 +179,20 @@ export class EventService {
     return event;
   }
 
-  async create(
-    chatEventRepository: Repository<ChatEventSchema>,
-    chatId: string,
-    customerId: string,
-    type: ChatEventType,
-  ) {
+  async create(projectId: string, customerId: string, type: ChatEventType) {
     const event = new ChatEventSchema();
-    event.chatId = chatId;
+    event.projectId = projectId;
     event.senderId = customerId;
     event.type = type;
 
-    return chatEventRepository.save(event);
+    return this.eventRepository.save(event);
   }
 
-  async createMediaEvent(
-    chatEventMediaRepository: Repository<ChatEventMediaSchema>,
-    eventId: string,
-    file: Express.Multer.File,
-  ) {
+  async delete(eventId: string) {
+    return this.eventRepository.delete(eventId);
+  }
+
+  async createMediaEvent(eventId: string, file: Express.Multer.File) {
     const attachmentId = DbService.getUUID();
     const event = new ChatEventMediaSchema();
     event.eventId = eventId;
@@ -191,25 +202,29 @@ export class EventService {
       public: false,
     });
 
-    return chatEventMediaRepository.save(event);
+    return this.eventMediaRepository.save(event);
   }
 
-  async createMessageEvent(
-    chatEventMessageRepository: Repository<ChatEventMessageSchema>,
-    eventId: string,
-    text: string,
-  ) {
+  async createMessageEvent(eventId: string, text: string) {
     const message = new ChatEventMessageSchema();
     message.eventId = eventId;
     message.content = text;
 
-    return chatEventMessageRepository.save(message);
+    return this.eventMessageRepository.save(message);
+  }
+
+  async createAppointmentNewEvent(eventId: string, appointmentId: string) {
+    const appointmentEvent = new ChatEventAppointmentNewSchema();
+    appointmentEvent.eventId = eventId;
+    appointmentEvent.appointmentId = appointmentId;
+
+    return this.eventAppointmentNewRepository.save(appointmentEvent);
   }
 
   async getRecipientId(eventId: string) {
-    const { recipient_id: recipientId } = await this.chatEventRepository
+    const { recipient_id: recipientId } = await this.eventRepository
       .createQueryBuilder('chat_event')
-      .innerJoin('project', 'p', 'p.id = chat_event.chat_id')
+      .innerJoin('project', 'p', 'p.id = chat_event.project_id')
       .innerJoin('shop', 's', 's.id = p.shop_id')
       .select([
         'CASE WHEN chat_event.sender_id = p.customer_id THEN s.owner_id ELSE p.customer_id END AS recipient_id',
@@ -227,7 +242,7 @@ export class EventService {
       return;
     }
 
-    if (!this.chatNotificationService.checkUserConnected(recipientId)) {
+    if (!this.eventNotificationService.checkUserConnected(recipientId)) {
       return;
     }
 
@@ -237,6 +252,6 @@ export class EventService {
       return;
     }
 
-    this.chatNotificationService.sendMessageToUser(recipientId, event);
+    this.eventNotificationService.sendMessageToUser(recipientId, event);
   }
 }

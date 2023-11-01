@@ -1,18 +1,11 @@
-import { CustomerSchema } from 'src/entitiees/customer.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   JoinColumn,
-  OneToOne,
 } from 'typeorm';
-import { ChatSchema } from '../chat.entity';
-import {
-  ChatEventMessageSchema,
-  ChatEventMediaSchema,
-  ChatEventAppointmentNewSchema,
-} from './entity/event-types.entity';
+import { ProjectSchema } from 'src/v2/project/project.entity';
 
 export enum ChatEventType {
   APPOINTMENT_NEW = 'appointment_new',
@@ -35,8 +28,8 @@ export class ChatEventSchema {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'chat_id', type: 'uuid' })
-  chatId: string;
+  @Column({ name: 'project_id', type: 'uuid' })
+  projectId: string;
 
   @Column({ name: 'creation_date', type: 'timestamp', default: () => 'NOW()' })
   creationDate: Date;
@@ -50,9 +43,9 @@ export class ChatEventSchema {
   @Column({ name: 'is_read', default: false })
   isRead: boolean;
 
-  @ManyToOne(() => ChatSchema, (chat) => chat.chatEvents)
-  @JoinColumn({ name: 'chat_id' })
-  chat: ChatSchema;
+  @ManyToOne(() => ProjectSchema, (project) => project.events)
+  @JoinColumn({ name: 'project_id' })
+  project: ProjectSchema;
 
   // @ManyToOne(() => CustomerSchema)
   // @JoinColumn({ name: 'sender_id' })

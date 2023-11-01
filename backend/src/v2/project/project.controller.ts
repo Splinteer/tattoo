@@ -4,7 +4,10 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  MessageEvent,
   Patch,
+  Req,
+  Sse,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -14,6 +17,7 @@ import {
   ApiOkResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
+  ApiOperation,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/v1/auth/auth.guard';
 import { ProjectService } from './project.service';
@@ -21,6 +25,12 @@ import { ProjectPatchDTO, ProjectState } from './dto/project-patch.dto';
 import { ProjectGuard } from './project.guard';
 import { GuardRole } from '@app/common/decorators/guard-role.decorator';
 import { UUIDParam } from '@app/common/decorators/uuid-param.decorator';
+import { ProjectRole } from './project.interface';
+import { Request } from 'express';
+import { Observable } from 'rxjs';
+import { Credentials } from 'src/v1/auth/session/session.decorator';
+import { Credentials as ICredentials } from 'src/v1/auth/credentials/credentials.service';
+import { EventNotificationService } from './event/notification/notification.service';
 
 @ApiTags('project')
 @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -31,7 +41,10 @@ import { UUIDParam } from '@app/common/decorators/uuid-param.decorator';
   version: '2',
 })
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly eventNotificationService: EventNotificationService,
+  ) {}
 
   // @ApiOkResponse({ description: 'Returns all projects' })
   // @Get()
@@ -48,7 +61,7 @@ export class ProjectController {
   @Get(':id')
   @UseGuards(ProjectGuard)
   getProject(
-    @GuardRole('projectRole') role: string,
+    @GuardRole('projectRole') role: ProjectRole,
     @UUIDParam('id') id: string,
   ) {
     return this.projectService.getById(id);
@@ -60,12 +73,12 @@ export class ProjectController {
   @Patch(':id')
   @UseGuards(ProjectGuard)
   updateProject(
-    @GuardRole('projectRole') role: string,
+    @GuardRole('projectRole') role: ProjectRole,
     @UUIDParam('id') id: string,
     @Body() body: ProjectPatchDTO,
   ) {
     if (body.state === ProjectState.PAID) {
-      if (role !== 'shop') {
+      if (role !== ProjectRole.SHOP) {
         throw new ForbiddenException();
       }
 
@@ -73,7 +86,7 @@ export class ProjectController {
     }
 
     if (body.customer_rating) {
-      if (role !== 'customer') {
+      if (role !== ProjectRole.CUSTOMER) {
         throw new ForbiddenException();
       }
 
@@ -81,7 +94,7 @@ export class ProjectController {
     }
 
     if (body.shop_rating) {
-      if (role !== 'shop') {
+      if (role !== ProjectRole.SHOP) {
         throw new ForbiddenException();
       }
 
@@ -89,5 +102,18 @@ export class ProjectController {
     }
 
     throw new BadRequestException();
+  }
+
+  @ApiOperation({
+    summary: 'Establish an SSE connection to receive chat events',
+  })
+  @ApiOkResponse({ description: 'Successfully established an SSE connection' })
+  @Sse('events/sync')
+  sse(
+    @Req() request: Request,
+    @Credentials()
+    credentials: ICredentials,
+  ): Observable<MessageEvent> {
+    return this.eventNotificationService.addClient(credentials.id, request);
   }
 }

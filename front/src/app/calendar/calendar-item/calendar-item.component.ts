@@ -1,10 +1,8 @@
 import {
   Component,
-  HostBinding,
   Input,
   OnInit,
   Signal,
-  WritableSignal,
   booleanAttribute,
   computed,
   inject,
@@ -39,6 +37,8 @@ export class CalendarItemComponent implements OnInit {
 
   public readonly selectionActive = this.calendarSelection.isActive;
 
+  // TODO
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input({ required: true }) event!: CalendarEvent | any;
 
   @Input({ transform: booleanAttribute }) hideTitle = false;
@@ -87,6 +87,7 @@ export class CalendarItemComponent implements OnInit {
   }
 
   hasClickedAnotherEvent(parent: HTMLElement): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let node: any = parent;
     const tagName = 'app-calendar-item'.toUpperCase();
     let found = false;

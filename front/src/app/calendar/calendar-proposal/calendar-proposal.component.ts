@@ -13,6 +13,7 @@ import {
 import { CalendarFormEventComponent } from '../calendar-form-event/calendar-form-event.component';
 import { CalendarViewComponent } from '../calendar-view/calendar-view.component';
 import {
+  FormArray,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -20,12 +21,12 @@ import {
 } from '@angular/forms';
 import { CalendarSelectionService } from '../calendar-selection.service';
 import { CalendarService } from '../calendar.service';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { minDateValidator } from '@app/shared/custom-validators';
-import { tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map, tap } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ProjectService } from '@app/project/project.service';
 
 @Component({
@@ -59,50 +60,86 @@ import { ProjectService } from '@app/project/project.service';
       *ngIf="form"
       (ngSubmit)="submit()"
     >
-      <div role="group" aria-labelledby="group-date">
-        <div class="input-group">
-          <h1 class="title1" translate>CALENDAR.PROPOSAL.title</h1>
-        </div>
-        <div class="input-group inline">
-          <label translate>AVAILABILITY.the_day</label>
-          <input
-            formControlName="date"
-            type="date"
-            id="date"
-            name="date"
-            [min]="today.toISODate()"
-            [placeholder]="'AVAILABILITY.the_day' | translate | lowercase"
-            [ngClass]="{
-              'is-invalid':
-                (ngForm.submitted || form.get('date')?.touched) &&
-                form.get('date')?.errors
-            }"
-          />
-        </div>
-        <div
-          class="input-group inline"
-          *ngIf="!form.get('allDay')?.getRawValue()"
-        >
-          <label translate>AVAILABILITY.from_hour</label>
-          <input
-            type="time"
-            formControlName="startTime"
-            [class.is-invalid]="
-              (ngForm.submitted || form.get('startTime')?.touched) &&
-              form.get('startTime')?.errors
-            "
-          />
-          <label class="lowercase" translate>AVAILABILITY.to_hour</label>
-          <input
-            type="time"
-            formControlName="endTime"
-            [class.is-invalid]="
-              (ngForm.submitted || form.get('startTime')?.touched) &&
-              form.get('startTime')?.errors
-            "
-          />
-        </div>
+      <ng-container formArrayName="proposals">
+        <div role="group" aria-labelledby="group-date">
+          <div class="input-group">
+            <h1 class="title1" translate>CALENDAR.PROPOSAL.title</h1>
+          </div>
+          <!-- @for (proposal of proposalsFormArray().controls; let proposalIndex = $index; let isLast = $last) { -->
 
+          <ng-container
+            *ngFor="
+              let proposal of proposalsFormArray().controls;
+              let proposalIndex = index;
+              let isLast = last
+            "
+          >
+            <ng-container [formGroupName]="proposalIndex">
+              <div class="input-group inline">
+                <label translate>AVAILABILITY.the_day</label>
+                <input
+                  formControlName="date"
+                  type="date"
+                  id="date"
+                  name="date"
+                  [min]="today.toISODate()"
+                  [placeholder]="'AVAILABILITY.the_day' | translate | lowercase"
+                  [ngClass]="{
+                    'is-invalid':
+                      (ngForm.submitted || form.get('date')?.touched) &&
+                      form.get('date')?.errors
+                  }"
+                />
+              </div>
+              <div
+                class="input-group inline"
+                *ngIf="!form.get('allDay')?.getRawValue()"
+              >
+                <label translate>AVAILABILITY.from_hour</label>
+                <input
+                  type="time"
+                  formControlName="startTime"
+                  [class.is-invalid]="
+                    (ngForm.submitted || form.get('startTime')?.touched) &&
+                    form.get('startTime')?.errors
+                  "
+                />
+                <label class="lowercase" translate>AVAILABILITY.to_hour</label>
+                <input
+                  type="time"
+                  formControlName="endTime"
+                  [class.is-invalid]="
+                    (ngForm.submitted || form.get('startTime')?.touched) &&
+                    form.get('startTime')?.errors
+                  "
+                />
+              </div>
+              <div class="input-group inline button-group">
+                <button
+                  *ngIf="showDeleteButton()"
+                  type="button"
+                  class="link-button"
+                  (click)="proposalsFormArray().removeAt(proposalIndex)"
+                  translate
+                >
+                  <i class="fa-regular fa-times"></i>
+                  COMMON.delete
+                </button>
+                <button
+                  *ngIf="isLast"
+                  type="button"
+                  class="link-button"
+                  (click)="proposalsFormArray().push(getProposalFormGroup())"
+                  translate
+                >
+                  <i class="fa-regular fa-plus"></i>
+                  COMMON.add
+                </button>
+              </div>
+            </ng-container>
+          </ng-container>
+          <!-- } -->
+        </div>
         <div class="input-group inline button-group">
           <button
             type="button"
@@ -116,7 +153,7 @@ import { ProjectService } from '@app/project/project.service';
             CALENDAR.PROPOSAL.propose
           </button>
         </div>
-      </div>
+      </ng-container>
     </form>
   `,
   styles: [
@@ -160,24 +197,39 @@ export class CalendarProposalComponent {
 
   public readonly today = DateTime.now();
 
+  getProposalFormGroup = () =>
+    new FormGroup({
+      date: new FormControl<string>('', {
+        validators: [
+          Validators.required,
+          minDateValidator(this.today.toJSDate()),
+        ],
+        nonNullable: true,
+      }),
+      startTime: new FormControl<string>('', {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      endTime: new FormControl<string>('', {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+    });
+
   readonly form = new FormGroup({
     availability: new FormControl<string[]>([]),
-    date: new FormControl<string>('', {
-      validators: [
-        Validators.required,
-        minDateValidator(this.today.toJSDate()),
-      ],
-      nonNullable: true,
-    }),
-    startTime: new FormControl<string>('', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    endTime: new FormControl<string>('', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
+    proposals: new FormArray([this.getProposalFormGroup()]),
   });
+
+  proposalsFormArray() {
+    return this.form.get('proposals') as FormArray;
+  }
+
+  readonly showDeleteButton = toSignal(
+    this.proposalsFormArray().valueChanges.pipe(
+      map((proposals) => proposals.length > 1),
+    ),
+  );
 
   selected = computed(() => {
     const selection = this.#selectionService.selectionObject();
@@ -200,13 +252,15 @@ export class CalendarProposalComponent {
           const start = DateTime.fromISO(selected.start_time);
           const end = DateTime.fromISO(selected.end_time);
 
-          this.form?.patchValue({
+          const formProposals = this.form.get('proposals') as FormArray;
+
+          formProposals.at(-1).patchValue({
             date: start.toISODate() as string,
             startTime: start.toFormat('H:mm'),
             endTime: end.toFormat('H:mm'),
           });
         }
-      })
+      }),
     )
     .subscribe();
 
@@ -215,21 +269,26 @@ export class CalendarProposalComponent {
       return;
     }
 
-    const { date, startTime, endTime } = this.form?.getRawValue();
+    const formProposals = this.form.get('proposals') as FormArray;
 
-    const start_time = DateTime.fromFormat(
-      `${date} ${startTime}`,
-      'yyyy-MM-dd H:mm'
-    ).toISO() as string;
-    const end_time = DateTime.fromFormat(
-      `${date} ${endTime}`,
-      'yyyy-MM-dd H:mm'
-    ).toISO() as string;
+    const proposals = formProposals
+      .getRawValue()
+      .map(({ date, startTime, endTime }) => {
+        return {
+          start_time: DateTime.fromFormat(
+            `${date} ${startTime}`,
+            'yyyy-MM-dd H:mm',
+          ).toISO() as string,
+          end_time: DateTime.fromFormat(
+            `${date} ${endTime}`,
+            'yyyy-MM-dd H:mm',
+          ).toISO() as string,
+        };
+      });
 
-    this.#calendarService.addProposal({
-      projectId: this.#projectService.project()!.id,
-      start_time,
-      end_time,
-    });
+    this.#calendarService.addProposals(
+      this.#projectService.project()!.id,
+      proposals,
+    );
   }
 }

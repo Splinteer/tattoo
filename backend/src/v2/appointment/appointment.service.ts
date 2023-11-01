@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FindManyOptions, Repository } from 'typeorm';
 import { AppointmentSchema } from './appointment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AppointmentProposal } from '../project/project-appointment/dto/appointments-proposal.dto';
 
 export enum AppointmentStatus {
   PAID = 'appointment_paid',
@@ -26,10 +27,29 @@ export class AppointmentService {
     private appointmentRepository: Repository<AppointmentSchema>,
   ) {}
 
+  async get(projectId: string, id: string) {
+    return this.appointmentRepository.findOne({
+      where: { id, projectId },
+    });
+  }
+
   async getById(id: string) {
     return this.appointmentRepository.findOne({
       where: { id },
       relations: ['project'],
+    });
+  }
+
+  async createProposal(
+    projectId: string,
+    { start_time, end_time }: AppointmentProposal,
+  ) {
+    return this.appointmentRepository.save({
+      projectId,
+      isConfirmed: false,
+      createdByShop: true,
+      startDate: start_time,
+      endDate: end_time,
     });
   }
 

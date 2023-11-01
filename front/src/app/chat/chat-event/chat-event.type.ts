@@ -39,7 +39,7 @@ export type ChatEventMedia = ChatEventBase & {
 export type ChatEventAppointmentNew = ChatEventBase & {
   type: ChatEventType.APPOINTMENT_NEW;
   property: {
-    appointmentId: string;
+    appointmentIds: string[];
   };
 };
 

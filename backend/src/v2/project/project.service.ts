@@ -8,6 +8,7 @@ import {
 } from './project-attachment.entity';
 import { StorageService } from '@app/common/storage/storage.service';
 import { AppointmentService } from '../appointment/appointment.service';
+import { ProjectRole } from './project.interface';
 
 @Injectable()
 export class ProjectService {
@@ -54,20 +55,20 @@ export class ProjectService {
     );
   }
 
-  async canAccess(
+  canAccess(
     project: { customerId: string; shopId: string },
     customerId: string,
     shopId?: string,
-  ) {
+  ): ProjectRole {
     if (project.customerId === customerId) {
-      return 'customer';
+      return ProjectRole.CUSTOMER;
     }
 
     if (project.shopId === shopId) {
-      return 'shop';
+      return ProjectRole.SHOP;
     }
 
-    return 'unauthorised';
+    return ProjectRole.UNAUTHORISED;
   }
 
   async setPaid(id: string) {

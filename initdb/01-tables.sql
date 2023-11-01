@@ -118,6 +118,8 @@ CREATE TYPE
 CREATE TABLE
     IF NOT EXISTS public.project (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        created_at timestamp(3) NOT NULL DEFAULT NOW(),
+        updated_at timestamp(3) NOT NULL DEFAULT NOW(),
         customer_id uuid NOT NULL,
         shop_id uuid NOT NULL,
         name varchar(255) NOT NULL,
@@ -177,20 +179,14 @@ CREATE TABLE
     IF NOT EXISTS public.appointment(
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         project_id uuid NOT NULL,
+        event_id uuid,
         creation_date timestamp(3) NOT NULL DEFAULT NOW(),
         start_date timestamp(3) NOT NULL,
         end_date timestamp(3),
         created_by_shop boolean NOT NULL DEFAULT false,
         is_confirmed boolean NOT NULL DEFAULT false,
-        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
-    );
-
-CREATE TABLE
-    IF NOT EXISTS public.chat(
-        project_id uuid PRIMARY KEY NOT NULL,
-        creation_date timestamp(3) NOT NULL DEFAULT NOW(),
-        last_update timestamp(3) NOT NULL DEFAULT NOW(),
-        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id)
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id),
+        CONSTRAINT fk_event_id FOREIGN KEY (event_id) REFERENCES chat_event (id)
     );
 
 CREATE TYPE
@@ -210,12 +206,12 @@ CREATE TYPE
 CREATE TABLE
     chat_event (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-        chat_id uuid NOT NULL,
+        project_id uuid NOT NULL,
         creation_date timestamp(3) NOT NULL DEFAULT NOW(),
         sender_id uuid NOT NULL,
         type chat_event_type NOT NULL,
         is_read boolean NOT NULL DEFAULT false,
-        CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) REFERENCES public.chat (project_id),
+        CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES public.project (id),
         CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES public.customer (id)
     );
 
@@ -232,15 +228,6 @@ CREATE TABLE
         event_id uuid,
         url text NOT NULL,
         CONSTRAINT fk_event_id FOREIGN KEY (event_id) REFERENCES chat_event (id)
-    );
-
-CREATE TABLE
-    IF NOT EXISTS chat_event_appointment_new (
-        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-        event_id uuid,
-        appointment_id uuid NOT NULL,
-        CONSTRAINT fk_event_id FOREIGN KEY (event_id) REFERENCES chat_event (id),
-        CONSTRAINT fk_appointment_id FOREIGN KEY (appointment_id) REFERENCES public.appointment (id)
     );
 
 CREATE TABLE

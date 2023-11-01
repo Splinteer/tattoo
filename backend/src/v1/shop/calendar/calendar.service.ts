@@ -23,7 +23,7 @@ export type BaseCalendarEvent = {
   properties: { random?: string }; // fake empty object
 };
 
-export type AppointmentEvent = BaseCalendarEvent & {
+export type AppointmentEvent = Omit<BaseCalendarEvent, 'event_type'> & {
   event_type: AppointmentType;
   properties: {
     project_id: string;

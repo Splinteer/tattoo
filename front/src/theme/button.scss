@@ -1,0 +1,8 @@
+.link-button {
+  color: var(--label-secondary);
+  font-size: var(--subheadline-size);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

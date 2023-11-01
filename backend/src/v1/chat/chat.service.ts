@@ -4,12 +4,7 @@ import { Credentials } from 'src/v1/auth/credentials/credentials.service';
 
 @Injectable()
 export class ChatService {
-  constructor(private readonly db: DbService) {
-    this.getShopChats(
-      '2d24ec73-d53b-451f-9d6f-89b9194c795d',
-      '2023-09-04T01:47:28.564+02:00',
-    );
-  }
+  constructor(private readonly db: DbService) {}
 
   async getCustomerChats(shopId: string, last_fetched_date: string) {
     return null;
@@ -18,12 +13,12 @@ export class ChatService {
   async getShopChats(shopId: string, last_fetched_date: string) {
     const query = `--sql
       SELECT
-          c.project_id AS id,
-          c.project_id,
+          p.id AS id,
+          p.id as project_id,
           p.name as project_name,
           p.shop_id,
-          c.creation_date AS creation_date,
-          COALESCE(ce.creation_date, c.creation_date) AS last_update,
+          p.created_at AS creation_date,
+          COALESCE(ce.creation_date, p.created_at) AS last_update,
           CONCAT_WS(' ', customer.firstname, customer.lastname) as contact_name,
           json_build_object(
             'id', customer.id,
@@ -32,23 +27,21 @@ export class ChatService {
           ) as avatar,
           'hello' as last_event, --TEMP TODO
           ce.id IS NULL OR ce.sender_id <> customer.id OR ce.is_read as is_read
-      FROM chat c
-
-      INNER JOIN project p ON p.id = c.project_id
+      FROM project p
       INNER JOIN customer ON customer.id = p.customer_id
       LEFT JOIN LATERAL(
         SELECT *
         FROM chat_event ce
-        WHERE chat_id = c.project_id
+        WHERE project_id = p.id
         AND type = 'message'
         ORDER BY creation_date DESC
         LIMIT 1
-      ) AS ce ON c.project_id = ce.chat_id
+      ) AS ce ON p.id = ce.project_id
 
       WHERE p.shop_id=$1
-      AND c.last_update < $2
-      GROUP BY c.project_id, c.creation_date, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.creation_date
-      ORDER BY last_update DESC
+      AND p.updated_at < $2
+      GROUP BY p.id, p.created_at, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.creation_date
+      ORDER BY p.updated_at DESC
       LIMIT 10
     `;
 
@@ -60,11 +53,11 @@ export class ChatService {
     return chats;
   }
 
-  async getShopChat(chatId: string) {
+  async getShopChat(projectId: string) {
     const query = `--sql
       SELECT
-          c.project_id AS id,
-          c.project_id,
+          p.id AS id,
+          p.id as project_id,
           p.name as project_name,
           p.shop_id,
           c.creation_date AS creation_date,
@@ -77,36 +70,34 @@ export class ChatService {
           ) as avatar,
           ce.content as last_event,
           ce.id IS NULL OR ce.sender_id <> customer.id OR ce.is_read as is_read
-      FROM chat c
+      FROM project p
 
-      INNER JOIN project p ON p.id = c.project_id
       INNER JOIN customer ON customer.id = p.customer_id
       LEFT JOIN LATERAL(
         SELECT *
         FROM chat_event ce
-        WHERE chat_id = c.project_id
+        WHERE chat_id = p.id
         AND type = 'message'
         ORDER BY creation_date DESC
         LIMIT 1
-      ) AS ce ON c.project_id = ce.chat_id
+      ) AS ce ON p.id = ce.chat_id
 
-      WHERE c.project_id = $1
-      GROUP BY c.project_id, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.content, ce.creation_date
+      WHERE p.id = $1
+      GROUP BY p.id, customer.id, p.shop_id, p.name, ce.id, ce.sender_id, ce.is_read, ce.content, ce.creation_date
     `;
 
-    const { rows: chats } = await this.db.query(query, [chatId]);
+    const { rows: chats } = await this.db.query(query, [projectId]);
 
     return chats[0];
   }
 
   async checkChatAccess(
     credentials: Credentials,
-    chatId: string,
+    projectId: string,
   ): Promise<boolean> {
     const query = `--sql
-      SELECT p.customer_id=$1 OR p.shop_id=$2 as can_access FROM chat c
-      INNER JOIN project p ON p.id=c.project_id
-      WHERE c.project_id=$3
+      SELECT customer_id=$1 OR shop_id=$2 as can_access FROM project
+      WHERE id=$3
     `;
 
     const {
@@ -114,7 +105,7 @@ export class ChatService {
     } = await this.db.query<{ can_access: boolean }>(query, [
       credentials.id,
       credentials.shop_id,
-      chatId,
+      projectId,
     ]);
 
     return can_access;
@@ -122,8 +113,8 @@ export class ChatService {
 
   async getChatByProject(projectId: string) {
     const query = `--sql
-      SELECT * FROM chat c
-      WHERE c.project_id=$1
+      SELECT * FROM project
+      WHERE id=$1
     `;
 
     const {

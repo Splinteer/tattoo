@@ -1,6 +1,7 @@
 {
   "COMMON": {
     "add": "Ajouter",
+    "delete": "Supprimer",
     "edit": "Modifier",
     "update": "Mettre à jour",
     "cancel": "Annuler",

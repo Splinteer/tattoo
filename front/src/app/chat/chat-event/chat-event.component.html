@@ -1,28 +1,28 @@
 <div class="message">
-  <app-chat-event-attachments
-    *ngIf="event.type === 'media'"
-    [attachments]="event.property.urls"
-    [isMine]="event.isSender"
-  ></app-chat-event-attachments>
-
-  <app-chat-event-message
-    *ngIf="event.type === 'message'"
-    [isMine]="event.isSender"
-  >
-  {{event.property.text}}
-  </app-chat-event-message>
-
+  @if (event.type === 'media') {
+    <app-chat-event-attachments
+      [attachments]="event.property.urls"
+      [isMine]="event.isSender"
+    ></app-chat-event-attachments>
+  }
+  @else if (event.type === 'message') {
+    <app-chat-event-message
+      [isMine]="event.isSender"
+    >
+    {{event.property.text}}
+    </app-chat-event-message>
+  }
+  @else if (event.type === 'project_created') {
+    <app-chat-event-project-new
+      [event]="event"
+    ></app-chat-event-project-new>
+  }
+  @else if (event.type === 'appointment_new') {
+    <app-chat-event-appointment-new
+      [event]="event"
+    ></app-chat-event-appointment-new>
+  }
   <!-- <ng-container *ngIf="event.type === 'project_created'"> </ng-container> -->
-
-  <app-chat-event-project-new
-    *ngIf="event.type === 'project_created'"
-    [event]="event"
-  ></app-chat-event-project-new>
-
-  <app-chat-event-appointment-new
-    *ngIf="event.type === 'appointment_new'"
-    [event]="event"
-  ></app-chat-event-appointment-new>
 </div>
 
 <span class="message-time">{{ event.creationDate | date : "shortTime" }}</span>
