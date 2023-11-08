@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectSchema } from './project.entity';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import {
   ProjectAttachmentSchema,
   ProjectAttachmentType,
@@ -9,15 +9,228 @@ import {
 import { StorageService } from '@app/common/storage/storage.service';
 import { AppointmentService } from '../appointment/appointment.service';
 import { ProjectRole } from './project.interface';
+import { ChatEventSchema, ChatEventType } from './event/event.entity';
+import { CustomerSchema } from 'src/entitiees/customer.entity';
+import { EntityMapperService } from '@app/common/entity-mapper/entity-mapper.service';
+import { ShopSchema } from 'src/entitiees/shop.entity';
+import { ChatEventMessageSchema } from './event/entity/event-types.entity';
+import { ChatEvent } from './event/event.service';
+
+type ChatLastMessageEvent = {
+  senderId: string;
+  creationDate: Date;
+  type: ChatEventType.MESSAGE;
+  content: string;
+  isRead: true;
+};
+
+export type ChatLastEvent =
+  | ChatLastMessageEvent
+  | (Omit<ChatLastMessageEvent, 'content'> & {
+      type: Exclude<ChatEventType, ChatEventType.MESSAGE>;
+    });
+
+export type CustomerChat = {
+  project: ProjectSchema;
+  shop: ShopSchema;
+  lastEvent: ChatLastEvent;
+  events?: ChatEvent[];
+};
+
+export type ShopChat = {
+  project: ProjectSchema;
+  customer: CustomerSchema;
+  lastEvent: ChatLastEvent;
+  events?: ChatEvent[];
+};
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(ProjectSchema)
     private readonly projectRepository: Repository<ProjectSchema>,
+
+    @InjectRepository(ChatEventSchema)
+    private readonly eventRepository: Repository<ChatEventSchema>,
+
     @Inject('public') private readonly publicStorage: StorageService,
     private readonly appointmentService: AppointmentService,
+    private readonly entityMapper: EntityMapperService,
   ) {}
+
+  #getAllQuery() {
+    return this.projectRepository
+      .createQueryBuilder('p')
+      .select([
+        'row_to_json(p.*) as project',
+        `
+          json_strip_nulls(
+            json_build_object(
+              'senderId', ce.sender_id,
+              'creationDate', ce.creation_date,
+              'type', ce.type,
+              'content', ce.content,
+              'isRead', ce.is_read
+            )
+          ) AS last_event
+        `,
+      ])
+      .innerJoin(
+        (qb) =>
+          qb
+            .from(ChatEventSchema, 'last_event_date')
+            .select('MAX(last_event_date.creationDate)', 'max_date')
+            .addSelect('last_event_date.project_id', 'project_id')
+            .groupBy('last_event_date.project_id'),
+        'last_event_date',
+        'last_event_date.project_id = p.id',
+      )
+      .innerJoin(
+        (db) =>
+          db
+            .from(ChatEventSchema, 'ce')
+            .leftJoin(
+              ChatEventMessageSchema,
+              'message',
+              'message.event_id = ce.id',
+            ),
+        'ce',
+        'ce.project_id = p.id AND ce.creation_date = last_event_date.max_date',
+      )
+      .groupBy(
+        'p.id, ce.project_id, ce.content, ce.type, ce.creation_date, ce.is_read, ce.sender_id, last_event_date.max_date',
+      )
+      .orderBy('p.updatedAt', 'DESC');
+  }
+
+  async getAllByCustomer(
+    customerId: string,
+    lastFetchedDate?: string,
+  ): Promise<CustomerChat[]> {
+    const query: SelectQueryBuilder<ProjectSchema> = this.#getAllQuery()
+      .addSelect('row_to_json(shop.*) as shop')
+      .innerJoin(ShopSchema, 'shop', 'shop.id = p.shopId')
+      .addGroupBy('shop.id')
+      .where('p.customerId = :customerId', { customerId })
+      .limit(10);
+
+    if (lastFetchedDate) {
+      query.andWhere('ce.creation_date < :lastFetchedDate', {
+        lastFetchedDate,
+      });
+    }
+
+    const result = await query.getRawMany();
+
+    return result.map((row) => {
+      return {
+        project: this.entityMapper.mapEntity<ProjectSchema>(
+          row.project,
+          ProjectSchema,
+        ),
+        shop: this.entityMapper.mapEntity<ShopSchema>(row.shop, ShopSchema),
+        lastEvent: row.last_event as ChatLastEvent,
+      };
+    });
+  }
+
+  async getAllByShop(
+    shopId: string,
+    lastFetchedDate: string,
+  ): Promise<ShopChat[] | any> {
+    // const query: SelectQueryBuilder<ProjectSchema> = this.projectRepository
+    //   .createQueryBuilder('p')
+    //   .select([
+    //     'row_to_json(p.*) as project',
+    //     'row_to_json(customer.*) as customer',
+    //     // 'row_to_json(shop.*) as shop',
+    //     "CONCAT(customer.firstname, ' ', customer.lastname) AS contact_name",
+    //     `
+    //       json_build_object(
+    //         'id', customer.id,
+    //         'gotProfilePicture', customer.got_profile_picture,
+    //         'profilePictureVersion', customer.profile_picture_version
+    //       ) AS avatar
+    //     `,
+    //     `
+    //       json_strip_nulls(
+    //         json_build_object(
+    //           'type', ce.type,
+    //           'content', ce.content
+    //         )
+    //       ) AS last_event
+    //     `,
+
+    //     // 'ce.id IS NULL OR ce.senderId <> customer.id OR ce.isRead AS is_read',
+    //   ])
+    //   .innerJoin(CustomerSchema, 'customer', 'customer.id = p.customerId')
+    //   .leftJoin(
+    //     (qb) =>
+    //       qb
+    //         .from(ChatEventSchema, 'last_event_date')
+    //         .select('MAX(last_event_date.creationDate)', 'max_date')
+    //         .addSelect('last_event_date.project_id', 'project_id')
+    //         .groupBy('last_event_date.project_id'),
+    //     'last_event_date',
+    //     'last_event_date.project_id = p.id',
+    //   )
+    //   .leftJoin(
+    //     (db) =>
+    //       db
+    //         .from(ChatEventSchema, 'ce')
+    //         .leftJoin(
+    //           ChatEventMessageSchema,
+    //           'message',
+    //           'message.event_id = ce.id',
+    //         ),
+    //     'ce',
+    //     'ce.project_id = p.id AND ce.creation_date = last_event_date.max_date',
+    //   )
+
+    //   // .where('p.shopId = :shopId', { shopId })
+    //   // .andWhere('p.updatedAt < :updatedAt', { updatedAt })
+    //   .groupBy(
+    //     'p.id, customer.id, ce.project_id, ce.content, ce.type, last_event_date.max_date',
+    //   )
+    //   .orderBy('p.updatedAt', 'DESC')
+    //   .limit(10);
+
+    const query: SelectQueryBuilder<ProjectSchema> = this.#getAllQuery()
+      .addSelect('row_to_json(customer.*) as customer')
+      .innerJoin(CustomerSchema, 'customer', 'customer.id = p.customerId')
+      .addGroupBy('customer.id')
+      .limit(10);
+
+    const result = await query.getRawMany();
+    return result.map((row) => {
+      return {
+        ...row,
+        project: this.entityMapper.mapEntity<ProjectSchema>(
+          row.project,
+          ProjectSchema,
+        ),
+        customer: this.entityMapper.mapEntity<CustomerSchema>(
+          row.customer,
+          CustomerSchema,
+        ),
+        lastEvent: row.last_event as ChatLastEvent,
+      };
+    });
+  }
+
+  // #mapProjectDbToProject(originalProject: Record<string, any>): ProjectSchema {
+  //   const project = new ProjectSchema();
+
+  //   const metadata = this.projectRepository
+  //     .createQueryBuilder()
+  //     .connection.getMetadata(ProjectSchema);
+
+  //   metadata.columns.forEach((column) => {
+  //     project[column.propertyName] = originalProject[column.databaseName];
+  //   });
+
+  //   return project;
+  // }
 
   async getById(id: string) {
     const rawProject = await this.projectRepository.findOne({

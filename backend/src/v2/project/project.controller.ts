@@ -6,6 +6,7 @@ import {
   Get,
   MessageEvent,
   Patch,
+  Query,
   Req,
   Sse,
   UseGuards,
@@ -46,14 +47,25 @@ export class ProjectController {
     private readonly eventNotificationService: EventNotificationService,
   ) {}
 
-  // @ApiOkResponse({ description: 'Returns all projects' })
-  // @Get()
-  // getAll(
-  //   @Credentials()
-  //   credentials: ICredentials,
-  // ) {
-  //   return this.projectService.getAll(credentials.id);
-  // }
+  @ApiOkResponse({ description: 'Returns all project conversations' })
+  @Get('personal')
+  getAllByCustomer(
+    @Credentials()
+    credentials: ICredentials,
+    @Query('date') date: string,
+  ) {
+    return this.projectService.getAllByCustomer(credentials.id, date);
+  }
+
+  @ApiOkResponse({ description: 'Returns all project conversations' })
+  @Get('shops/:shopId')
+  getAllByShop(
+    @Credentials()
+    credentials: ICredentials,
+    @Query('date') date: string,
+  ) {
+    return this.projectService.getAllByShop(credentials.shop_id, date);
+  }
 
   @ApiOkResponse({ description: 'Returns a project' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
