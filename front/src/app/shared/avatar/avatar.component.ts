@@ -1,6 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Credentials } from '@app/auth/credentials.service';
-import { Customer } from '@app/customer/customer.service';
+import { Component, Input, OnChanges, booleanAttribute } from '@angular/core';
 import { environment } from '@env/environment';
 
 export type AvatarCustomer = {
@@ -20,6 +18,12 @@ export type AvatarCustomer = {
   template: ` <img [src]="src" alt="Avatar" />`,
   styles: [
     `
+      :host {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
       img {
         border-radius: 50%;
         border: 1px solid var(--gray-500);
@@ -33,12 +37,12 @@ export type AvatarCustomer = {
 export class AvatarComponent implements OnChanges {
   @Input({ required: true }) customer!: AvatarCustomer;
 
-  @Input() ignoreShop?: boolean = false;
+  @Input({ transform: booleanAttribute }) ignoreShop?: boolean = false;
 
   public src: string =
     'https://flowbite.com/docs/images/people/profile-picture-3.jpg';
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (
       this.customer.owner_id ||
       (this.customer.shop_got_picture && !this.ignoreShop)
