@@ -96,8 +96,4 @@ export class GalleryListComponent
       this.fetchMore.next(true);
     }
   }
-
-  trackByIdx(index: number, item: Gallery): string {
-    return item.id;
-  }
 }

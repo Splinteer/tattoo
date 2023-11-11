@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, forwardRef, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  forwardRef,
+  inject,
+} from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -35,7 +42,7 @@ export class FlashSelectionComponent
   public value?: ControlValue;
 
   public toggle(toggledItem: Flash & { selected?: boolean }): void {
-    toggledItem.selected = !!!toggledItem.selected;
+    toggledItem.selected = !toggledItem.selected;
     if (this.loadedFlashs) {
       const value = this.loadedFlashs.filter((item) => item.selected);
 
@@ -57,8 +64,8 @@ export class FlashSelectionComponent
 
   private loadedFlashs: ControlValue;
 
-  ngOnChanges(changes: any): void {
-    if (changes.shopUrl) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['shopUrl']) {
       this.flashs$ = this.fetchMore.pipe(
         switchMap(() =>
           this.flashService
@@ -66,8 +73,8 @@ export class FlashSelectionComponent
             .pipe(
               tap((flashs) => {
                 this.lastDate = flashs.at(-1)?.creation_date;
-              })
-            )
+              }),
+            ),
         ),
         scan((acc, newPage) => {
           if (newPage.length === 0) {
@@ -79,6 +86,8 @@ export class FlashSelectionComponent
         }),
         takeWhile(() => !this.allDataLoaded),
         tap((flashs) => {
+          // TODO: remove any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           flashs.forEach((flash: any) => {
             if (
               this.value?.some((selectedFlash) => selectedFlash.id === flash.id)
@@ -88,7 +97,7 @@ export class FlashSelectionComponent
           });
           this.loadedFlashs = flashs;
         }),
-        shareReplay(1)
+        shareReplay(1),
       );
     }
   }
@@ -99,31 +108,27 @@ export class FlashSelectionComponent
     }
   }
 
-  trackByIdx(index: number, item: Flash): string {
-    return item.id;
-  }
-
   // ControlValueAccessor
 
   @Input() disabled = false;
 
   public onChange: (value: ControlValue) => void = () => {};
 
-  public onTouched: Function = () => {};
+  public onTouched: () => unknown = () => {};
 
   private touched = false;
 
-  public writeValue(value: ControlValue, ignoreRefresh?: true): void {
+  public writeValue(value: ControlValue): void {
     this.value = value;
   }
 
   public registerOnChange(
-    fn: typeof FlashSelectionComponent.prototype.onChange
+    fn: typeof FlashSelectionComponent.prototype.onChange,
   ): void {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: Function): void {
+  public registerOnTouched(fn: () => unknown): void {
     this.onTouched = fn;
   }
 

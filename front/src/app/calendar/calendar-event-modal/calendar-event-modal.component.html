@@ -1,14 +1,14 @@
 <div class="header">
-  <ng-container
-    *ngIf="DateTime.local() <= DateTime.fromISO(event.start_time).endOf('day')"
-  >
+  @if (DateTime.local() <= DateTime.fromISO(event.start_time).endOf('day')) {
+
     <button (click)="edit = true">
       <i class="fa-regular fa-pencil"></i>
     </button>
     <button (click)="remove()">
       <i class="fa-regular fa-trash"></i>
     </button>
-  </ng-container>
+  
+}
   <button (click)="close.emit()">
     <i class="fa-regular fa-times"></i>
   </button>
@@ -29,9 +29,11 @@
   </div>
 </div>
 
+@if (edit) {
 <app-calendar-form-event
-  *ngIf="edit"
+ 
   [event]="event"
   [@slideDown]
   (close)="edit = false"
 ></app-calendar-form-event>
+}

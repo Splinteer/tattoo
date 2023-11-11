@@ -1,9 +1,10 @@
+@if (form) {
 <form
   class="grouped-form"
   [formGroup]="form"
   #ngForm="ngForm"
   (ngSubmit)="onSubmit()"
-  *ngIf="form"
+ 
   [@backInDown]
 >
   <div role="group" aria-labelledby="group-picture">
@@ -13,19 +14,23 @@
     </div>
 
     <div class="input-group logo">
-      <div
+      @if (picturePreview$ | async; as picturePreview) {
+<div
         class="logo-preview"
-        *ngIf="picturePreview$ | async as picturePreview"
+       
       >
         <img [src]="picturePreview" />
-        <button
+        @if (!customer) {
+<button
           type="button"
           (click)="form.get('profile_picture')?.setValue([])"
-          *ngIf="!customer"
+         
         >
           <i class="fa-regular fa-times-circle"></i>
         </button>
+}
       </div>
+}
 
       <app-file-dropzone
         formControlName="profile_picture"
@@ -207,15 +212,17 @@
         placeholder="Twitter"
       ></app-icon-input>
 
-      <div
-        class="error-group"
-        *ngIf="
+      @if (
         form.get('instagram')?.errors?.['pattern'] || form.get('twitter')?.errors?.['pattern']
-        "
+        ) {
+<div
+        class="error-group"
+       
         translate
       >
         CUSTOMER.PROFILE.wrong_social_format
       </div>
+}
     </div>
   </div>
 
@@ -225,3 +232,4 @@
     </button>
   </div>
 </form>
+}

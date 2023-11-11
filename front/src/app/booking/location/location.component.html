@@ -1,4 +1,5 @@
-<ng-container *ngIf="form$ | async as form">
+@if (form$ | async; as form) {
+
   <form [formGroup]="form">
     <ng-container formGroupName="location">
       <div class="input-group">
@@ -13,13 +14,15 @@
           "
         ></app-file-dropzone>
 
-        <div
+        @if (imagesPreview$ | async; as imagesPreview) {
+<div
           class="images-container"
-          *ngIf="imagesPreview$ | async as imagesPreview"
+         
         >
-          <div
+          @for (image of imagesPreview; track image; let imageIndex = $index) {
+  <div
             class="image-container"
-            *ngFor="let image of imagesPreview; let imageIndex = index"
+           
           >
             <img [src]="image" />
             <button
@@ -30,7 +33,9 @@
               <i class="fa-regular fa-times"></i>
             </button>
           </div>
+}
         </div>
+}
       </div>
 
       <div class="input-group">
@@ -87,4 +92,5 @@
       </div>
     </ng-container>
   </form>
-</ng-container>
+
+}

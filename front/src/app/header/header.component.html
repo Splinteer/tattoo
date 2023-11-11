@@ -1,9 +1,10 @@
-<header class="mobile" *ngIf="isMobile(); else isDesktop">
+@if (isMobile()) {
+<header class="mobile">
   <ng-container *ngTemplateOutlet="searchBar"></ng-container>
   <ng-container *ngTemplateOutlet="profile"></ng-container>
 </header>
+} @else {
 
-<ng-template #isDesktop>
   <header class="desktop">
     <nav>
       <a class="logo" routerLink="/">Tattoo</a>
@@ -13,8 +14,10 @@
         <li>
           <a routerLink="/tattooists" routerLinkActive="active">Tattooists</a>
         </li>
-        <ng-container *ngIf="credentials$ | async as credentials">
-          <ng-container *ngIf="credentials.shop_name">
+        @if (credentials$ | async; as credentials) {
+
+          @if (credentials.shop_name) {
+
             <li>
               <a
                 routerLink="/shop"
@@ -33,8 +36,10 @@
                 >HEADER.gallery</a
               >
             </li>
-          </ng-container>
-        </ng-container>
+          
+}
+        
+}
       </ul>
 
       <div class="right-side">
@@ -43,7 +48,9 @@
       </div>
     </nav>
   </header>
-</ng-template>
+
+}
+
 
 <ng-template #searchBar>
   <div class="search">
@@ -56,16 +63,19 @@
 
 <ng-template #profile>
   <div class="profile">
-    <ng-container *ngIf="credentials$ | async as credentials; else notLogged">
+    @if (credentials$ | async; as credentials) {
+
       <button class="profile" [cdkMenuTriggerFor]="profileMenu">
         <app-avatar [customer]="credentials"></app-avatar>
       </button>
       <ng-template #profileMenu>
         <div class="profile-menu" cdkMenu>
           <div class="profile-info" cdkMenuItem>
-            <div class="shop" *ngIf="credentials.shop_name">
+            @if (credentials.shop_name) {
+<div class="shop">
               {{ credentials.shop_name }}
             </div>
+}
             <div class="name">
               {{ credentials.firstname }} {{ credentials.lastname }}
             </div>
@@ -80,7 +90,8 @@
           </a>
           <hr />
 
-          <ng-container *ngIf="!credentials.shop_name">
+          @if (!credentials.shop_name) {
+
             <a
               cdkMenuItem
               routerLink="/shop/create"
@@ -91,7 +102,8 @@
               CUSTOMER.MENU.open_shop
             </a>
             <hr />
-          </ng-container>
+          
+}
 
           <a cdkMenuItem (click)="logOut()" class="hoverable" translate>
             <i class="fa-solid fa-power-off"></i>
@@ -99,9 +111,11 @@
           </a>
         </div>
       </ng-template>
-    </ng-container>
-    <ng-template #notLogged>
+    
+} @else {
+
       <a class="button" routerLink="/auth" translate>HEADER.signin</a>
-    </ng-template>
-  </div>
+    
+}
+      </div>
 </ng-template>

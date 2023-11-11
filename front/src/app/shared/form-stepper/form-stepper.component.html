@@ -1,7 +1,6 @@
 <nav>
-  <ng-container
-    *ngFor="let step of steps; let isLast = last; let stepIndex = index"
-  >
+  @for (step of steps; track step; let isLast = $last; let stepIndex = $index) {
+  
     <button
       type="button"
       [class.active]="selectedIndex === stepIndex"
@@ -9,23 +8,32 @@
       (click)="onClick(stepIndex, step.stepControl)"
     >
       {{ step.ariaLabel }}
-      <i class="fa-regular fa-check-circle valid" *ngIf="step.completed"></i>
+      @if (step.completed) {
+<i class="fa-regular fa-check-circle valid"></i>
+}
     </button>
-    <i class="fa-solid fa-chevron-right" *ngIf="!isLast"></i>
-  </ng-container>
+    @if (!isLast) {
+<i class="fa-solid fa-chevron-right"></i>
+}
+  
+}
 </nav>
 
 <section class="form-container">
-  <header *ngIf="headers">
+  @if (headers) {
+<header>
     <ng-container *ngTemplateOutlet="headers"></ng-container>
   </header>
+}
 
   <section [hidden]="!selected">
     <!-- Content from the CdkStep is projected here -->
     <ng-container [ngTemplateOutlet]="selected?.content ?? null"></ng-container>
 
-    <ng-container *ngIf="submitRef">
+    @if (submitRef) {
+
       <ng-container *ngTemplateOutlet="submitRef"></ng-container>
-    </ng-container>
+    
+}
   </section>
 </section>

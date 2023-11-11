@@ -18,14 +18,15 @@ type ControlValue = boolean | undefined;
       >
         <span></span>
       </button>
+      @if (text) {
       <label
         class="cursor-pointer"
         [class.bold]="bold"
         [class.invalid]="invalid"
         (click)="toggleValue()"
-        *ngIf="text"
         >{{ text }}</label
       >
+      }
     </div>
   `,
   styleUrls: ['./toggle.component.scss'],
@@ -59,7 +60,7 @@ export class ToggleComponent implements ControlValueAccessor {
 
   public onChange: (value: ControlValue) => void = () => {};
 
-  public onTouched: Function = () => {};
+  public onTouched: () => unknown = () => {};
 
   private touched = false;
 
@@ -71,7 +72,7 @@ export class ToggleComponent implements ControlValueAccessor {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: Function): void {
+  public registerOnTouched(fn: () => unknown): void {
     this.onTouched = fn;
   }
 

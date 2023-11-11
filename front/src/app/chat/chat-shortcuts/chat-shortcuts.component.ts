@@ -9,25 +9,19 @@ import { CalendarProposalComponent } from '@app/calendar/calendar-proposal/calen
   standalone: true,
   imports: [CommonModule],
   template: `
-    <ng-container *ngIf="projectSignal() as project">
-      <ng-container *ngIf="!project.plannedDate">
-        <button (click)="proposal()">Proposer un rdv</button>
-      </ng-container>
+    @if (projectSignal(); as project) { @if (!project.plannedDate) {
 
-      <ng-container
-        *ngIf="
-          project.plannedDate && project.isPaid && !project.customerRating
-        "
-      >
-        <button>Noter l'artiste</button>
-      </ng-container>
+    <button (click)="proposal()">Proposer un rdv</button>
 
-      <ng-container
-        *ngIf="project.plannedDate && project.isPaid && !project.shopRating"
-      >
-        <button>Noter le client</button>
-      </ng-container>
-    </ng-container>
+    } @if ( project.plannedDate && project.isPaid && !project.customerRating ) {
+
+    <button>Noter l'artiste</button>
+
+    } @if (project.plannedDate && project.isPaid && !project.shopRating) {
+
+    <button>Noter le client</button>
+
+    } }
   `,
   styles: [
     `

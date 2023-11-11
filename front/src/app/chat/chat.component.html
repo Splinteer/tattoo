@@ -1,6 +1,10 @@
 <app-chat-list></app-chat-list>
-<app-chat-window *ngIf="!isMobile() || !showDetailsPanel()"></app-chat-window>
+@if (!isMobile() || !showDetailsPanel()) {
+<app-chat-window></app-chat-window>
+}
+@if (showDetailsPanel()) {
 <app-chat-details-panel
-  *ngIf="showDetailsPanel()"
+ 
   [@slideLeft]
 ></app-chat-details-panel>
+}

@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 type ActionButton = {
   text: string;
-  value: any;
+  value: unknown;
   isDanger?: boolean;
 };
 
@@ -24,14 +24,14 @@ export type ActionDialogData = {
     <div class="ios-dialog">
       <div class="content">
         <div class="headline" translate>{{ data.title }}</div>
-        <span class="footnote" *ngIf="data.description" translate>{{
-          data.description
-        }}</span>
+        @if (data.description) {
+        <span class="footnote" translate>{{ data.description }}</span>
+        }
       </div>
 
       <div class="buttons" [class.vertical]="data.vertical">
+        @for (button of data.buttons; track button) {
         <button
-          *ngFor="let button of data.buttons"
           (click)="dialogRef.close(button.value)"
           [class.emphasized]="button.isDanger"
           [class.danger]="button.isDanger"
@@ -39,6 +39,7 @@ export type ActionDialogData = {
         >
           {{ button.text }}
         </button>
+        }
       </div>
     </div>
   `,

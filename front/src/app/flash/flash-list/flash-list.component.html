@@ -1,9 +1,13 @@
 <div class="grid" infiniteScroll (scrolled)="onScroll()">
-  <h1 *ngIf="!shop" translate>FLASH.LIST.title_shop</h1>
+  @if (!shop) {
+<h1 translate>FLASH.LIST.title_shop</h1>
+}
+  @for (flash of flashs$ | async; track flash.id) {
   <app-flash-item
     [hideAvailability]="available !== undefined"
     [flash]="flash"
-    *ngFor="let flash of flashs$ | async; trackBy: trackByIdx"
+
   >
   </app-flash-item>
+}
 </div>

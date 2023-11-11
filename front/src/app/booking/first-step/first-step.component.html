@@ -1,4 +1,5 @@
-<form [formGroup]="form" *ngIf="form$ | async as form">
+@if (form$ | async; as form) {
+<form [formGroup]="form">
   <ng-container formGroupName="first-step">
     <div class="input-group">
       <h3 translate>BOOKING.first-step.types</h3>
@@ -82,3 +83,4 @@
     </div>
   </ng-container>
 </form>
+}

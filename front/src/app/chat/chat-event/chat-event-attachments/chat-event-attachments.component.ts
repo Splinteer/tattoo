@@ -13,13 +13,11 @@ import { ImagePreviewService } from '@app/shared/image-preview.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <button
-      *ngFor="let attachment of attachments"
-      (click)="openModalPreview(attachment)"
-      class="cursor-pointer"
-    >
+    @for (attachment of attachments; track attachment) {
+    <button (click)="openModalPreview(attachment)" class="cursor-pointer">
       <img [src]="attachment" />
     </button>
+    }
   `,
   styles: [
     `

@@ -16,7 +16,8 @@ import { ChatEventAppointmentNew } from '../chat-event.type';
   standalone: true,
   imports: [CommonModule, CalendarItemComponent],
   template: `
-    <div class="ios-dialog" *ngIf="{ appointment: appointmentSignal() } as vm">
+    @if ({ appointment: appointmentSignal() }; as vm) {
+    <div class="ios-dialog">
       <div class="content">
         <div class="headline" translate>
           {{
@@ -25,25 +26,27 @@ import { ChatEventAppointmentNew } from '../chat-event.type';
               : 'Créneau proposé'
           }}
         </div>
-        <span *ngIf="vm.appointment">
+        @if (vm.appointment) {
+        <span>
           <app-calendar-item
             [event]="vm.appointment"
             hideTitle
             date
           ></app-calendar-item>
         </span>
+        }
       </div>
 
-      <div
-        class="buttons"
-        *ngIf="vm.appointment && vm.appointment.type === 'appointment_proposal'"
-      >
+      @if (vm.appointment && vm.appointment.type === 'appointment_proposal') {
+      <div class="buttons">
         <button (click)="reject()" class="danger" translate>Rejeter</button>
         <button (click)="accept()" class="emphasized" translate>
           Accepter
         </button>
       </div>
+      }
     </div>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

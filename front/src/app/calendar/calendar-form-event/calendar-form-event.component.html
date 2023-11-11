@@ -1,13 +1,15 @@
+@if (form) {
 <form
   class="grouped-form no-border"
   [formGroup]="form"
   #ngForm="ngForm"
   #editTemplate
-  *ngIf="form"
+ 
   (ngSubmit)="submit()"
 >
   <div role="group" aria-labelledby="group-date">
-    <div class="input-group" *ngIf="!event">
+    @if (!event) {
+<div class="input-group">
       <select formControlName="type">
         <option value="Availability" translate>
           CALENDAR.EVENT_TYPE.Availability
@@ -17,6 +19,7 @@
         </option>
       </select>
     </div>
+}
     <div class="input-group inline">
       <label translate>AVAILABILITY.the_day</label>
       <input
@@ -33,7 +36,8 @@
         }"
       />
     </div>
-    <div class="input-group inline" *ngIf="!form.get('allDay')?.getRawValue()">
+    @if (!form.get('allDay')?.getRawValue()) {
+<div class="input-group inline">
       <label translate>AVAILABILITY.from_hour</label>
       <input
         type="time"
@@ -53,6 +57,7 @@
         "
       />
     </div>
+}
 
     <div class="input-group inline">
       <app-toggle
@@ -80,3 +85,4 @@
     </div>
   </div>
 </form>
+}

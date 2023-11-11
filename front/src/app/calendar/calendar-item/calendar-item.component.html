@@ -10,29 +10,38 @@
   [ngClass]="event.event_type || event.type"
   [@slideDown]
 >
-  <div *ngIf="selectionActive() !== 'selection' && !hideTitle" translate>
+  @if (selectionActive() !== 'selection' && !hideTitle) {
+<div translate>
     {{ "CALENDAR.EVENT_TYPE." + (event.event_type || event.type) }}
   </div>
+}
   <div class="time">
-    <span *ngIf="showDate">
-      <ng-container *ngIf="hideTitle">
+    @if (showDate) {
+<span>
+      @if (hideTitle) {
+
         {{ "AVAILABILITY.the_day" | translate }}
-      </ng-container>
+      
+}
       {{ (event.start_time || event.startTime) | date : "shortDate" }}
       {{ "AVAILABILITY.from_hour" | translate | lowercase }}
     </span>
-    <div
-      *ngIf="hoursBetweenDates && hoursBetweenDates > 23; else range"
+}
+    @if (hoursBetweenDates && hoursBetweenDates > 23) {
+<div
+     
       translate
     >
       AVAILABILITY.all_day
     </div>
-    <ng-template #range>
+} @else {
+
       {{ (event.start_time || event.startTime) | shortTime }}
       {{ showDate ? ("AVAILABILITY.to_hour" | translate | lowercase) : "-" }}
       {{ (event.end_time || event.endTime) | shortTime : showDate }}
-    </ng-template>
-  </div>
+    
+}
+      </div>
 </button>
 
 <ng-template

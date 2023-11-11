@@ -16,13 +16,13 @@ import { ChatHeaderComponent } from '@app/chat-header/chat-header.component';
   ],
   // changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ng-container *ngIf="chat() as chat; else noChatActive">
-      <app-chat-header [chat]="chat"></app-chat-header>
-      <app-chat-event-list [chat]="chat"> </app-chat-event-list>
-      <app-chat-input></app-chat-input>
-    </ng-container>
+    @if (chat(); as chat) {
 
-    <ng-template #noChatActive> Aucun chat sélectionné </ng-template>
+    <app-chat-header [chat]="chat"></app-chat-header>
+    <app-chat-event-list [chat]="chat"> </app-chat-event-list>
+    <app-chat-input></app-chat-input>
+
+    } @else { Aucun chat sélectionné }
   `,
   styles: [
     `

@@ -6,27 +6,37 @@
 >
   <div class="day-header">
     <div class="week-number">
-      <span *ngIf="day.weekday === 1">
+      @if (day.weekday === 1) {
+<span>
         {{ day.weekNumber }}
       </span>
+}
     </div>
     <div class="day-number-container">
       <div class="day-number" [class.active]="day.hasSame(today, 'day')">
         {{ day.toFormat("d") }}
       </div>
-      <span *ngIf="day.day === 1">{{ day.toJSDate() | date : "LLL" }}</span>
+      @if (day.day === 1) {
+<span>{{ day.toJSDate() | date : "LLL" }}</span>
+}
     </div>
   </div>
 
   <div class="content">
-    <ng-container *ngIf="events()[day.toFormat('yyyy-MM-dd')] as dailyEvents">
-      <ng-container *ngFor="let timeRangeEvents of dailyEvents">
-        <app-calendar-time-range
-          *ngIf="timeRangeEvents.length"
+    @if (events()[day.toFormat('yyyy-MM-dd')]; as dailyEvents) {
+
+      @for (timeRangeEvents of dailyEvents; track timeRangeEvents) {
+  
+        @if (timeRangeEvents.length) {
+<app-calendar-time-range
+         
           [events]="timeRangeEvents"
         ></app-calendar-time-range>
-      </ng-container>
-    </ng-container>
+}
+      
+}
+    
+}
   </div>
 </div>
 

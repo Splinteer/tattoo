@@ -22,34 +22,36 @@ import { ChatEvent } from '../chat-event.type';
     ChatEventAttachmentsComponent,
   ],
   template: `
-    <ng-container *ngIf="projectSignal() as project">
-      <app-chat-event-message [isMine]="event.isSender">
-        Nouveau projet:
-        <ng-container *ngFor="let type of project.types; let isLast = last">
-          {{ 'BOOKING.types.' + type | translate }}{{ !isLast ? ',' : '' }}
-        </ng-container>
+    @if (projectSignal(); as project) {
 
-        <br />
-        Zone: {{ project.zone }}<br />
-        Taille: {{ project.widthCm }}x{{ project.heightCm }}<br />
-        Description:<br />
-        {{ project.additionalInformation }}
-      </app-chat-event-message>
+    <app-chat-event-message [isMine]="event.isSender">
+      Nouveau projet: @for (type of project.types; track type; let isLast =
+      $last) {
 
-      <app-chat-event-attachments
-        *ngIf="project.illustrations"
-        [attachments]="project.illustrations"
-        [isMine]="event.isSender"
-      >
-      </app-chat-event-attachments>
+      {{ 'BOOKING.types.' + type | translate }}{{ !isLast ? ',' : '' }}
 
-      <app-chat-event-attachments
-        *ngIf="project.locations"
-        [attachments]="project.locations"
-        [isMine]="event.isSender"
-      >
-      </app-chat-event-attachments>
-    </ng-container>
+      }
+
+      <br />
+      Zone: {{ project.zone }}<br />
+      Taille: {{ project.widthCm }}x{{ project.heightCm }}<br />
+      Description:<br />
+      {{ project.additionalInformation }}
+    </app-chat-event-message>
+
+    @if (project.illustrations) {
+    <app-chat-event-attachments
+      [attachments]="project.illustrations"
+      [isMine]="event.isSender"
+    >
+    </app-chat-event-attachments>
+    } @if (project.locations) {
+    <app-chat-event-attachments
+      [attachments]="project.locations"
+      [isMine]="event.isSender"
+    >
+    </app-chat-event-attachments>
+    } }
   `,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,

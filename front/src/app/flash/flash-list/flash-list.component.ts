@@ -103,8 +103,4 @@ export class FlashListComponent
       this.fetchMore.next(true);
     }
   }
-
-  trackByIdx(index: number, item: Flash): string {
-    return item.id;
-  }
 }

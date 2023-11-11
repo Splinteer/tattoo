@@ -1,8 +1,12 @@
 <div class="grid" infiniteScroll (scrolled)="onScroll()">
-  <h1 *ngIf="!shop" translate>GALLERY.LIST.title_shop</h1>
+  @if (!shop) {
+<h1 translate>GALLERY.LIST.title_shop</h1>
+}
+  @for (item of gallery$ | async; track item.id) {
   <app-gallery-item
     [gallery]="item"
-    *ngFor="let item of gallery$ | async; trackBy: trackByIdx"
+
   >
   </app-gallery-item>
+}
 </div>

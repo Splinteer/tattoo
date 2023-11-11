@@ -1,9 +1,10 @@
+@if (form) {
 <form
   class="grouped-form"
   [formGroup]="form"
   #ngForm="ngForm"
   (ngSubmit)="onSubmit()"
-  *ngIf="form"
+ 
   [@backInDown]
 >
   <div role="group" aria-labelledby="group-shop">
@@ -37,25 +38,29 @@
           }"
         ></app-url-input>
 
-        <div
-          class="error-group"
-          *ngIf="
+        @if (
             (ngForm.submitted || form.get('url')?.touched) &&
             form.get('url')?.errors?.['pattern']
-          "
+          ) {
+<div
+          class="error-group"
+         
           translate
         >
           FORM.VALIDATORS.url_invalid
         </div>
+}
       </div>
 
-      <div
+      @if (ngForm.submitted && form.invalid) {
+<div
         class="error-group"
-        *ngIf="ngForm.submitted && form.invalid"
+       
         translate
       >
         FORM.VALIDATORS.fill_required
       </div>
+}
     </div>
   </div>
 
@@ -66,16 +71,20 @@
     </div>
 
     <div class="input-group logo">
-      <div class="logo-preview" *ngIf="logoPreview$ | async as imgPreview">
+      @if (logoPreview$ | async; as imgPreview) {
+<div class="logo-preview">
         <img [src]="imgPreview" />
-        <button
+        @if (!shop) {
+<button
           type="button"
           (click)="form.get('logo')?.setValue([])"
-          *ngIf="!shop"
+         
         >
           <i class="fa-regular fa-times-circle"></i>
         </button>
+}
       </div>
+}
 
       <app-file-dropzone
         formControlName="logo"
@@ -84,7 +93,8 @@
     </div>
   </div>
 
-  <div role="group" aria-labelledby="group-description" *ngIf="shop">
+  @if (shop) {
+<div role="group" aria-labelledby="group-description">
     <div class="group-description">
       <label id="group-description" translate
         >SHOP.CREATE.description_title</label
@@ -107,6 +117,7 @@
       ></textarea>
     </div>
   </div>
+}
 
   <div role="group" aria-labelledby="group-conditions">
     <div class="group-description">
@@ -181,3 +192,4 @@
     </button>
   </div>
 </form>
+}

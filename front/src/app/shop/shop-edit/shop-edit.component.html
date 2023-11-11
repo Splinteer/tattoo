@@ -1,1 +1,3 @@
-<app-creation *ngIf="shop$ | async as shop" [shop]="shop"></app-creation>
+@if (shop$ | async; as shop) {
+<app-creation [shop]="shop"></app-creation>
+}

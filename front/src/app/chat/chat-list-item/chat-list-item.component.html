@@ -10,12 +10,16 @@
       {{ chat.contact_name }}
     </div>
     <div class="project-name">{{ chat.project_name }}</div>
-    <div class="last-message" *ngIf="chat.last_event">
+    @if (chat.last_event) {
+<div class="last-message">
       {{ chat.last_event }}
     </div>
+}
   </div>
   <div class="indicators">
-    <div *ngIf="!chat.is_read" class="unread-indicator"></div>
+    @if (!chat.is_read) {
+<div class="unread-indicator"></div>
+}
     <div class="last-update">
       {{ chat.last_update | timeAgo : "short" | async }}
     </div>

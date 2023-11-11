@@ -1,8 +1,11 @@
-<ng-container *ngIf="imagesPreview$ | async as imagesPreview">
-  <div class="preview-container" *ngIf="imagesPreview.length">
-    <div
+@if (imagesPreview$ | async; as imagesPreview) {
+
+  @if (imagesPreview.length) {
+<div class="preview-container">
+    @for (image of imagesPreview; track image; let imageIndex = $index) {
+  <div
       class="image-container"
-      *ngFor="let image of imagesPreview; let imageIndex = index"
+     
     >
       <img [src]="image" />
 
@@ -10,15 +13,22 @@
         <i class="fa-regular fa-times" (click)="removeImage(imageIndex)"></i>
       </button>
     </div>
+}
   </div>
+}
   <div class="preview-error-container">
-    <div class="error-group" *ngIf="fileSizeError" translate>
+    @if (fileSizeError) {
+<div class="error-group" translate>
       Fichier trop gros
     </div>
+}
 
-    <div class="error-group" *ngIf="fileTypeError" translate>Pas une image</div>
+    @if (fileTypeError) {
+<div class="error-group" translate>Pas une image</div>
+}
   </div>
-</ng-container>
+
+}
 <div class="input-container">
   <button class="media-btn" (click)="fileInput.click()">
     <i class="fa-solid fa-image"></i>

@@ -8,18 +8,20 @@ import {
 } from '@app/auth/credentials.service';
 import { Observable } from 'rxjs';
 import { CalendarViewComponent } from '@app/calendar/calendar-view/calendar-view.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
 
   template: `
-    <ng-container *ngIf="credentials$ | async as credentials">
-      <app-calendar-view
-        [shopUrl]="credentials.shop_url"
-        showToggle
-      ></app-calendar-view>
-    </ng-container>
+    @if (credentials$ | async; as credentials) {
+
+    <app-calendar-view
+      [shopUrl]="credentials.shop_url"
+      showToggle
+    ></app-calendar-view>
+
+    }
   `,
   styles: [
     `

@@ -1,5 +1,7 @@
-<div class="mobile-menu" *ngIf="credentials$ | async as credentials">
-  <ng-container *ngIf="credentials.shop_name">
+@if (credentials$ | async; as credentials) {
+<div class="mobile-menu">
+  @if (credentials.shop_name) {
+
     <a
       routerLink="/shop"
       routerLinkActive="active"
@@ -20,5 +22,7 @@
       <i class="fa-regular fa-message"></i>
       Messagerie
     </a>
-  </ng-container>
+  
+}
 </div>
+}

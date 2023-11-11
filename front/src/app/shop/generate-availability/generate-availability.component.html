@@ -15,14 +15,9 @@
       </small>
     </div>
 
-    <ng-template #success>
-      <div class="input-group">
-        C'est bon du {{ form.get("start_day")?.value }} au
-        {{ form.get("end_day")?.value }}
-      </div>
-    </ng-template>
-
-    <div class="input-group" *ngIf="!submitted(); else success">
+    
+    @if (!submitted()) {
+<div class="input-group">
       <div class="input-group inline">
         <label translate>AVAILABILITY.from_day</label>
         <input
@@ -54,32 +49,44 @@
         />
       </div>
 
-      <div
-        class="error-group"
-        *ngIf="
+      @if (
           (ngForm.submitted || form.get('start_day')?.touched) &&
           form.get('start_day')?.errors
-        "
+        ) {
+<div
+        class="error-group"
+       
         translate
       >
         AVAILABILITY.GENERATE.start_day_error
       </div>
+}
 
-      <div
-        class="error-group"
-        *ngIf="
+      @if (
             (ngForm.submitted ||
             form.get('end_day')?.touched) &&
               form.get('end_day')?.errors?.['dateRange']
-        "
+        ) {
+<div
+        class="error-group"
+       
         translate
       >
         AVAILABILITY.GENERATE.end_day_error
       </div>
+}
 
       <button class="button fit" type="submit" translate>
         AVAILABILITY.GENERATE.generate
       </button>
     </div>
+} @else {
+
+      <div class="input-group">
+        C'est bon du {{ form.get("start_day")?.value }} au
+        {{ form.get("end_day")?.value }}
+      </div>
+    
+}
   </div>
 </form>

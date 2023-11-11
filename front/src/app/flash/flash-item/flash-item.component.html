@@ -3,8 +3,9 @@
   [class.clickable]="clickable"
   (click)="clickable && openModal()"
 >
-  <div
-    *ngIf="!hideAvailability"
+  @if (!hideAvailability) {
+<div
+   
     class="availability"
     [ngClass]="flash.available ? 'available' : 'not_available'"
   >
@@ -16,6 +17,7 @@
       ) | translate
     }}
   </div>
+}
   <img
     [src]="publicBucket + (flash.image_url || flash.imageUrl) + '?v=' + (flash.image_version || flash.imageVersion)"
     [alt]="flash.name"

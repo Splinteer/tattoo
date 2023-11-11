@@ -1,11 +1,15 @@
-<ng-container *ngIf="form$ | async as form" [formGroup]="form">
-  <app-flash-selection
+@if (form$ | async; as form) {
+<ng-container [formGroup]="form">
+  @if (shop$ | async; as shop) {
+<app-flash-selection
     formControlName="flashs"
-    *ngIf="shop$ | async as shop"
+   
     [shop]="shop.url"
     [invalid]="
       (step.submitted || form.get('flashs')?.touched) &&
       !!form.get('flashs')?.errors
     "
   ></app-flash-selection>
+}
 </ng-container>
+}

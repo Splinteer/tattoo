@@ -6,8 +6,8 @@ type ControlValue<T> = T | T[] | undefined;
 @Component({
   selector: 'app-icon-select',
   template: `
+    @for (item of items; track item.icon) {
     <button
-      *ngFor="let item of items"
       type="button"
       class="input-container"
       (click)="toggle(item)"
@@ -18,6 +18,7 @@ type ControlValue<T> = T | T[] | undefined;
       <i [ngClass]="item.icon"></i>
       {{ item.text }}
     </button>
+    }
   `,
   styleUrls: ['./icon-select.component.scss'],
   providers: [
@@ -43,12 +44,11 @@ export class IconSelectComponent<T> implements ControlValueAccessor {
   public value?: ControlValue<T>;
 
   public toggle(toggledItem: (typeof IconSelectComponent.prototype.items)[0]) {
-    toggledItem.active = !!!toggledItem.active;
-    if (this.multi) {
-    } else {
+    toggledItem.active = !toggledItem.active;
+    if (!this.multi) {
       this.items.forEach((item) => {
         item.active =
-          item.value === toggledItem.value ? !!!toggledItem.active : false;
+          item.value === toggledItem.value ? !toggledItem.active : false;
       });
     }
 
@@ -67,7 +67,7 @@ export class IconSelectComponent<T> implements ControlValueAccessor {
 
   public onChange: (value: ControlValue<T>) => void = () => {};
 
-  public onTouched: Function = () => {};
+  public onTouched: () => unknown = () => {};
 
   private touched = false;
 
@@ -84,12 +84,12 @@ export class IconSelectComponent<T> implements ControlValueAccessor {
   }
 
   public registerOnChange(
-    fn: typeof IconSelectComponent.prototype.onChange
+    fn: typeof IconSelectComponent.prototype.onChange,
   ): void {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: Function): void {
+  public registerOnTouched(fn: () => unknown): void {
     this.onTouched = fn;
   }
 

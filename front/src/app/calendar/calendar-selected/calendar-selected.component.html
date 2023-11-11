@@ -1,6 +1,8 @@
-<ng-container *ngFor="let item of selection$ | async">
+@for (item of selection$ | async; track item) {
+  
   <app-calendar-item
     [event]="loadedEventsByIdSignal()[item]"
     date
   ></app-calendar-item>
-</ng-container>
+
+}

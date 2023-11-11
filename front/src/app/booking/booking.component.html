@@ -1,5 +1,6 @@
 <app-form-stepper #stepper>
-  <ng-template #headers *ngIf="shop$ | async as shop">
+  @if (shop$ | async; as shop) {
+<ng-template #headers>
     <div class="form-header">
       <a class="avatar" [routerLink]="'/shop/' + shop.url">
         <app-avatar [customer]="shop"></app-avatar>
@@ -17,22 +18,29 @@
       </a>
     </div>
   </ng-template>
+}
 
-  <ng-container *ngIf="steps$ | async as steps">
-    <ng-container *ngFor="let step of steps">
-      <cdk-step
+  @if (steps$ | async; as steps) {
+
+    @for (step of steps; track step.title) {
+
+      @if (step.show === undefined || step.show()) {
+<cdk-step
         [aria-label]="step.title | translate"
         [completed]="step.completed()"
         [stepControl]="step.stepControl"
-        *ngIf="step.show === undefined || step.show()"
+
       >
         <ng-container
           *ngComponentOutlet="step.component; inputs: { step }"
         ></ng-container>
       </cdk-step>
-    </ng-container>
+}
 
-    <ng-template #submit *ngIf="form$ | async as form">
+}
+
+    @if (form$ | async; as form) {
+<ng-template #submit>
       <form
         [formGroup]="form"
         #ngForm="ngForm"
@@ -49,5 +57,7 @@
         </button>
       </form>
     </ng-template>
-  </ng-container>
+}
+
+}
 </app-form-stepper>

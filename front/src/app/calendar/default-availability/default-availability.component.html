@@ -1,51 +1,58 @@
-<form *ngIf="form$ | async as form" [formGroup]="form" #ngForm="ngForm">
+@if (form$ | async; as form) {
+<form [formGroup]="form" #ngForm="ngForm">
+  @for (
+      dayAvailability of defaultAvailabilities(form).controls; track 
+      dayAvailability; let dayRangeIndex = $index) {
   <div
     class="days-range"
     formArrayName="defaultAvailabilities"
-    *ngFor="
-      let dayAvailability of defaultAvailabilities(form).controls;
-      let dayRangeIndex = index
-    "
+   
   >
     <ng-container [formGroupName]="dayRangeIndex">
       <div class="range">
         <label translate>AVAILABILITY.from_day</label>
         <select formControlName="startDay">
-          <option
-            *ngFor="let day of weekdays; let dayIndex = index"
+          @for (day of weekdays; track day; let dayIndex = $index) {
+  <option
+           
             [ngValue]="dayIndex + 1"
             translate
           >
             COMMON.DAY.{{ day }}
           </option>
+}
         </select>
         <label class="lowercase" translate>AVAILABILITY.to_day</label>
         <select formControlName="endDay">
-          <option
-            *ngFor="let day of weekdays; let dayIndex = index"
+          @for (day of weekdays; track day; let dayIndex = $index) {
+  <option
+           
             [ngValue]="dayIndex + 1"
             translate
           >
             COMMON.DAY.{{ day }}
           </option>
+}
         </select>
         <div class="remove-button">
-          <button
-            *ngIf="dayRangeIndex > 0"
+          @if (dayRangeIndex > 0) {
+<button
+           
             (click)="removeDayRange(form, dayRangeIndex)"
           >
             <i class="fa-regular fa-times"></i>
           </button>
+}
         </div>
       </div>
 
       <div class="hour-ranges" formArrayName="hourRanges">
-        <div
+        @for (
+            hourControl of getHourRangesControls(dayAvailability); track 
+            hourControl; let hourRangeIndex = $index) {
+  <div
           class="range"
-          *ngFor="
-            let hourControl of getHourRangesControls(dayAvailability);
-            let hourRangeIndex = index
-          "
+         
           [formGroupName]="hourRangeIndex"
         >
           <label translate>AVAILABILITY.from_hour</label>
@@ -72,14 +79,17 @@
             "
           />
           <div class="remove-button">
-            <button
-              *ngIf="hourRangeIndex > 0"
+            @if (hourRangeIndex > 0) {
+<button
+             
               (click)="removeHourRange(dayAvailability, hourRangeIndex)"
             >
               <i class="fa-regular fa-times"></i>
             </button>
+}
           </div>
         </div>
+}
       </div>
       <div class="range">
         <button
@@ -95,6 +105,7 @@
       </div>
     </ng-container>
   </div>
+}
   <button
     type="button"
     class="button button-outline add-range"
@@ -105,3 +116,4 @@
     COMMON.add
   </button>
 </form>
+}

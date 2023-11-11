@@ -3,11 +3,9 @@ import {
   Component,
   Input,
   OnDestroy,
-  OnInit,
   booleanAttribute,
   forwardRef,
   inject,
-  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarMonthlyComponent } from '../calendar-monthly/calendar-monthly.component';
@@ -42,7 +40,8 @@ type ControlValue = string[];
     ReactiveFormsModule,
   ],
   template: `
-    <div *ngIf="showToggle">
+    @if (showToggle) {
+    <div>
       <app-toggle-group [(ngModel)]="view">
         <app-toggle-group-item value="week">{{
           'CALENDAR.UNIT.week' | translate
@@ -52,18 +51,20 @@ type ControlValue = string[];
         }}</app-toggle-group-item>
       </app-toggle-group>
     </div>
+    }
 
     <div class="view">
+      @if (view === 'month') {
       <app-calendar-monthly
         [shopUrl]="shopUrl"
         [current]="minimumDate"
-        *ngIf="view === 'month'"
       ></app-calendar-monthly>
+      } @if (view === 'week') {
       <app-calendar-weekly
         [shopUrl]="shopUrl"
         [current]="minimumDate"
-        *ngIf="view === 'week'"
       ></app-calendar-weekly>
+      }
     </div>
   `,
   styleUrls: ['./calendar-view.component.scss'],
@@ -96,7 +97,7 @@ export class CalendarViewComponent implements ControlValueAccessor, OnDestroy {
     tap((value) => {
       this.writeValue(value, false);
       this.onChange(value);
-    })
+    }),
   );
 
   initSelection() {
@@ -104,7 +105,7 @@ export class CalendarViewComponent implements ControlValueAccessor, OnDestroy {
       this.#isUsedInForm = true;
       this.calendarService.selectShop(this.shopUrl);
       this.calendarSelection.setEditMode(
-        this.proposal ? 'proposal' : 'selection'
+        this.proposal ? 'proposal' : 'selection',
       );
       this.calendarService
         .getMinimumAvailabilityDate(this.shopUrl)
@@ -131,7 +132,7 @@ export class CalendarViewComponent implements ControlValueAccessor, OnDestroy {
 
   public onChange: (value: ControlValue) => void = () => {};
 
-  public onTouched: Function = () => {};
+  public onTouched: () => unknown = () => {};
 
   private touched = false;
 
@@ -144,14 +145,14 @@ export class CalendarViewComponent implements ControlValueAccessor, OnDestroy {
   }
 
   public registerOnChange(
-    fn: typeof CalendarViewComponent.prototype.onChange
+    fn: typeof CalendarViewComponent.prototype.onChange,
   ): void {
     this.initSelection();
     this.onChange = fn;
   }
 
   public registerOnTouched(
-    fn: typeof CalendarViewComponent.prototype.onTouched
+    fn: typeof CalendarViewComponent.prototype.onTouched,
   ): void {
     this.initSelection();
     this.onTouched = fn;

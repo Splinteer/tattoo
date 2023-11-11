@@ -13,20 +13,24 @@
         <div>
           <h1>{{ flash.name }}</h1>
 
-          <div class="price" *ngIf="flash.price_range_start">
+          @if (flash.price_range_start) {
+<div class="price">
             {{ flash.price_range_start | currency }}
-            <ng-container *ngIf="flash.price_range_end">
+            @if (flash.price_range_end) {
+
               - {{ flash.price_range_end | currency }}
-            </ng-container>
+            
+}
           </div>
+}
         </div>
-        <ng-container *ngIf="{ credentials: credentials$ | async } as vm">
-          <span
+        @if ({ credentials: credentials$ | async }; as vm) {
+
+          @if (
+              vm.credentials && vm.credentials.shop_id === flash.shop_id) {
+<span
             class="button-group"
-            *ngIf="
-              vm.credentials && vm.credentials.shop_id === flash.shop_id;
-              else bookButton
-            "
+           
           >
             <a
               [routerLink]="'shop/gallery/flash/' + flash.id"
@@ -45,10 +49,11 @@
               <i class="fa-regular fa-trash"></i>
             </button>
           </span>
-        </ng-container>
-        <ng-template #bookButton>
-          <a
-            *ngIf="flash.available"
+} @else {
+
+          @if (flash.available) {
+<a
+           
             (click)="dialog.close()"
             [routerLink]="['book', flash.shop_url]"
             [queryParams]="{ flash: flash.id }"
@@ -59,11 +64,17 @@
             <i class="fa-regular fa-calendar button-icon-left"></i>
             FLASH.book
           </a>
-        </ng-template>
-      </div>
-      <p class="break-lines" *ngIf="flash.description">
+}
+        
+}
+        
+}
+              </div>
+      @if (flash.description) {
+<p class="break-lines">
         {{ flash.description }}
       </p>
+}
     </div>
   </div>
 </div>

@@ -53,11 +53,11 @@ import { ProjectService } from '@app/project/project.service';
       </p>
     </form>
 
+    @if (form) {
     <form
       class="grouped-form no-border"
       [formGroup]="form"
       #ngForm="ngForm"
-      *ngIf="form"
       (ngSubmit)="submit()"
     >
       <ng-container formArrayName="proposals">
@@ -67,77 +67,74 @@ import { ProjectService } from '@app/project/project.service';
           </div>
           <!-- @for (proposal of proposalsFormArray().controls; let proposalIndex = $index; let isLast = $last) { -->
 
-          <ng-container
-            *ngFor="
-              let proposal of proposalsFormArray().controls;
-              let proposalIndex = index;
-              let isLast = last
-            "
-          >
-            <ng-container [formGroupName]="proposalIndex">
-              <div class="input-group inline">
-                <label translate>AVAILABILITY.the_day</label>
-                <input
-                  formControlName="date"
-                  type="date"
-                  id="date"
-                  name="date"
-                  [min]="today.toISODate()"
-                  [placeholder]="'AVAILABILITY.the_day' | translate | lowercase"
-                  [ngClass]="{
-                    'is-invalid':
-                      (ngForm.submitted || form.get('date')?.touched) &&
-                      form.get('date')?.errors
-                  }"
-                />
-              </div>
-              <div
-                class="input-group inline"
-                *ngIf="!form.get('allDay')?.getRawValue()"
+          @for ( proposal of proposalsFormArray().controls; track proposal; let
+          proposalIndex = $index; let isLast = $last) {
+
+          <ng-container [formGroupName]="proposalIndex">
+            <div class="input-group inline">
+              <label translate>AVAILABILITY.the_day</label>
+              <input
+                formControlName="date"
+                type="date"
+                id="date"
+                name="date"
+                [min]="today.toISODate()"
+                [placeholder]="'AVAILABILITY.the_day' | translate | lowercase"
+                [ngClass]="{
+                  'is-invalid':
+                    (ngForm.submitted || form.get('date')?.touched) &&
+                    form.get('date')?.errors
+                }"
+              />
+            </div>
+            @if (!form.get('allDay')?.getRawValue()) {
+            <div class="input-group inline">
+              <label translate>AVAILABILITY.from_hour</label>
+              <input
+                type="time"
+                formControlName="startTime"
+                [class.is-invalid]="
+                  (ngForm.submitted || form.get('startTime')?.touched) &&
+                  form.get('startTime')?.errors
+                "
+              />
+              <label class="lowercase" translate>AVAILABILITY.to_hour</label>
+              <input
+                type="time"
+                formControlName="endTime"
+                [class.is-invalid]="
+                  (ngForm.submitted || form.get('startTime')?.touched) &&
+                  form.get('startTime')?.errors
+                "
+              />
+            </div>
+            }
+            <div class="input-group inline button-group">
+              @if (showDeleteButton()) {
+              <button
+                type="button"
+                class="link-button"
+                (click)="proposalsFormArray().removeAt(proposalIndex)"
+                translate
               >
-                <label translate>AVAILABILITY.from_hour</label>
-                <input
-                  type="time"
-                  formControlName="startTime"
-                  [class.is-invalid]="
-                    (ngForm.submitted || form.get('startTime')?.touched) &&
-                    form.get('startTime')?.errors
-                  "
-                />
-                <label class="lowercase" translate>AVAILABILITY.to_hour</label>
-                <input
-                  type="time"
-                  formControlName="endTime"
-                  [class.is-invalid]="
-                    (ngForm.submitted || form.get('startTime')?.touched) &&
-                    form.get('startTime')?.errors
-                  "
-                />
-              </div>
-              <div class="input-group inline button-group">
-                <button
-                  *ngIf="showDeleteButton()"
-                  type="button"
-                  class="link-button"
-                  (click)="proposalsFormArray().removeAt(proposalIndex)"
-                  translate
-                >
-                  <i class="fa-regular fa-times"></i>
-                  COMMON.delete
-                </button>
-                <button
-                  *ngIf="isLast"
-                  type="button"
-                  class="link-button"
-                  (click)="proposalsFormArray().push(getProposalFormGroup())"
-                  translate
-                >
-                  <i class="fa-regular fa-plus"></i>
-                  COMMON.add
-                </button>
-              </div>
-            </ng-container>
+                <i class="fa-regular fa-times"></i>
+                COMMON.delete
+              </button>
+              } @if (isLast) {
+              <button
+                type="button"
+                class="link-button"
+                (click)="proposalsFormArray().push(getProposalFormGroup())"
+                translate
+              >
+                <i class="fa-regular fa-plus"></i>
+                COMMON.add
+              </button>
+              }
+            </div>
           </ng-container>
+
+          }
           <!-- } -->
         </div>
         <div class="input-group inline button-group">
@@ -155,6 +152,7 @@ import { ProjectService } from '@app/project/project.service';
         </div>
       </ng-container>
     </form>
+    }
   `,
   styles: [
     `

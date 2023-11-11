@@ -9,7 +9,8 @@ import { AvatarComponent } from '@app/shared/avatar/avatar.component';
   standalone: true,
   imports: [CommonModule, AvatarComponent, RouterModule],
   template: `
-    <div class="header" *ngIf="credentials$ | async as credentials">
+    @if (credentials$ | async; as credentials) {
+    <div class="header">
       <a routerLink="/shop">
         <app-avatar [customer]="credentials"></app-avatar>
       </a>
@@ -36,6 +37,7 @@ import { AvatarComponent } from '@app/shared/avatar/avatar.component';
         Modifier la boutique
       </a>
     </div>
+    }
   `,
   styleUrls: ['./shop-header.component.scss'],
 })

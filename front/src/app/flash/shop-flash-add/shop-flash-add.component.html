@@ -1,9 +1,10 @@
+@if (form) {
 <form
   class="inline-form"
   [formGroup]="form"
   #ngForm="ngForm"
   (ngSubmit)="onSubmit()"
-  *ngIf="form"
+
   [@backInDown]
 >
   <h1 translate>
@@ -58,39 +59,49 @@
         "
       ></app-file-dropzone>
 
-      <small
-        class="error-group"
-        translate
-        *ngIf="
+      @if (
           (ngForm.submitted || form.get('image')?.touched) &&
           form.get('image')?.errors
-        "
+        ) {
+<small
+        class="error-group"
+        translate
+
         >FLASH.CREATE.image_required</small
       >
-      <small class="text-muted" *ngIf="!!!flash" translate
+}
+      @if (!!!flash) {
+<small class="text-muted" translate
         >FLASH.CREATE.multiple_images</small
       >
+}
     </div>
 
-    <div
+    @if (imagesPreview$ | async; as imagesPreview) {
+<div
       class="images-container"
-      *ngIf="imagesPreview$ | async as imagesPreview"
+
     >
-      <div
+      @for (image of imagesPreview; track image; let imageIndex = $index) {
+  <div
         class="image-container"
-        *ngFor="let image of imagesPreview; let imageIndex = index"
+
       >
         <img [src]="image" />
-        <button
+        @if (!flash) {
+<button
           type="button"
           class="button button-outline"
           (click)="removeImage(imageIndex)"
-          *ngIf="!flash"
+
         >
           <i class="fa-regular fa-times"></i>
         </button>
+}
       </div>
+}
     </div>
+}
   </div>
 
   <div role="group" aria-labelledby="group-price">
@@ -120,9 +131,11 @@
           }"
         ></app-input-number>
       </div>
-      <small class="error-group" translate *ngIf="form?.errors?.['greaterThan']"
+      @if (form.errors?.['greaterThan']) {
+<small class="error-group" translate
         >FLASH.CREATE.price_range_error</small
       >
+}
       <small translate>FLASH.CREATE.price_range_tips</small>
     </div>
   </div>
@@ -157,3 +170,4 @@
     </button>
   </div>
 </form>
+}

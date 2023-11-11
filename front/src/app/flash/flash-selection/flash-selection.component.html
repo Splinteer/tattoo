@@ -5,27 +5,33 @@
   (scrolled)="onScroll()"
   [infiniteScrollContainer]="selection"
 >
+  @for (flash of flashs$ | async; track flash.id) {
   <button
-    *ngFor="let flash of flashs$ | async; trackBy: trackByIdx"
+
     (click)="toggle(flash)"
     [class.selected]="flash.selected"
   >
     <app-flash-item [clickable]="false" [flash]="flash" hideAvailability>
     </app-flash-item>
   </button>
+}
 </section>
 
-<section *ngIf="value?.length">
+@if (value?.length) {
+<section>
   <h3>Sélectionnés:</h3>
 
   <div class="grid">
-    <button
+    @for (flash of value; track flash.id) {
+  <button
       class="selected"
-      *ngFor="let flash of value"
+
       (click)="toggle(flash)"
     >
       <app-flash-item [clickable]="false" [flash]="flash" hideAvailability>
       </app-flash-item>
     </button>
+}
   </div>
 </section>
+}

@@ -14,9 +14,11 @@ interface ConfirmDialogData {
   selector: 'app-confirm-dialog',
   template: `
     <h2 translate>{{ data.title ?? 'COMMON.CONFIRM.title' }}</h2>
-    <p class="text-muted" *ngIf="data.description" translate>
+    @if (data.description) {
+    <p class="text-muted" translate>
       {{ data.description }}
     </p>
+    }
     <div class="button-group">
       <button
         class="button button-outline"
@@ -32,10 +34,9 @@ interface ConfirmDialogData {
         translate
         (click)="dialogRef.close(true)"
       >
-        <i
-          class="fa-regular fa-trash button-icon-left"
-          *ngIf="data?.isDelete"
-        ></i>
+        @if (data.isDelete) {
+        <i class="fa-regular fa-trash button-icon-left"></i>
+        }
         {{ data.confirm ?? 'COMMON.CONFIRM.confirm' }}
       </button>
     </div>

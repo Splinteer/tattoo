@@ -17,20 +17,24 @@
 </nav>
 
 <div class="calendar weekdays">
+  @for (day of days.slice(0, 7); track day; let dayIndex = $index) {
   <div
     class="weekday"
-    *ngFor="let day of days.slice(0, 7); let dayIndex = index"
+   
   >
     {{ day.toJSDate() | date : "EE" }}
   </div>
+}
 </div>
 <div class="calendar">
+  @for (day of days; track day; let dayIndex = $index) {
   <app-calendar-day
-    *ngFor="let day of days; let dayIndex = index"
+   
     [day]="day"
     [today]="today"
     [class.not-active-month]="current.month !== day.month"
     [class.past]="day < today"
   >
   </app-calendar-day>
+}
 </div>

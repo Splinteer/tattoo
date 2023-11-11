@@ -14,10 +14,12 @@
         <div>
           <h1>{{ gallery.name }}</h1>
         </div>
-        <ng-container *ngIf="{ credentials: credentials$ | async } as vm">
-          <span
+        @if ({ credentials: credentials$ | async }; as vm) {
+
+          @if (vm.credentials && vm.credentials.shop_id === gallery.shop_id) {
+<span
             class="button-group"
-            *ngIf="vm.credentials && vm.credentials.shop_id === gallery.shop_id"
+           
           >
             <a
               [routerLink]="'shop/gallery/' + gallery.id"
@@ -36,11 +38,15 @@
               <i class="fa-regular fa-trash"></i>
             </button>
           </span>
-        </ng-container>
+}
+        
+}
       </div>
-      <p class="break-lines" *ngIf="gallery.description">
+      @if (gallery.description) {
+<p class="break-lines">
         {{ gallery.description }}
       </p>
+}
     </div>
   </div>
 </div>

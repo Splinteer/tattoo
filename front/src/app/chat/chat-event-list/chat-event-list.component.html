@@ -4,38 +4,43 @@
   reverse
 >
   <app-chat-shortcuts></app-chat-shortcuts>
-  <ng-container *ngIf="chat.events() as events">
-    <div
-      *ngFor="
-        let event of chat.events();
-        let index = index;
-        let isFirst = first;
-        let isLast = last
-      "
+  @if (chat.events(); as events) {
+
+    @for (
+        event of chat.events(); track
+        event.id; let index = $index; let isFirst = $first; let isLast = $last) {
+  <div
+
     >
-      <div
-        class="day"
-        *ngIf="
+      @if (
           isLast ||
           (event.creationDate | date : 'mediumDate') !==
             (events[index + 1].creationDate | date : 'mediumDate')
-        "
+        ) {
+<div
+        class="day"
+
       >
         {{ event.creationDate | date : "mediumDate" }}
       </div>
+}
       <app-chat-event [event]="event"></app-chat-event>
-      <div
-        class="read-indicator"
-        *ngIf="
+      @if (
           chat.shop_id === credentials()?.shop_id &&
           event.isSender &&
           event.isRead &&
           (isFirst || !events[index - 1].isRead)
-        "
+        ) {
+<div
+        class="read-indicator"
+
         translate
       >
         CHAT.read
       </div>
+}
     </div>
-  </ng-container>
+}
+
+}
 </app-infinite-scroll>

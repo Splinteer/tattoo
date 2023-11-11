@@ -7,4 +7,6 @@
 >
   <ng-content></ng-content>
 </div>
-<span class="loading" *ngIf="!reverse && !fullyLoaded && loading"></span>
+@if (!reverse && !fullyLoaded && loading) {
+<span class="loading"></span>
+}

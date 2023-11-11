@@ -1,15 +1,19 @@
-<form *ngIf="form$ | async as form" [formGroup]="form">
+@if (form$ | async; as form) {
+<form [formGroup]="form">
   <ng-container formGroupName="availability">
     <div class="input-group">
       <h3 translate>BOOKING.availability.availabilities</h3>
-      <app-calendar-view
+      @if (shop$ | async; as shop) {
+<app-calendar-view
         [class.error]="(step.submitted || form.get('availability')?.touched) && form.get('availability')?.errors?.['noControlsSet']"
-        *ngIf="shop$ | async as shop"
+       
         formControlName="availabilities"
         view="month"
         [shopUrl]="shop.url"
       ></app-calendar-view>
-      <div *ngIf="form.get(['availability', 'availabilities'])?.value.length">
+}
+      @if (form.get(['availability', 'availabilities'])?.value.length) {
+<div>
         <h4
           translate
           [translateParams]="{
@@ -20,6 +24,7 @@
         </h4>
         <app-calendar-selected> </app-calendar-selected>
       </div>
+}
     </div>
 
     <div class="input-group">
@@ -37,15 +42,18 @@
         }"
       ></textarea>
 
-      <div
-        class="error-group"
-        *ngIf="
+      @if (
         (step.submitted || form.get('availability')?.touched) && form.get('availability')?.errors?.['noControlsSet']
-        "
+        ) {
+<div
+        class="error-group"
+       
         translate
       >
         BOOKING.availability.noControlsSet
       </div>
+}
     </div>
   </ng-container>
 </form>
+}

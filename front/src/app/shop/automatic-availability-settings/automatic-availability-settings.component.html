@@ -19,10 +19,11 @@
     </div>
   </div>
 
-  <div
+  @if (form().get('auto_generate_availability')?.value) {
+<div
     role="group"
     aria-labelledby="group-repeat-interval"
-    *ngIf="form().get('auto_generate_availability')?.value"
+   
     [@slideDown]
   >
     <div class="group-description">
@@ -73,6 +74,7 @@
       </select>
     </div>
   </div>
+}
 
   <div role="group" aria-labelledby="group-min-appointment_time">
     <div class="group-description">
