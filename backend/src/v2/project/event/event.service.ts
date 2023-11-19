@@ -94,7 +94,7 @@ export class EventService {
         "media.event_id = chat_event.id AND chat_event.type = 'media'",
       )
       .leftJoinAndSelect(
-        'appointment',
+        'chat_event_appointment_new',
         'appointment_new',
         "appointment_new.event_id = chat_event.id AND chat_event.type = 'appointment_new'",
       );
@@ -123,7 +123,7 @@ export class EventService {
         "CASE WHEN chat_event.type = 'message' THEN message.content ELSE null END as content",
         "CASE WHEN chat_event.type = 'media' THEN ARRAY_AGG(media.url) ELSE null END as urls",
         `CASE WHEN chat_event.type = 'appointment_new'
-          THEN COALESCE(ARRAY_AGG(appointment_new.id) FILTER (WHERE appointment_new.id IS NOT NULL), ARRAY[]::UUID[])
+          THEN COALESCE(ARRAY_AGG(appointment_new.appointment_id) FILTER (WHERE appointment_new.appointment_id IS NOT NULL), ARRAY[]::UUID[])
           ELSE null
         END as appointments`,
       ])

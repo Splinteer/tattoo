@@ -21,7 +21,10 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/v1/auth/auth.guard';
 import { ProjectGuard } from '../project.guard';
-import { AppointmentService } from 'src/v2/appointment/appointment.service';
+import {
+  AppointmentService,
+  CalendarEvent,
+} from 'src/v2/appointment/appointment.service';
 import { AppointmentsProposalDto } from './dto/appointments-proposal.dto';
 import { GuardRole } from '@app/common/decorators/guard-role.decorator';
 import { ProjectRole } from '../project.interface';
@@ -129,7 +132,7 @@ export class ProjectAppointmentController {
 
   @ApiOkResponse({ description: 'Returns all project appointments' })
   @Get()
-  getAll(@Param('projectId') projectId: string) {
+  getAll(@Param('projectId') projectId: string): Promise<CalendarEvent[]> {
     return this.appointmentService.getCalendarEventsByProject(projectId);
   }
 

@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { ChatSelectionService } from './chatV2/chat-selection.service';
+import { DetailsPanelService } from './chatV2/details-panel.service';
+import { ConversationEventsService } from './chatV2/conversation-events.service';
+import { ConversationService } from './chatV2/conversation.service';
 
 const routes: Routes = [
   {
@@ -27,13 +31,21 @@ const routes: Routes = [
   },
   {
     path: 'chat',
+    providers: [
+      ChatSelectionService,
+      ConversationService,
+      ConversationEventsService,
+      DetailsPanelService,
+    ],
     loadComponent: () =>
-      import('./chat/chat.component').then((mod) => mod.ChatComponent),
+      import('./chatV2/chat/chat.component').then((mod) => mod.ChatComponent),
     children: [
       {
         path: ':id/:details',
         loadComponent: () =>
-          import('./chat/chat.component').then((mod) => mod.ChatComponent),
+          import('./chatV2/chat/chat.component').then(
+            (mod) => mod.ChatComponent,
+          ),
       },
     ],
   },

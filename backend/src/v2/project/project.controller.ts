@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   Get,
   MessageEvent,
+  Param,
   Patch,
   Query,
   Req,
@@ -58,12 +59,18 @@ export class ProjectController {
   }
 
   @ApiOkResponse({ description: 'Returns all project conversations' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
   @Get('shops/:shopId')
   getAllByShop(
+    @Param('shopId') shopId: string,
     @Credentials()
     credentials: ICredentials,
     @Query('date') date: string,
   ) {
+    if (credentials.shop_id !== shopId) {
+      throw new ForbiddenException();
+    }
+
     return this.projectService.getAllByShop(credentials.shop_id, date);
   }
 

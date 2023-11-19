@@ -69,7 +69,22 @@
   },
 
   "CHAT": {
-    "read": "Lu"
+    "read": "Lu",
+    "ACTIONS": {
+      "appointment_proposal": "Proposer un rendez-vous",
+      "appointment_review": "Noter l'artiste",
+      "appointment_customer_review": "Noter le client"
+    },
+    "INPUT": {
+      "file_size_error": "Le fichier est trop volumineux",
+      "file_type_error": "Le fichier n'est une image valide"
+    },
+    "EVENTS": {
+      "APPOINTMENT_NEW": {
+        "accept": "Accepter",
+        "reject": "{count, plural, one{Rejecter} other{Rejeter tout}}"
+      }
+    }
   },
 
   "AVAILABILITY": {

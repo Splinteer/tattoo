@@ -9,21 +9,22 @@ import { ChatService } from '../chat.service';
   standalone: true,
   imports: [CommonModule, AvatarComponent],
   template: `
-    @if ({ user: credentials(), activeChatList: activeChatList() }; as vm) { @if
-    (vm.user && vm.user.shop_id ) {
-    <button
-      (click)="activeChatList.set(vm.user.shop_id)"
-      [class.selected]="vm.activeChatList === vm.user.shop_id"
-    >
-      <app-avatar [customer]="vm.user"></app-avatar>
-    </button>
-    <button
-      (click)="activeChatList.set('personnal')"
-      [class.selected]="vm.activeChatList !== vm.user.shop_id"
-    >
-      <app-avatar [customer]="vm.user" ignoreShop></app-avatar>
-    </button>
-    } }
+    @if ({ user: credentials(), activeChatList: activeChatList() }; as vm) {
+      @if (vm.user && vm.user.shop_id) {
+        <button
+          (click)="activeChatList.set(vm.user.shop_id)"
+          [class.selected]="vm.activeChatList === vm.user.shop_id"
+        >
+          <app-avatar [customer]="vm.user"></app-avatar>
+        </button>
+        <button
+          (click)="activeChatList.set('personal')"
+          [class.selected]="vm.activeChatList !== vm.user.shop_id"
+        >
+          <app-avatar [customer]="vm.user" ignoreShop></app-avatar>
+        </button>
+      }
+    }
   `,
   styles: [
     `

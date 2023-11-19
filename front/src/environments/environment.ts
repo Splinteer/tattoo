@@ -6,6 +6,8 @@ export const environment = {
   production: false,
   serverUrl: 'http://localhost:3000',
   public_bucket: 'http://storage.googleapis.com/tattoo-public/',
+  conversationsQueryLimit: 10,
+  messagesQueryLimit: 10,
 };
 
 /*
