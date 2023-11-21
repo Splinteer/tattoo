@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, fromEvent, of } from 'rxjs';
-import { map, share, shareReplay, switchMap } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { Observable, forkJoin, of } from 'rxjs';
+import { share, switchMap } from 'rxjs/operators';
 import { Dialog } from '@angular/cdk/dialog';
 import { ImagePreviewDialogComponent } from './image-preview-dialog/image-preview-dialog.component';
 
@@ -11,7 +10,7 @@ import { ImagePreviewDialogComponent } from './image-preview-dialog/image-previe
 export class ImagePreviewService {
   private readonly dialog = inject(Dialog);
 
-  getImagesPreviews(observable: Observable<File[]>) {
+  getImagesPreviews(observable: Observable<File[]>): Observable<string[]> {
     return observable.pipe(
       switchMap((files) => {
         if (files.length === 0) {
@@ -38,7 +37,7 @@ export class ImagePreviewService {
 
         return forkJoin(fileReaderObservables);
       }),
-      share()
+      share(),
     );
   }
 
