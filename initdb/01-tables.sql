@@ -231,6 +231,15 @@ CREATE TABLE
     );
 
 CREATE TABLE
+    chat_event_appointment_new(
+        id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+        event_id uuid NOT NULL,
+        appointment_id uuid NOT NULL,
+        CONSTRAINT fk_event_id FOREIGN KEY (event_id) REFERENCES chat_event (id),
+        CONSTRAINT fk_appointment_id FOREIGN KEY (appointment_id) REFERENCES appointment (id)
+    );
+
+CREATE TABLE
     IF NOT EXISTS public.gallery (
         id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
         shop_id uuid NOT NULL,

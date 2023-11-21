@@ -8,6 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { ChatEventSchema } from '../event.entity';
+import { AppointmentSchema } from 'src/v2/appointment/appointment.entity';
 
 // ChatEventMessage Entity
 @Entity('chat_event_message')
@@ -53,4 +54,8 @@ export class ChatEventAppointmentNewSchema {
   @ManyToOne(() => ChatEventSchema)
   @JoinColumn({ name: 'event_id' })
   event: ChatEventSchema;
+
+  @OneToOne(() => AppointmentSchema)
+  @JoinColumn({ name: 'appointment_id' })
+  appointment: AppointmentSchema;
 }
