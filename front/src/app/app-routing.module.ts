@@ -31,17 +31,17 @@ const routes: Routes = [
   },
   {
     path: 'chat',
+    pathMatch: 'prefix',
     providers: [
       ChatSelectionService,
       ConversationService,
       ConversationEventsService,
       DetailsPanelService,
+      CustomerNamePipe,
     ],
-    loadComponent: () =>
-      import('./chatV2/chat/chat.component').then((mod) => mod.ChatComponent),
     children: [
       {
-        path: ':id/:details',
+        path: '**',
         loadComponent: () =>
           import('./chatV2/chat/chat.component').then(
             (mod) => mod.ChatComponent,

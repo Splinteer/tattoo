@@ -60,18 +60,18 @@ export class ProjectController {
 
   @ApiOkResponse({ description: 'Returns all project conversations' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  @Get('shops/:shopId')
+  @Get('shops/:shopUrl')
   getAllByShop(
-    @Param('shopId') shopId: string,
+    @Param('shopUrl') shopUrl: string,
     @Credentials()
     credentials: ICredentials,
     @Query('date') date: string,
   ) {
-    if (credentials.shop_id !== shopId) {
+    if (credentials.shop_url !== shopUrl) {
       throw new ForbiddenException();
     }
 
-    return this.projectService.getAllByShop(credentials.shop_id, date);
+    return this.projectService.getAllByShop(credentials.shop_url, date);
   }
 
   @ApiOkResponse({ description: 'Returns a project' })

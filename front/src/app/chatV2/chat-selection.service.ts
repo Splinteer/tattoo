@@ -4,12 +4,18 @@ import { Conversation } from './chat.interface';
 import { environment } from '@env/environment';
 import { Subject, combineLatest, exhaustMap, filter, map, tap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { CustomerNamePipe } from '@app/shared/customer-name.pipe';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatSelectionService {
   readonly #chatHttpService = inject(ChatHttpService);
+
+  readonly #router = inject(Router);
+
+  readonly #customerNamePipe = inject(CustomerNamePipe);
 
   // States
 
@@ -56,6 +62,65 @@ export class ChatSelectionService {
 
   // Events
 
+  #removeActiveConversationOnProfileChange = toObservable(
+    this.selectedChatProfile,
+  )
+    .pipe(
+      takeUntilDestroyed(),
+      tap(() => this.setActiveConversation(null)),
+    )
+    .subscribe();
+
+  #getUrlParams() {
+    let route = this.#router.routerState.root;
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+
+    return route.snapshot.params;
+  }
+
+  #defaultConversationSelection = combineLatest({
+    selectedProfile: toObservable(this.selectedChatProfile),
+    conversations: toObservable(this.conversations),
+  })
+    .pipe(
+      takeUntilDestroyed(),
+      tap(({ conversations }) => {
+        const activeConversation = this.activeConversation();
+        if (!activeConversation && conversations.length) {
+          const { id } = this.#getUrlParams();
+          if (id) {
+            const urlChat = conversations.find(
+              (conversation) => conversation.project.id === id,
+            );
+            if (urlChat) {
+              this.setActiveConversation(urlChat);
+            }
+          } else {
+            this.setActiveConversation(conversations[0]);
+          }
+        }
+      }),
+    )
+    .subscribe();
+
+  #conversationRouter = toObservable(this.conversation)
+    .pipe(
+      takeUntilDestroyed(),
+      tap((conversation) => {
+        if (conversation) {
+          return this.#router.navigate([
+            '/chat',
+            ...this.#chatToUrl(conversation),
+          ]);
+        }
+
+        return this.#router.navigate(['/chat']);
+      }),
+    )
+    .subscribe();
+
   readonly #loadMoreConversationsSubject = new Subject<void>();
 
   #conversationsLoader = combineLatest({
@@ -95,7 +160,28 @@ export class ChatSelectionService {
       );
   }
 
-  setActiveConversation(conversation: Conversation) {
-    this.activeConversation.set(conversation.project.id);
+  // Functions
+
+  #chatToUrl(conversation: Conversation) {
+    const url: string[] = [];
+    if (conversation.type === 'shop') {
+      const selectedProfile = this.selectedChatProfile();
+      if (selectedProfile) {
+        url.push(selectedProfile);
+      }
+      url.push(conversation.project.id);
+      url.push(this.#customerNamePipe.transform(conversation.customer));
+    } else {
+      url.push(conversation.project.id);
+      url.push(conversation.shop.url);
+    }
+
+    console.log(url);
+
+    return url.map((part) => part.replaceAll(' ', '-'));
+  }
+
+  setActiveConversation(conversation: Conversation | null) {
+    this.activeConversation.set(conversation?.project?.id ?? null);
   }
 }

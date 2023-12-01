@@ -145,7 +145,7 @@ export class ProjectService {
   }
 
   async getAllByShop(
-    shopId: string,
+    shopUrl: string,
     lastFetchedDate: string,
   ): Promise<ShopConversation[]> {
     const query: SelectQueryBuilder<ProjectSchema> = this.#getAllQuery(
@@ -153,8 +153,9 @@ export class ProjectService {
     )
       .addSelect('row_to_json(customer.*) as customer')
       .innerJoin(CustomerSchema, 'customer', 'customer.id = p.customerId')
+      .innerJoin(ShopSchema, 'shop', 'shop.id = p.shopId')
       .addGroupBy('customer.id')
-      .andWhere('p.shopId = :shopId', { shopId })
+      .andWhere('shop.url = :shopUrl', { shopUrl })
       .limit(10);
 
     const result = await query.getRawMany();

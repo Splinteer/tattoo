@@ -12,16 +12,16 @@ import { ChatSelectionService } from '../chat-selection.service';
   imports: [CommonModule, AvatarComponent],
   template: `
     @if ({ user: credentials(), activeChatList: activeChatList() }; as vm) {
-      @if (vm.user && vm.user.shop_id) {
+      @if (vm.user && vm.user.shop_url) {
         <button
-          (click)="activeChatList.set(vm.user.shop_id)"
-          [class.selected]="vm.activeChatList === vm.user.shop_id"
+          (click)="activeChatList.set(vm.user.shop_url)"
+          [class.selected]="vm.activeChatList === vm.user.shop_url"
         >
           <app-avatar [customer]="vm.user"></app-avatar>
         </button>
         <button
           (click)="activeChatList.set('personal')"
-          [class.selected]="vm.activeChatList !== vm.user.shop_id"
+          [class.selected]="vm.activeChatList !== vm.user.shop_url"
         >
           <app-avatar [customer]="vm.user" ignoreShop></app-avatar>
         </button>
@@ -76,9 +76,9 @@ export class ChatSelectionComponent {
     .pipe(
       takeUntilDestroyed(),
       tap((credentials) => {
-        if (credentials?.shop_id) {
+        if (credentials?.shop_url) {
           return this.#chatSelectionService.selectedChatProfile.set(
-            credentials.shop_id,
+            credentials.shop_url,
           );
         }
 
