@@ -31,6 +31,7 @@
   },
 
   "HEADER": {
+    "chat": "Messagerie",
     "shop": "Boutique",
     "gallery": "Galerie",
     "search": "Ville, nom d'un artiste...",
@@ -70,20 +71,37 @@
 
   "CHAT": {
     "read": "Lu",
+
     "ACTIONS": {
       "appointment_proposal": "Proposer un rendez-vous",
       "appointment_review": "Noter l'artiste",
       "appointment_customer_review": "Noter le client"
     },
-    "INPUT": {
-      "file_size_error": "Le fichier est trop volumineux",
-      "file_type_error": "Le fichier n'est une image valide"
+    "CONVERSATION_LIST": {
+      "EVENT_TITLE": {
+        "appointment_new": "Nouvelle proposition de dates",
+        "appointment_accepted": "Rendez-vous accepté",
+        "appointment_rejected": "Rendez-vous rejeté",
+        "deposit_request": "Demande d'acompte",
+        "deposit_paid": "Acompte payé",
+        "message": "Nouveau message",
+        "media": "Nouvelle photo ajoutée",
+        "project_created": "Nouveau projet",
+        "project_cancelled": "Projet annulé",
+        "project_rejected": "Projet rejeté",
+        "project_completed": "Projet terminé"
+      }
     },
+
     "EVENTS": {
       "APPOINTMENT_NEW": {
         "accept": "Accepter",
         "reject": "{count, plural, one{Rejecter} other{Rejeter tout}}"
       }
+    },
+    "INPUT": {
+      "file_size_error": "Le fichier est trop volumineux",
+      "file_type_error": "Le fichier n'est une image valide"
     }
   },
 
