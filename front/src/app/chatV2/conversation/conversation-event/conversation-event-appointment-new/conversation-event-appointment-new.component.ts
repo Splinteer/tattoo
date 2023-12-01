@@ -20,7 +20,7 @@ import { CalendarEvent } from '@app/project/project.service';
   standalone: true,
   imports: [CommonModule, CalendarItemComponent, TranslateModule],
   template: `
-    <div class="ios-dialog">
+    <div class="ios-dialog light">
       <div class="content">
         <div class="headline" translate>Créneau proposé</div>
         @if (appointments(); as appointments) {

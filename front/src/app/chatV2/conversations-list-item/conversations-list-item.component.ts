@@ -11,11 +11,18 @@ import { ChatSelectionService } from '../chat-selection.service';
 import { AvatarComponent } from '@app/shared/avatar/avatar.component';
 import { TimeAgoPipe } from '@app/shared/timeAgo.pipe';
 import { CustomerNamePipe } from '@app/shared/customer-name.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-conversations-list-item',
   standalone: true,
-  imports: [CommonModule, AvatarComponent, TimeAgoPipe, CustomerNamePipe],
+  imports: [
+    CommonModule,
+    AvatarComponent,
+    TimeAgoPipe,
+    CustomerNamePipe,
+    TranslateModule,
+  ],
   template: `
     <button
       class="container"
@@ -43,11 +50,10 @@ import { CustomerNamePipe } from '@app/shared/customer-name.pipe';
           @if (conversation.lastEvent.type === 'message') {
             {{ conversation.lastEvent.content }}
           } @else {
-            @switch (conversation.lastEvent.type) {
-              @default {
-                Evenement
-              }
-            }
+            {{
+              'CHAT.CONVERSATION_LIST.EVENT_TITLE.' +
+                conversation.lastEvent.type | translate
+            }}
           }
         </div>
       </div>

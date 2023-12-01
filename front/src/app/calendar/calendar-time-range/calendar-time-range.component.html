@@ -1,5 +1,7 @@
 @for (event of events; track event.id; let eventIndex = $index) {
-
-  <app-calendar-item [event]="event" [date]="showDate"></app-calendar-item>
-
+  <app-calendar-item
+    [event]="event"
+    [date]="showDate"
+    animated
+  ></app-calendar-item>
 }

@@ -35,12 +35,6 @@ import { ChatSelectionService } from '../chat-selection.service';
       overflow-x: auto;
     }
 
-    @media (max-width: 768px) {
-      :host {
-        max-width: 60px;
-      }
-    }
-
     button {
       display: flex;
       justify-content: center;
@@ -51,17 +45,23 @@ import { ChatSelectionService } from '../chat-selection.service';
       border-radius: var(--base-border-radius);
       padding: var(--space-xsmall);
 
-      app-avatar {
-        min-width: 30px;
-        max-width: 50px;
-      }
-
       &.selected {
         background-color: var(--fill-quinary);
       }
 
       &:hover {
         background-color: var(--fill-quaternary);
+      }
+    }
+
+    app-avatar {
+      min-width: 30px;
+      max-width: 50px;
+    }
+
+    @media (max-width: 768px) {
+      app-avatar {
+        max-width: 20px;
       }
     }
   `,

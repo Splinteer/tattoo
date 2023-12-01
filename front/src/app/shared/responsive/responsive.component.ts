@@ -12,6 +12,8 @@ export class ResponsiveComponent {
 
   public readonly isMobile = this.responsiveService.isMobile;
 
+  public readonly isTabletOrLess = this.responsiveService.isTabletOrLess;
+
   public readonly screenHeight$ = toObservable(
     this.responsiveService.screenHeight,
   ).pipe(distinctUntilChanged());

@@ -39,7 +39,7 @@ import { slideLeft } from '@app/shared/animation';
   styles: `
     :host {
       display: grid;
-      grid-template-columns: minmax(20%, 350px) 1fr auto;
+      grid-template-columns: minmax(250px, 22%) 1fr auto;
       width: 100%;
       height: 100%;
       border: 1px solid var(--separator-opaque);
@@ -56,7 +56,7 @@ import { slideLeft } from '@app/shared/animation';
 
     @media (max-width: 768px) {
       :host {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: 100px 1fr;
       }
 
       app-chat-details-panel {

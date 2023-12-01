@@ -7,41 +7,33 @@
   [class.selection]="selectionActive() === 'selection'"
   [class.selected]="selected()"
   [class.centered]="hideTitle"
-  [ngClass]="event.event_type || event.type"
+  [ngClass]="event.type"
   [@slideDown]
+  [@.disabled]="!animated"
 >
   @if (selectionActive() !== 'selection' && !hideTitle) {
-<div translate>
-    {{ "CALENDAR.EVENT_TYPE." + (event.event_type || event.type) }}
-  </div>
-}
+    <div translate>
+      {{ 'CALENDAR.EVENT_TYPE.' + event.type }}
+    </div>
+  }
   <div class="time">
     @if (showDate) {
-<span>
-      @if (hideTitle) {
-
-        {{ "AVAILABILITY.the_day" | translate }}
-      
-}
-      {{ (event.start_time || event.startTime) | date : "shortDate" }}
-      {{ "AVAILABILITY.from_hour" | translate | lowercase }}
-    </span>
-}
+      <span>
+        @if (hideTitle) {
+          {{ 'AVAILABILITY.the_day' | translate }}
+        }
+        {{ event.startTime | date: 'shortDate' }}
+        {{ 'AVAILABILITY.from_hour' | translate | lowercase }}
+      </span>
+    }
     @if (hoursBetweenDates && hoursBetweenDates > 23) {
-<div
-     
-      translate
-    >
-      AVAILABILITY.all_day
-    </div>
-} @else {
-
-      {{ (event.start_time || event.startTime) | shortTime }}
-      {{ showDate ? ("AVAILABILITY.to_hour" | translate | lowercase) : "-" }}
-      {{ (event.end_time || event.endTime) | shortTime : showDate }}
-    
-}
-      </div>
+      <div translate>AVAILABILITY.all_day</div>
+    } @else {
+      {{ event.startTime | shortTime }}
+      {{ showDate ? ('AVAILABILITY.to_hour' | translate | lowercase) : '-' }}
+      {{ event.endTime | shortTime: showDate }}
+    }
+  </div>
 </button>
 
 <ng-template
@@ -56,7 +48,7 @@
       originY: 'top',
       overlayX: 'start',
       overlayY: 'top',
-      offsetX: 5,
+      offsetX: 5
     }
   ]"
   (overlayOutsideClick)="close($event)"
