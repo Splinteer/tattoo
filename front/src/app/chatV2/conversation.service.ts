@@ -19,19 +19,23 @@ export class ConversationService {
     this.#chatSelectionService.chatsByProfile.update((chatsByProfile) => {
       const updatedChatsByProfile = { ...chatsByProfile };
 
-      const conversations = updatedChatsByProfile[selectedProfile].map(
-        (conversation) => {
-          if (conversation.project.id === conversationId) {
-            return editor(conversation);
-          }
+      const conversations = updatedChatsByProfile[
+        selectedProfile
+      ].conversations.map((conversation) => {
+        if (conversation.project.id === conversationId) {
+          return editor(conversation);
+        }
 
-          return conversation;
-        },
-      );
+        return conversation;
+      });
 
       return {
         ...updatedChatsByProfile,
-        [selectedProfile]: conversations,
+        [selectedProfile]: {
+          conversations,
+          noMoreConversation:
+            updatedChatsByProfile[selectedProfile].noMoreConversation,
+        },
       };
     });
 

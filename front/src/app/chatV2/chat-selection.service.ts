@@ -4,7 +4,7 @@ import { Conversation } from './chat.interface';
 import { environment } from '@env/environment';
 import { Subject, combineLatest, exhaustMap, filter, map, tap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerNamePipe } from '@app/shared/customer-name.pipe';
 
 @Injectable({
@@ -15,15 +15,18 @@ export class ChatSelectionService {
 
   readonly #router = inject(Router);
 
+  readonly #route = inject(ActivatedRoute);
+
   readonly #customerNamePipe = inject(CustomerNamePipe);
 
   // States
 
   readonly chatsByProfile = signal<{
-    [key: string | 'personal']: Conversation[];
+    [key: string | 'personal']: {
+      conversations: Conversation[];
+      noMoreConversation: boolean;
+    };
   }>({});
-
-  readonly noMoreConversation = signal(false);
 
   readonly selectedChatProfile = signal<(string | 'personal') | null>(null);
 
@@ -33,17 +36,22 @@ export class ChatSelectionService {
     const chatsByProfile = this.chatsByProfile();
     const selectedChatProfile = this.selectedChatProfile();
 
+    if (!selectedChatProfile || !chatsByProfile[selectedChatProfile]) {
+      return [];
+    }
+
+    return chatsByProfile[selectedChatProfile].conversations ?? [];
+  });
+
+  readonly noMoreConversation = computed<boolean>(() => {
+    const chatsByProfile = this.chatsByProfile();
+    const selectedChatProfile = this.selectedChatProfile();
+
     if (!selectedChatProfile) {
-      return [];
+      return false;
     }
 
-    if (chatsByProfile[selectedChatProfile] === undefined) {
-      this.loadConversations(selectedChatProfile, true).subscribe();
-
-      return [];
-    }
-
-    return chatsByProfile[selectedChatProfile];
+    return !!chatsByProfile[selectedChatProfile]?.noMoreConversation;
   });
 
   readonly conversation = computed<Conversation | null>(() => {
@@ -72,12 +80,15 @@ export class ChatSelectionService {
     .subscribe();
 
   #getUrlParams() {
-    let route = this.#router.routerState.root;
-    while (route.firstChild) {
-      route = route.firstChild;
+    const url = window.location.pathname;
+
+    const urlParts = url.replace('/chat/', '').split('/');
+
+    if (urlParts.length === 3) {
+      return { id: urlParts[0] };
     }
 
-    return route.snapshot.params;
+    return { id: urlParts[0] };
   }
 
   #defaultConversationSelection = combineLatest({
@@ -131,6 +142,7 @@ export class ChatSelectionService {
       takeUntilDestroyed(),
       map(({ profile }) => profile),
       filter((profile): profile is string => typeof profile === 'string'),
+      filter(() => !this.noMoreConversation()),
       exhaustMap((profile) => this.loadConversations(profile)),
     )
     .subscribe();
@@ -148,13 +160,10 @@ export class ChatSelectionService {
         tap((conversations) => {
           const noMoreConversation =
             conversations.length < environment.conversationsQueryLimit;
-          if (noMoreConversation) {
-            this.noMoreConversation.set(true);
-          }
 
           this.chatsByProfile.update((chatsByProfile) => ({
             ...chatsByProfile,
-            [profile]: conversations,
+            [profile]: { conversations, noMoreConversation },
           }));
         }),
       );
@@ -175,8 +184,6 @@ export class ChatSelectionService {
       url.push(conversation.project.id);
       url.push(conversation.shop.url);
     }
-
-    console.log(url);
 
     return url.map((part) => part.replaceAll(' ', '-'));
   }
