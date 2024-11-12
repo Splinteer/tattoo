@@ -17,7 +17,7 @@ import { CalendarEventModalComponent } from '../calendar-event-modal/calendar-ev
 import { DateTime } from 'luxon';
 import { CalendarSelectionService } from '../calendar-selection.service';
 import { slideDown } from '@app/shared/animation';
-
+import { CalendarEvent as CalendarEventV2 } from '@app/project/project.service';
 @Component({
   selector: 'app-calendar-item',
   templateUrl: './calendar-item.component.html',
@@ -37,13 +37,30 @@ export class CalendarItemComponent implements OnInit {
 
   public readonly selectionActive = this.calendarSelection.isActive;
 
-  // TODO
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input({ required: true }) event!: CalendarEvent | any;
+  @Input({
+    required: true,
+    transform: (event: CalendarEvent | CalendarEventV2) => {
+      if ('startTime' in event) {
+        return event;
+      }
+
+      return {
+        id: event.id,
+        type: event.event_type,
+        // projectId: event.,
+        shopUrl: event.shop_url,
+        startTime: event.start_time,
+        endTime: event.end_time,
+      };
+    },
+  })
+  event!: CalendarEventV2;
 
   @Input({ transform: booleanAttribute }) hideTitle = false;
 
   @Input({ transform: booleanAttribute, alias: 'date' }) showDate = false;
+
+  @Input({ transform: booleanAttribute }) animated = false;
 
   public isOpen = false;
 
@@ -59,8 +76,8 @@ export class CalendarItemComponent implements OnInit {
   }
 
   public getHoursBetweenEventDates() {
-    const start = DateTime.fromISO(this.event.start_time);
-    const end = DateTime.fromISO(this.event.end_time);
+    const start = DateTime.fromISO(this.event.startTime);
+    const end = DateTime.fromISO(this.event.endTime);
 
     return end.diff(start, 'hours').hours;
   }

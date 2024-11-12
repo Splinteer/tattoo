@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpService } from '@app/@core/http/http.service';
 import { Observable } from 'rxjs';
 import { AppointmentEvent } from '../calendar.service';
+import { CalendarEvent } from '@app/project/project.service';
 
 export type Appointment = {
   id: string;
@@ -25,6 +26,11 @@ export class AppointmentService {
     );
   }
 
+  getEvents(projectId: string): Observable<CalendarEvent[]> {
+    return this.#http.get<CalendarEvent[]>(
+      `/v2/projects/${projectId}/appointments/`,
+    );
+  }
   getEvent(projectId: string, id: string): Observable<AppointmentEvent> {
     return this.#http.get<AppointmentEvent>(
       `/v2/projects/${projectId}/appointments/${id}/event`,

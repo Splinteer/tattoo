@@ -62,7 +62,9 @@
     "PROPOSAL": {
       "title": "Proposer un créneau",
       "select_event": "Cliquez sur un événement pour utiliser ses valeurs ci-dessous",
-      "propose": "Proposer le créneau"
+      "propose": "Proposer le créneau",
+      "show_calendar": "Afficher le calendrier",
+      "hide_calendar": "Masquer le calendrier"
     },
 
     "add_event": "Ajouter un évènement",

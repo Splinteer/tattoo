@@ -245,9 +245,19 @@ export class CalendarService {
   }
 
   public async deletePastUnconfirmedAppointments() {
-    await this.db.query(
-      'DELETE FROM appointment WHERE is_confirmed IS FALSE AND start_date < NOW()',
-    );
+    await this.db.begin();
+    try {
+      const appointmentQuery = 'is_confirmed IS FALSE AND start_date < NOW()';
+      await this.db.query(
+        `DELETE FROM chat_event_appointment_new WHERE appointment_id IN (SELECT id FROM appointment WHERE ${appointmentQuery})`,
+      );
+      await this.db.query(`DELETE FROM appointment WHERE ${appointmentQuery}`);
+      await this.db.commit();
+    } catch (error) {
+      await this.db.rollback();
+
+      throw error;
+    }
   }
 
   public async deletePastAvailability() {

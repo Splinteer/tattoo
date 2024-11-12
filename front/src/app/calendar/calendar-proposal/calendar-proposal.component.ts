@@ -1,3 +1,4 @@
+import { slideDown } from '@app/shared/animation';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,13 +22,12 @@ import {
 } from '@angular/forms';
 import { CalendarSelectionService } from '../calendar-selection.service';
 import { CalendarService } from '../calendar.service';
-import { DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { minDateValidator } from '@app/shared/custom-validators';
 import { map, tap } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ProjectService } from '@app/project/project.service';
 
 @Component({
   selector: 'app-calendar-proposal',
@@ -40,7 +40,8 @@ import { ProjectService } from '@app/project/project.service';
     TranslateModule,
   ],
   template: `
-    <form [formGroup]="form">
+    @if (showCalendar) {
+    <form [formGroup]="form" [@slideDown]>
       <app-calendar-view
         formControlName="availability"
         view="month"
@@ -48,12 +49,20 @@ import { ProjectService } from '@app/project/project.service';
         proposal
         showToggle
       ></app-calendar-view>
-      <p class="caption1 text-center" translate>
-        CALENDAR.PROPOSAL.select_event
-      </p>
     </form>
-
-    @if (form) {
+    <div class="text-center">
+      <p class="caption1" translate>CALENDAR.PROPOSAL.select_event</p>
+      <button (click)="showCalendar = false" translate>
+        <i class="fa-regular fa-calendar"></i>
+        CALENDAR.PROPOSAL.hide_calendar
+      </button>
+    </div>
+    } @else {
+    <button (click)="showCalendar = true" translate>
+      <i class="fa-regular fa-calendar"></i>
+      CALENDAR.PROPOSAL.show_calendar
+    </button>
+    } @if (form) {
     <form
       class="grouped-form no-border"
       [formGroup]="form"
@@ -65,11 +74,9 @@ import { ProjectService } from '@app/project/project.service';
           <div class="input-group">
             <h1 class="title1" translate>CALENDAR.PROPOSAL.title</h1>
           </div>
-          <!-- @for (proposal of proposalsFormArray().controls; let proposalIndex = $index; let isLast = $last) { -->
 
           @for ( proposal of proposalsFormArray().controls; track proposal; let
-          proposalIndex = $index; let isLast = $last) {
-
+          proposalIndex = $index; let isLast = $last ) {
           <ng-container [formGroupName]="proposalIndex">
             <div class="input-group inline">
               <label translate>AVAILABILITY.the_day</label>
@@ -133,7 +140,6 @@ import { ProjectService } from '@app/project/project.service';
               }
             </div>
           </ng-container>
-
           }
           <!-- } -->
         </div>
@@ -177,8 +183,13 @@ import { ProjectService } from '@app/project/project.service';
       .caption1 {
         color: var(--label-secondary);
       }
+
+      button {
+        color: var(--material-control-selection-focus);
+      }
     `,
   ],
+  animations: [slideDown()],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarProposalComponent {
@@ -191,9 +202,11 @@ export class CalendarProposalComponent {
 
   readonly #selectionService = inject(CalendarSelectionService);
 
-  readonly #projectService = inject(ProjectService);
+  public readonly projectId: string = inject(DIALOG_DATA).projectId;
 
   public readonly today = DateTime.now();
+
+  showCalendar = false;
 
   getProposalFormGroup = () =>
     new FormGroup({
@@ -266,7 +279,6 @@ export class CalendarProposalComponent {
     if (this.form.invalid) {
       return;
     }
-
     const formProposals = this.form.get('proposals') as FormArray;
 
     const proposals = formProposals
@@ -284,9 +296,6 @@ export class CalendarProposalComponent {
         };
       });
 
-    this.#calendarService.addProposals(
-      this.#projectService.project()!.id,
-      proposals,
-    );
+    this.#calendarService.addProposals(this.projectId, proposals);
   }
 }

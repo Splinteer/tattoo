@@ -56,7 +56,7 @@ export class ShopService {
         userId,
         data.name.trim(),
         data.url.trim(),
-        data.description.replace(/\n+/g, '\n').trim(),
+        data.description?.replace(/\n+/g, '\n').trim(),
         data.instagram ?? null,
         data.twitter ?? null,
         data.facebook ?? null,

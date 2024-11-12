@@ -62,7 +62,7 @@ export class ChatEventAppointmentNewComponent {
   projectRealoaded = false;
 
   appointmentSignal = computed(() => {
-    if (!this.event.property.appointmentId) {
+    if (!this.event.property.appointmentIds) {
       return null;
     }
 
@@ -71,8 +71,8 @@ export class ChatEventAppointmentNewComponent {
       return null;
     }
 
-    const found = project.appointments?.find(
-      (appointment) => appointment.id === this.event.property.appointmentId,
+    const found = project.appointments?.find((appointment) =>
+      this.event.property.appointmentIds.includes(appointment.id),
     );
     if (!found && !this.projectRealoaded) {
       this.projectRealoaded = true;

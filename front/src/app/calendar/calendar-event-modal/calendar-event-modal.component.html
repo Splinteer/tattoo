@@ -1,14 +1,10 @@
 <div class="header">
-  @if (DateTime.local() <= DateTime.fromISO(event.start_time).endOf('day')) {
-
-    <button (click)="edit = true">
-      <i class="fa-regular fa-pencil"></i>
-    </button>
-    <button (click)="remove()">
-      <i class="fa-regular fa-trash"></i>
-    </button>
-  
-}
+  <button (click)="edit = true">
+    <i class="fa-regular fa-pencil"></i>
+  </button>
+  <button (click)="remove()">
+    <i class="fa-regular fa-trash"></i>
+  </button>
   <button (click)="close.emit()">
     <i class="fa-regular fa-times"></i>
   </button>
@@ -18,22 +14,21 @@
     <div class="color" [ngClass]="event.event_type"></div>
     <div class="title-container">
       <div class="title" translate>
-        {{ "CALENDAR.EVENT_TYPE." + event.event_type }}
+        {{ 'CALENDAR.EVENT_TYPE.' + event.event_type }}
       </div>
       <div class="text-muted">
-        {{ event.start_time | date : "EEEE, MMMM d, y - H:mm" }}
-        {{ "AVAILABILITY.to_hour" | translate | lowercase }}
-        {{ event.end_time | date : "H:mm" }}
+        {{ event.start_time | date: 'EEEE, MMMM d, y - H:mm' }}
+        {{ 'AVAILABILITY.to_hour' | translate | lowercase }}
+        {{ event.end_time | date: 'H:mm' }}
       </div>
     </div>
   </div>
 </div>
 
 @if (edit) {
-<app-calendar-form-event
- 
-  [event]="event"
-  [@slideDown]
-  (close)="edit = false"
-></app-calendar-form-event>
+  <app-calendar-form-event
+    [event]="event"
+    [@slideDown]
+    (close)="edit = false"
+  ></app-calendar-form-event>
 }

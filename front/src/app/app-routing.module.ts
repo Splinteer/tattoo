@@ -5,6 +5,7 @@ import { ChatSelectionService } from './chatV2/chat-selection.service';
 import { DetailsPanelService } from './chatV2/details-panel.service';
 import { ConversationEventsService } from './chatV2/conversation-events.service';
 import { ConversationService } from './chatV2/conversation.service';
+import { CustomerNamePipe } from './shared/customer-name.pipe';
 
 const routes: Routes = [
   {
@@ -49,6 +50,18 @@ const routes: Routes = [
       },
     ],
   },
+  // {
+  //   path: 'chat',
+  //   loadComponent: () =>
+  //     import('./chat/chat.component').then((mod) => mod.ChatComponent),
+  //   children: [
+  //     {
+  //       path: ':id/:details',
+  //       loadComponent: () =>
+  //         import('./chat/chat.component').then((mod) => mod.ChatComponent),
+  //     },
+  //   ],
+  // },
 ];
 
 @NgModule({
