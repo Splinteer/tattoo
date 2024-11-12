@@ -37,6 +37,8 @@ export class FlashListComponent
 
   public flashs$?: Observable<Flash[]>;
 
+  #isMobile$ = toObservable(this.isMobile);
+
   ngOnInit(): void {
     this.initObservable();
   }
@@ -47,7 +49,7 @@ export class FlashListComponent
 
   private initObservable() {
     this.flashs$ = combineLatest({
-      isMobile: toObservable(this.isMobile),
+      isMobile: this.#isMobile$,
       fetchMore: this.fetchMore,
       windowHeight: this.screenHeight$.pipe(
         takeWhile(() => !this.allDataLoaded),
